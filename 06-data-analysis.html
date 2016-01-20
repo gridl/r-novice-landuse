@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="generator" content="pandoc">
+    <title>Software Carpentry: R for Data Analysis</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap-theme.css" />
+    <link rel="stylesheet" type="text/css" href="css/swc.css" />
+    <link rel="alternate" type="application/rss+xml" title="Software Carpentry Blog" href="http://software-carpentry.org/feed.xml"/>
+    <meta charset="UTF-8" />
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body class="lesson">
+    <div class="container card">
+      <div class="banner">
+        <a href="http://software-carpentry.org" title="Software Carpentry">
+          <img alt="Software Carpentry banner" src="img/software-carpentry-banner.png" />
+        </a>
+      </div>
+      <article>
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+                    <a href="index.html"><h1 class="title">R for Data Analysis</h1></a>
+          <h2 class="subtitle">Data Analysis</h2>
+          <section class="objectives panel panel-warning">
+<div class="panel-heading">
+<h2 id="learning-objectives"><span class="glyphicon glyphicon-certificate"></span>Learning Objectives</h2>
+</div>
+<div class="panel-body">
+<ul>
+<li>To be able to summarize and visualize data.</li>
+</ul>
+</div>
+</section>
+<h2 id="data-manipulation">Data manipulation</h2>
+<p>Let’s try vectorisation on the <code>hh40</code> column of the <code>hh</code> dataset. First remove rows with NA. Then make a new column in the <code>hh</code> data frame that contains households in units of thousands of people.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hh &lt;-<span class="st"> </span><span class="kw">na.omit</span>(hh)
+hh$hh40inT &lt;-<span class="st"> </span>hh$hh40 /<span class="st"> </span><span class="dv">1000</span>
+<span class="kw">head</span>(hh)</code></pre></div>
+<pre class="output"><code>  county_id city_id  hh10  hh20  hh30  hh40         city_name county_name
+3         1     109 14853 17874 18051 18542      Everett MUGA   Snohomish
+4         1     113  9488 12157 13841 15639      Lake Stevens   Snohomish
+5         1     110  4836  5808  6218  6688            Monroe   Snohomish
+6         1     108  4464  4986  5398  5873     Mukilteo MUGA   Snohomish
+7         1     104  1409  1474  1836  2215 Larch Way Overlap   Snohomish
+8         1     105  7804 10878 11153 11644      Bothell MUGA   Snohomish
+  hh40inT
+3  18.542
+4  15.639
+5   6.688
+6   5.873
+7   2.215
+8  11.644
+</code></pre>
+<p>Create a log transformation:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hhlog &lt;-<span class="st"> </span>hh
+hhlog[,<span class="dv">2</span>:<span class="dv">6</span>] &lt;-<span class="st"> </span><span class="kw">log</span>(hhlog[,<span class="dv">2</span>:<span class="dv">6</span>])
+<span class="kw">head</span>(hhlog)</code></pre></div>
+<pre class="output"><code>  county_id  city_id     hh10     hh20     hh30     hh40         city_name
+3         1 4.691348 9.605957 9.791102 9.800956 9.827794      Everett MUGA
+4         1 4.727388 9.157783 9.405660 9.535390 9.657523      Lake Stevens
+5         1 4.700480 8.483843 8.666992 8.735204 8.808070            Monroe
+6         1 4.682131 8.403801 8.514389 8.593784 8.678121     Mukilteo MUGA
+7         1 4.644391 7.250636 7.295735 7.515345 7.703008 Larch Way Overlap
+8         1 4.653960 8.962392 9.294498 9.319464 9.362546      Bothell MUGA
+  county_name hh40inT
+3   Snohomish  18.542
+4   Snohomish  15.639
+5   Snohomish   6.688
+6   Snohomish   5.873
+7   Snohomish   2.215
+8   Snohomish  11.644
+</code></pre>
+<p>Create a dataset of differences:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hhdif &lt;-<span class="st"> </span><span class="kw">cbind</span>(<span class="kw">data.frame</span>(<span class="dt">city_id=</span>hh$city_id), hh[,<span class="dv">3</span>:<span class="dv">5</span>] -<span class="st"> </span>hh[,<span class="dv">2</span>:<span class="dv">4</span>])
+<span class="kw">head</span>(hhdif)</code></pre></div>
+<pre class="output"><code>  city_id  hh10 hh20 hh30
+3     109 14744 3021  177
+4     113  9375 2669 1684
+5     110  4726  972  410
+6     108  4356  522  412
+7     104  1305   65  362
+8     105  7699 3074  275
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(hhdif)</code></pre></div>
+<pre class="output"><code>    city_id            hh10               hh20              hh30         
+ Min.   :  1.00   Min.   :  -136.0   Min.   :  -92.0   Min.   : -359.00  
+ 1st Qu.: 35.75   1st Qu.:   408.8   1st Qu.:   46.0   1st Qu.:   46.75  
+ Median : 71.50   Median :  3419.5   Median :  601.5   Median :  285.00  
+ Mean   : 71.12   Mean   : 10362.6   Mean   : 1891.5   Mean   : 1289.60  
+ 3rd Qu.:106.25   3rd Qu.:  9040.5   3rd Qu.: 1778.2   3rd Qu.: 1229.50  
+ Max.   :142.00   Max.   :286516.0   Max.   :48991.0   Max.   :27976.00  
+</code></pre>
+<h2 id="scatter-plot-histogram-boxplot">Scatter plot, histogram, boxplot</h2>
+<p>Plot results:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(hh$hh10, hh$hh40, <span class="dt">xlab=</span><span class="st">&quot;2010&quot;</span>, <span class="dt">ylab=</span><span class="st">&quot;2040&quot;</span>)
+<span class="kw">abline</span>(<span class="dv">0</span>,<span class="dv">1</span>)</code></pre></div>
+<p><img src="fig/09-vectorisation-unnamed-chunk-5-1.png" title="plot of chunk unnamed-chunk-5" alt="plot of chunk unnamed-chunk-5" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(hh$hh10, hh$hh40, <span class="dt">xlab=</span><span class="st">&quot;2010&quot;</span>, <span class="dt">ylab=</span><span class="st">&quot;2040&quot;</span>, <span class="dt">log=</span><span class="st">&quot;xy&quot;</span>)</code></pre></div>
+<pre class="error"><code>Warning in xy.coords(x, y, xlabel, ylabel, log): 2 x values &lt;= 0 omitted
+from logarithmic plot
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">abline</span>(<span class="dv">0</span>,<span class="dv">1</span>)</code></pre></div>
+<p><img src="fig/09-vectorisation-unnamed-chunk-5-2.png" title="plot of chunk unnamed-chunk-5" alt="plot of chunk unnamed-chunk-5" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">hist</span>(hh$hh40 -<span class="st"> </span>hh$hh10, <span class="dt">main=</span><span class="st">&quot;Change 2040-2010&quot;</span>)
+<span class="kw">abline</span>(<span class="dt">v=</span><span class="dv">0</span>, <span class="dt">lwd=</span><span class="dv">2</span>, <span class="dt">col=</span><span class="st">&quot;red&quot;</span>)</code></pre></div>
+<p><img src="fig/09-vectorisation-unnamed-chunk-5-3.png" title="plot of chunk unnamed-chunk-5" alt="plot of chunk unnamed-chunk-5" style="display: block; margin: auto;" /> Investigate records with negative change between 2040 and 2010:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">neg &lt;-<span class="st"> </span>hh[hh$hh40 -<span class="st"> </span>hh$hh10 &lt;<span class="st"> </span><span class="dv">0</span>, ]
+<span class="kw">dim</span>(neg)</code></pre></div>
+<pre class="output"><code>[1] 6 9
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(neg$hh10, neg$hh40, <span class="dt">xlab=</span><span class="st">&quot;2010&quot;</span>, <span class="dt">ylab=</span><span class="st">&quot;2040&quot;</span>, <span class="dt">log=</span><span class="st">&quot;xy&quot;</span>)
+<span class="kw">text</span>(neg$hh10, neg$hh40, <span class="dt">labels=</span>neg$city_name, <span class="dt">pos=</span><span class="dv">3</span>)
+<span class="kw">abline</span>(<span class="dv">0</span>,<span class="dv">1</span>)</code></pre></div>
+<p><img src="fig/09-vectorisation-unnamed-chunk-6-1.png" title="plot of chunk unnamed-chunk-6" alt="plot of chunk unnamed-chunk-6" style="display: block; margin: auto;" /></p>
+<p>Let’s bring in a dataset with multiple land use indicators from 2010, merge it with city names and omit records with missing values:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">lu &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="dt">file=</span><span class="st">&quot;data/city__dataset_table__lu_indicators__2010.tab&quot;</span>, <span class="dt">header=</span><span class="ot">TRUE</span>, <span class="dt">sep=</span><span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span>)
+lu &lt;-<span class="st"> </span><span class="kw">merge</span>(lu, cities, <span class="dt">by=</span><span class="st">&quot;city_id&quot;</span>, <span class="dt">all=</span><span class="ot">TRUE</span>)
+lu &lt;-<span class="st"> </span><span class="kw">na.omit</span>(lu)
+<span class="kw">summary</span>(lu)</code></pre></div>
+<pre class="output"><code>    city_id            jobs            households         population    
+ Min.   :  1.00   Min.   :     0.0   Min.   :     0.0   Min.   :     0  
+ 1st Qu.: 35.75   1st Qu.:   213.5   1st Qu.:   523.5   1st Qu.:  1302  
+ Median : 71.50   Median :  2000.0   Median :  3501.5   Median :  8694  
+ Mean   : 71.12   Mean   : 12684.2   Mean   : 10433.7   Mean   : 25836  
+ 3rd Qu.:106.25   3rd Qu.:  8685.0   3rd Qu.:  9080.2   3rd Qu.: 22885  
+ Max.   :142.00   Max.   :487626.0   Max.   :286525.0   Max.   :589269  
+   res_units         non_res_sqft         land_value       
+ Min.   :     0.0   Min.   :        0   Min.   :2.247e+05  
+ 1st Qu.:   576.8   1st Qu.:   117606   1st Qu.:4.829e+07  
+ Median :  3747.5   Median :  1089404   Median :2.794e+08  
+ Mean   : 11422.9   Mean   :  7736671   Mean   :9.140e+08  
+ 3rd Qu.:  9923.5   3rd Qu.:  5143938   3rd Qu.:6.324e+08  
+ Max.   :310493.0   Max.   :265491636   Max.   :3.036e+10  
+   buildings        occupied_res_units  sf_res_units   
+ Min.   :     0.0   Min.   :     0.0   Min.   :     0  
+ 1st Qu.:   480.5   1st Qu.:   523.5   1st Qu.:   476  
+ Median :  2661.5   Median :  3501.5   Median :  2534  
+ Mean   :  8224.0   Mean   : 10433.7   Mean   :  7807  
+ 3rd Qu.:  6986.5   3rd Qu.:  9080.2   3rd Qu.:  6734  
+ Max.   :171283.0   Max.   :286525.0   Max.   :153726  
+      sqft            city_name           county_id    
+ Min.   :1.428e+05   Length:140         Min.   :1.000  
+ 1st Qu.:2.516e+07   Class :character   1st Qu.:1.000  
+ Median :8.993e+07   Mode  :character   Median :2.000  
+ Mean   :1.073e+09                      Mean   :2.121  
+ 3rd Qu.:2.094e+08                      3rd Qu.:3.000  
+ Max.   :4.748e+10                      Max.   :4.000  
+</code></pre>
+<p>Say we want to look at the distribution of the average household sizes by counties. First, create a column for household size:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">lu &lt;-<span class="st"> </span><span class="kw">cbind</span>(lu, <span class="dt">hh_size=</span>lu$population/lu$households)
+<span class="kw">head</span>(lu[<span class="kw">order</span>(lu$hh_size),])</code></pre></div>
+<pre class="output"><code>    city_id   jobs households population res_units non_res_sqft
+9         9 487626     286525     589269    310493    265491636
+119     119      6         34         73        62            0
+52       52     70        121        261       132       118973
+77       77   9093       3419       7641      3684      5902719
+65       65  29462      15310      34791     17003      6168649
+82       82    153        349        805       417       117854
+     land_value buildings occupied_res_units sf_res_units       sqft
+9   30357550147    171283             286525       153726 1757333047
+119      712861        21                 34            9     155510
+52      3047934       155                121          153    7712744
+77    355165636      3053               3419         2773  141504525
+65    628643417     11943              15310        10414  720426378
+82     18713040       449                349          431    6044453
+                 city_name county_id  hh_size
+9                  Seattle         2 2.056606
+119 Mountlake Terrace MUGA         1 2.147059
+52               Skykomish         2 2.157025
+77              Gig Harbor         4 2.234864
+65               Bremerton         3 2.272436
+82                  Ruston         4 2.306590
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">tail</span>(lu[<span class="kw">order</span>(lu$hh_size),])</code></pre></div>
+<pre class="output"><code>    city_id  jobs households population res_units non_res_sqft land_value
+132     132  3555         56        183        57      2852584  104873190
+75       75 11949       1389       4604      2418       116203  373175945
+24       24    89         91        315       110        23187   18213263
+36       36     0          2          7         2            0     224744
+134     134  3293          0          0         0      3445822  327479104
+136     136     0          0          0         0            0    5013913
+    buildings occupied_res_units sf_res_units      sqft        city_name
+132       246                 56          244  33209766       Maltby UGA
+75         29               1389           29 747249491             JBLM
+24         88                 91           87  32740944    Sammamish PAA
+36          2                  2            2    266690    Newcastle PAA
+134        43                  0           43  50220760 PAINE FIELD AREA
+136         0                  0            0   5039471     Woodway MUGA
+    county_id  hh_size
+132         1 3.267857
+75          4 3.314615
+24          2 3.461538
+36          2 3.500000
+134         1      NaN
+136         1      NaN
+</code></pre>
+<p>Second, create a histogram for all cities, and a box plot by counties:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">hist</span>(lu$hh_size)</code></pre></div>
+<p><img src="fig/09-vectorisation-unnamed-chunk-9-1.png" title="plot of chunk unnamed-chunk-9" alt="plot of chunk unnamed-chunk-9" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">boxplot</span>(hh_size ~<span class="st"> </span>county_id, lu)</code></pre></div>
+<p><img src="fig/09-vectorisation-unnamed-chunk-9-2.png" title="plot of chunk unnamed-chunk-9" alt="plot of chunk unnamed-chunk-9" style="display: block; margin: auto;" /></p>
+<h2 id="simple-regression">Simple regression</h2>
+<p>Here is a simple regression for our lu dataset:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(jobs ~<span class="st"> </span>non_res_sqft, lu)
+fit &lt;-<span class="st"> </span><span class="kw">lm</span>(jobs ~<span class="st"> </span>non_res_sqft, lu)
+<span class="kw">summary</span>(fit)</code></pre></div>
+<pre class="output"><code>
+Call:
+lm(formula = jobs ~ non_res_sqft, data = lu)
+
+Residuals:
+   Min     1Q Median     3Q    Max 
+-42912   -373    855   1081  22487 
+
+Coefficients:
+               Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  -8.965e+02  6.274e+02  -1.429    0.155    
+non_res_sqft  1.755e-03  2.395e-05  73.296   &lt;2e-16 ***
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+Residual standard error: 7092 on 138 degrees of freedom
+Multiple R-squared:  0.975, Adjusted R-squared:  0.9748 
+F-statistic:  5372 on 1 and 138 DF,  p-value: &lt; 2.2e-16
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">abline</span>(fit)</code></pre></div>
+<p><img src="fig/09-vectorisation-unnamed-chunk-10-1.png" title="plot of chunk unnamed-chunk-10" alt="plot of chunk unnamed-chunk-10" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cor</span>(lu$jobs, lu$non_res_sqft)</code></pre></div>
+<pre class="output"><code>[1] 0.9873986
+</code></pre>
+<p>Try to add another variable:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(<span class="kw">lm</span>(jobs ~<span class="st"> </span>non_res_sqft +<span class="st"> </span>population, lu))</code></pre></div>
+<pre class="output"><code>
+Call:
+lm(formula = jobs ~ non_res_sqft + population, data = lu)
+
+Residuals:
+   Min     1Q Median     3Q    Max 
+-42432   -362    949   1133  22553 
+
+Coefficients:
+               Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  -1.026e+03  6.714e+02  -1.528    0.129    
+non_res_sqft  1.723e-03  6.359e-05  27.092   &lt;2e-16 ***
+population    1.474e-02  2.673e-02   0.551    0.582    
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+Residual standard error: 7110 on 137 degrees of freedom
+Multiple R-squared:  0.975, Adjusted R-squared:  0.9746 
+F-statistic:  2673 on 2 and 137 DF,  p-value: &lt; 2.2e-16
+</code></pre>
+<p>Or remove the intercept:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fit &lt;-<span class="st"> </span><span class="kw">lm</span>(jobs ~<span class="st"> </span>-<span class="dv">1</span> +<span class="st"> </span>non_res_sqft, lu)
+<span class="kw">summary</span>(fit)</code></pre></div>
+<pre class="output"><code>
+Call:
+lm(formula = jobs ~ -1 + non_res_sqft, data = lu)
+
+Residuals:
+   Min     1Q Median     3Q    Max 
+-43189  -1225    -30    193  24274 
+
+Coefficients:
+              Estimate Std. Error t value Pr(&gt;|t|)    
+non_res_sqft 1.745e-03  2.297e-05   75.99   &lt;2e-16 ***
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+Residual standard error: 7119 on 139 degrees of freedom
+Multiple R-squared:  0.9765,    Adjusted R-squared:  0.9763 
+F-statistic:  5775 on 1 and 139 DF,  p-value: &lt; 2.2e-16
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">names</span>(fit)</code></pre></div>
+<pre class="output"><code> [1] &quot;coefficients&quot;  &quot;residuals&quot;     &quot;effects&quot;       &quot;rank&quot;         
+ [5] &quot;fitted.values&quot; &quot;assign&quot;        &quot;qr&quot;            &quot;df.residual&quot;  
+ [9] &quot;xlevels&quot;       &quot;call&quot;          &quot;terms&quot;         &quot;model&quot;        
+</code></pre>
+<!-- 
+
+Let's bring in the population and jobs dataset and merge with households:
+
+~~~{.r}
+pop <- read.table(file="data/city__table__population.csv", header=TRUE, sep=",")
+head(pop)
+~~~
+
+
+
+~~~{.output}
+  city_id population_2010 population_2020 population_2030 population_2040
+1      49          121615          133008          136286          146476
+2      94           33959           39114           46440           55807
+3      95           96490          116305          137138          161535
+4      96            6543            6859            7041            7335
+5      97            2065            1892            1898            1954
+6      98           38639           44734           46361           48795
+
+~~~
+
+
+
+~~~{.r}
+jobs <- read.table(file="data/city__table__employment.csv", header=TRUE, sep=",")
+head(jobs)
+~~~
+
+
+
+~~~{.output}
+  city_id employment_2010 employment_2020 employment_2030 employment_2040
+1      49           18393           27222           27780           28628
+2      94           24610           31962           36532           46699
+3      95           81516          108938          117279          158310
+4      96             489             567             533             690
+5      97             105             187             164             144
+6      98           13157           16091           14897           15913
+
+~~~
+
+
+
+~~~{.r}
+hhc <- merge(hhc[,-8], pop[,c("city_id", "population_2010", "population_2040")], by="city_id", all=TRUE)
+~~~
+
+
+
+~~~{.error}
+Error in merge(hhc[, -8], pop[, c("city_id", "population_2010", "population_2040")], : object 'hhc' not found
+
+~~~
+
+
+
+~~~{.r}
+hhc <- merge(hhc, jobs[,c("city_id", "employment_2010", "employment_2040")], by="city_id", all=TRUE)
+~~~
+
+
+
+~~~{.error}
+Error in merge(hhc, jobs[, c("city_id", "employment_2010", "employment_2040")], : object 'hhc' not found
+
+~~~
+
+
+
+~~~{.r}
+head(hhc)
+~~~
+
+
+
+~~~{.error}
+Error in head(hhc): object 'hhc' not found
+
+~~~
+We can do a simple linear regression:
+
+~~~{.r}
+dim(hhc)
+~~~
+
+
+
+~~~{.error}
+Error in eval(expr, envir, enclos): object 'hhc' not found
+
+~~~
+
+
+
+~~~{.r}
+hhc <- na.omit(hhc)
+~~~
+
+
+
+~~~{.error}
+Error in na.omit(hhc): object 'hhc' not found
+
+~~~
+
+
+
+~~~{.r}
+dim(hhc)
+~~~
+
+
+
+~~~{.error}
+Error in eval(expr, envir, enclos): object 'hhc' not found
+
+~~~
+
+
+
+~~~{.r}
+hhnozeros <- subset(hhc, employment_2010 > 0 & households_2010 > 0)
+~~~
+
+
+
+~~~{.error}
+Error in subset(hhc, employment_2010 > 0 & households_2010 > 0): object 'hhc' not found
+
+~~~
+
+
+
+~~~{.r}
+plot(population_2040 ~ households_2040, data=hhc)
+~~~
+
+
+
+~~~{.error}
+Error in eval(expr, envir, enclos): object 'hhc' not found
+
+~~~
+-->
+        </div>
+      </div>
+      </article>
+      <div class="footer">
+        <a class="label swc-blue-bg" href="http://software-carpentry.org">Software Carpentry</a>
+        <a class="label swc-blue-bg" href="https://github.com/swcarpentry/lesson-template">Source</a>
+        <a class="label swc-blue-bg" href="mailto:admin@software-carpentry.org">Contact</a>
+        <a class="label swc-blue-bg" href="LICENSE.html">License</a>
+      </div>
+    </div>
+    <!-- Javascript placed at the end of the document so the pages load faster -->
+    <script src="http://software-carpentry.org/v5/js/jquery-1.9.1.min.js"></script>
+    <script src="css/bootstrap/bootstrap-js/bootstrap.js"></script>
+  </body>
+</html>

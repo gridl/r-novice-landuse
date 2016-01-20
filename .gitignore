@@ -4,8 +4,8 @@ FAQ.html
 DESIGN.html
 CONTRIBUTING.html
 CONDUCT.html
-*.html
-*.md
+#*.html
+#*.md
 *~
 *.pyc
 _site

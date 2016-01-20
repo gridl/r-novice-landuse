@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="generator" content="pandoc">
+    <title>Software Carpentry: R for Data Analysis</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap-theme.css" />
+    <link rel="stylesheet" type="text/css" href="css/swc.css" />
+    <link rel="alternate" type="application/rss+xml" title="Software Carpentry Blog" href="http://software-carpentry.org/feed.xml"/>
+    <meta charset="UTF-8" />
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body class="lesson">
+    <div class="container card">
+      <div class="banner">
+        <a href="http://software-carpentry.org" title="Software Carpentry">
+          <img alt="Software Carpentry banner" src="img/software-carpentry-banner.png" />
+        </a>
+      </div>
+      <article>
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+                    <a href="index.html"><h1 class="title">R for Data Analysis</h1></a>
+          <h2 class="subtitle">Data frames and reading in data</h2>
+          <section class="objectives panel panel-warning">
+<div class="panel-heading">
+<h2 id="learning-objectives"><span class="glyphicon glyphicon-certificate"></span>Learning Objectives</h2>
+</div>
+<div class="panel-body">
+<ul>
+<li>Become familiar with data frames</li>
+<li>Be able to read regular data into R</li>
+</ul>
+</div>
+</section>
+<h2 id="data-frames">Data frames</h2>
+<p>Data frames are similar to matrices, except each column can be a different atomic type. A data frames is the standard structure for storing and manipulating rectangular data sets. Underneath the hood, data frames are really lists, where each element is an atomic vector, with the added restriction that they’re all the same length. As you will see, if we pull out one column of a data frame,we will have a vector. You will probably find that data frames are more complicated than vectors and other data structures we have considered, but they provide powerful capabilities.</p>
+<p>Data frames can be created manually with the <code>data.frame</code> function:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">id =</span> <span class="kw">c</span>(<span class="st">&#39;a&#39;</span>, <span class="st">&#39;b&#39;</span>, <span class="st">&#39;c&#39;</span>, <span class="st">&#39;d&#39;</span>, <span class="st">&#39;e&#39;</span>, <span class="st">&#39;f&#39;</span>), <span class="dt">x =</span> <span class="dv">1</span>:<span class="dv">6</span>, <span class="dt">y =</span> <span class="kw">c</span>(<span class="dv">214</span>:<span class="dv">219</span>))
+df</code></pre></div>
+<pre class="output"><code>  id x   y
+1  a 1 214
+2  b 2 215
+3  c 3 216
+4  d 4 217
+5  e 5 218
+6  f 6 219
+</code></pre>
+<p>As with matrices, you can use the functions <code>dim</code>, <code>nrow</code> and <code>ncol</code> to view the dimensions of the data frame.</p>
+<p>We can access a column in a <code>data.frame</code> by using the <code>$</code> operator</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df$x</code></pre></div>
+<pre class="output"><code>[1] 1 2 3 4 5 6
+</code></pre>
+<p>or</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df[,<span class="st">&#39;x&#39;</span>]</code></pre></div>
+<pre class="output"><code>[1] 1 2 3 4 5 6
+</code></pre>
+<p>We can add columns or rows to a data.frame using <code>cbind</code> or <code>rbind</code> (these are the two-dimensional equivalents of the <code>c</code> function):</p>
+<h2 id="adding-columns-to-a-data-frame">Adding columns to a data frame</h2>
+<p>To add a column we can use <code>cbind</code>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df &lt;-<span class="st"> </span><span class="kw">cbind</span>(df, <span class="dt">z=</span><span class="dv">6</span>:<span class="dv">1</span>, <span class="dt">caps=</span>LETTERS[<span class="dv">1</span>:<span class="dv">6</span>])
+df</code></pre></div>
+<pre class="output"><code>  id x   y z caps
+1  a 1 214 6    A
+2  b 2 215 5    B
+3  c 3 216 4    C
+4  d 4 217 3    D
+5  e 5 218 2    E
+6  f 6 219 1    F
+</code></pre>
+<p>(<code>LETTERS</code> and <code>letters</code> are built-in constants.)</p>
+<p>Since under the hood data frames are lists, we can add columns just like adding new elements to lists:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df$zero &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="dv">0</span>, <span class="dv">6</span>)
+df</code></pre></div>
+<pre class="output"><code>  id x   y z caps zero
+1  a 1 214 6    A    0
+2  b 2 215 5    B    0
+3  c 3 216 4    C    0
+4  d 4 217 3    D    0
+5  e 5 218 2    E    0
+6  f 6 219 1    F    0
+</code></pre>
+<h2 id="adding-rows-to-a-data-frame">Adding rows to a data frame</h2>
+<p>To add a row we use <code>rbind</code>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df &lt;-<span class="st"> </span><span class="kw">rbind</span>(df, <span class="kw">data.frame</span>(<span class="dt">id=</span><span class="st">&quot;g&quot;</span>, <span class="dt">x=</span><span class="dv">11</span>, <span class="dt">y=</span><span class="dv">42</span>, <span class="dt">z=</span><span class="dv">0</span>, <span class="dt">caps=</span><span class="st">&#39;G&#39;</span>, <span class="dt">zero=</span><span class="ot">NA</span>))
+<span class="kw">str</span>(df)</code></pre></div>
+<pre class="output"><code>&#39;data.frame&#39;:   7 obs. of  6 variables:
+ $ id  : Factor w/ 7 levels &quot;a&quot;,&quot;b&quot;,&quot;c&quot;,&quot;d&quot;,..: 1 2 3 4 5 6 7
+ $ x   : num  1 2 3 4 5 6 11
+ $ y   : num  214 215 216 217 218 219 42
+ $ z   : num  6 5 4 3 2 1 0
+ $ caps: Factor w/ 7 levels &quot;A&quot;,&quot;B&quot;,&quot;C&quot;,&quot;D&quot;,..: 1 2 3 4 5 6 7
+ $ zero: num  0 0 0 0 0 0 NA
+</code></pre>
+<h2 id="deleting-rows-and-handling-na">Deleting rows and handling NA</h2>
+<p>There are multiple ways to delete a row containing <code>NA</code>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df[-<span class="dv">7</span>, ]  <span class="co"># The minus sign tells R to delete the row</span></code></pre></div>
+<pre class="output"><code>  id x   y z caps zero
+1  a 1 214 6    A    0
+2  b 2 215 5    B    0
+3  c 3 216 4    C    0
+4  d 4 217 3    D    0
+5  e 5 218 2    E    0
+6  f 6 219 1    F    0
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df[!<span class="kw">is.na</span>(df$zero), ]  <span class="co"># is.na() returns TRUE where its argument is NA</span></code></pre></div>
+<pre class="output"><code>  id x   y z caps zero
+1  a 1 214 6    A    0
+2  b 2 215 5    B    0
+3  c 3 216 4    C    0
+4  d 4 217 3    D    0
+5  e 5 218 2    E    0
+6  f 6 219 1    F    0
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df &lt;-<span class="st"> </span><span class="kw">na.omit</span>(df)  <span class="co"># Another function for the same purpose; checks all variables</span>
+df</code></pre></div>
+<pre class="output"><code>  id x   y z caps zero
+1  a 1 214 6    A    0
+2  b 2 215 5    B    0
+3  c 3 216 4    C    0
+4  d 4 217 3    D    0
+5  e 5 218 2    E    0
+6  f 6 219 1    F    0
+</code></pre>
+<h2 id="combining-data-frames">Combining data frames</h2>
+<p>We can also row-bind data.frames together:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rbind</span>(df, df)</code></pre></div>
+<pre class="output"><code>   id x   y z caps zero
+1   a 1 214 6    A    0
+2   b 2 215 5    B    0
+3   c 3 216 4    C    0
+4   d 4 217 3    D    0
+5   e 5 218 2    E    0
+6   f 6 219 1    F    0
+7   a 1 214 6    A    0
+8   b 2 215 5    B    0
+9   c 3 216 4    C    0
+10  d 4 217 3    D    0
+11  e 5 218 2    E    0
+12  f 6 219 1    F    0
+</code></pre>
+<h2 id="merging-data-frames">Merging data frames</h2>
+<p>Data frames can be merged on one or mole columns. Create a second dataset and merge it with our <code>df</code> object:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df2 &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">id =</span> <span class="kw">c</span>(<span class="st">&#39;a&#39;</span>, <span class="st">&#39;b&#39;</span>, <span class="st">&#39;c&#39;</span>, <span class="st">&#39;d&#39;</span>, <span class="st">&#39;e&#39;</span>), <span class="dt">X =</span> <span class="dv">101</span>:<span class="dv">105</span>)
+df2</code></pre></div>
+<pre class="output"><code>  id   X
+1  a 101
+2  b 102
+3  c 103
+4  d 104
+5  e 105
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df &lt;-<span class="st"> </span><span class="kw">merge</span>(df, df2, <span class="dt">by=</span><span class="st">&quot;id&quot;</span>, <span class="dt">all=</span><span class="ot">TRUE</span>)
+df</code></pre></div>
+<pre class="output"><code>  id x   y z caps zero   X
+1  a 1 214 6    A    0 101
+2  b 2 215 5    B    0 102
+3  c 3 216 4    C    0 103
+4  d 4 217 3    D    0 104
+5  e 5 218 2    E    0 105
+6  f 6 219 1    F    0  NA
+</code></pre>
+<section class="challenge panel panel-success">
+<div class="panel-heading">
+<h2 id="challenge-2"><span class="glyphicon glyphicon-pencil"></span>Challenge 2</h2>
+</div>
+<div class="panel-body">
+<p>Create a data frame that holds the following information for yourself:</p>
+<ul>
+<li>First name</li>
+<li>Last name</li>
+<li>Age</li>
+</ul>
+<p>Then use rbind to add the same information for the people sitting near you.</p>
+<p>Now use cbind to add a column of logicals that will, for each person, hold the answer to the question, “Is there anything in this workshop you’re finding confusing?”</p>
+</div>
+</section>
+<h2 id="reading-in-data">Reading in data</h2>
+<p>Now we want to load our data into R. We will use PSRC land use data, particularly in this lesson the number of households in cities. Before reading in data, it’s a good idea to have a look at its structure. Let’s take a look using our newly-learned shell skills:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cd data/<span class="st"> </span><span class="co"># navigate to the data directory of the project folder</span>
+head city__table__households.csv</code></pre></div>
+<pre class="output"><code>city_id,households_2010,households_2020,households_2030,households_2040
+49.0,43742.0,49969.0,52608.0,57695.0
+94.0,13996.0,16912.0,20425.0,24603.0
+95.0,40735.0,50907.0,61703.0,73879.0
+96.0,2276.0,2484.0,2593.0,2753.0
+97.0,762.0,759.0,787.0,822.0
+98.0,16315.0,19519.0,20639.0,21839.0
+99.0,958.0,1020.0,1126.0,1258.0
+100.0,7130.0,8706.0,8867.0,9150.0
+101.0,8078.0,9479.0,10496.0,11484.0
+</code></pre>
+<p>As its file extension would suggest, the file contains comma-separated values, and seems to contain a header row.</p>
+<p>We can use <code>read.table</code> to read this into R:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hh &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="dt">file=</span><span class="st">&quot;data/city__table__households.csv&quot;</span>, <span class="dt">header=</span><span class="ot">TRUE</span>, <span class="dt">sep=</span><span class="st">&quot;,&quot;</span>)
+<span class="kw">head</span>(hh)</code></pre></div>
+<pre class="output"><code>  city_id households_2010 households_2020 households_2030 households_2040
+1      49           43742           49969           52608           57695
+2      94           13996           16912           20425           24603
+3      95           40735           50907           61703           73879
+4      96            2276            2484            2593            2753
+5      97             762             759             787             822
+6      98           16315           19519           20639           21839
+</code></pre>
+<p>Because we know the structure of the data, we’re able to specify the appropriate arguments to <code>read.table</code>. Without these arguments, <code>read.table</code> will do its best to do something sensible, but it is always more reliable to explicitly tell <code>read.table</code> the structure of the data. <code>read.csv</code> function provides a convenient shortcut for loading in CSV files.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Here is the read.csv version of the above command</span>
+hh &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="dt">file=</span><span class="st">&quot;data/city__table__households.csv&quot;</span>)
+<span class="kw">head</span>(hh)</code></pre></div>
+<pre class="output"><code>  city_id households_2010 households_2020 households_2030 households_2040
+1      49           43742           49969           52608           57695
+2      94           13996           16912           20425           24603
+3      95           40735           50907           61703           73879
+4      96            2276            2484            2593            2753
+5      97             762             759             787             822
+6      98           16315           19519           20639           21839
+</code></pre>
+<aside class="callout panel panel-info">
+<div class="panel-heading">
+<h2 id="miscellaneous-tips"><span class="glyphicon glyphicon-pushpin"></span>Miscellaneous Tips</h2>
+</div>
+<div class="panel-body">
+<ol style="list-style-type: decimal">
+<li><p>Another type of file you might encounter are tab-separated format. To specify a tab as a separator, use <code>sep=&quot;\t&quot;</code>.</p></li>
+<li><p>You can also read in files from the Internet by replacing the file paths with a web address.</p></li>
+<li><p>You can read directly from excel spreadsheets without converting them to plain text first by using the <code>xlsx</code> package.</p></li>
+</ol>
+</div>
+</aside>
+<p>To make sure our analysis is reproducible, we should put the code into a script file so we can come back to it later.</p>
+<section class="challenge panel panel-success">
+<div class="panel-heading">
+<h2 id="challenge-3"><span class="glyphicon glyphicon-pencil"></span>Challenge 3</h2>
+</div>
+<div class="panel-body">
+<p>Go to file -&gt; new file -&gt; R script, and write an R script to load in the households dataset. Put it in the <code>scripts/</code> directory and add it to version control.</p>
+<p>Run the script using the <code>source</code> function, using the file path as its argument (or by pressing the “source” button in RStudio).</p>
+</div>
+</section>
+<h2 id="using-data-frames">Using data frames</h2>
+<p>To recap what we’ve just learned, let’s have a look at our example data (mumber of households in various cities for various years).</p>
+<p>Remember, there are a few functions we can use to interrogate data structures in R:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">class</span>() <span class="co"># what is the data structure?</span>
+<span class="kw">typeof</span>() <span class="co"># what is its atomic type?</span>
+<span class="kw">length</span>() <span class="co"># how long is it? What about two dimensional objects?</span>
+<span class="kw">attributes</span>() <span class="co"># does it have any metadata?</span>
+<span class="kw">str</span>() <span class="co"># A full summary of the entire object</span>
+<span class="kw">dim</span>() <span class="co"># Dimensions of the object - also try nrow(), ncol()</span></code></pre></div>
+<p>Let’s use them to explore the household dataset.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">class</span>(hh)</code></pre></div>
+<pre class="output"><code>[1] &quot;data.frame&quot;
+</code></pre>
+<p>The household data is stored in a “data.frame”. This is the default data structure when you read in data, and (as we’ve heard) is useful for storing data with mixed types of columns.</p>
+<p>Let’s add a column with the name of each city and merge the two datasets:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cities &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="dt">file=</span><span class="st">&quot;data/cities.csv&quot;</span>, <span class="dt">header=</span><span class="ot">TRUE</span>, <span class="dt">sep=</span><span class="st">&quot;,&quot;</span>)
+<span class="kw">head</span>(cities)</code></pre></div>
+<pre class="output"><code>  city_id       city_name county_id
+1      49 Snohomish-Rural         1
+2      94        Lynnwood         1
+3      95         Everett         1
+4      96           Brier         1
+5      97      Brier MUGA         1
+6      98         Edmonds         1
+</code></pre>
+<p>Let’s look at some of the columns.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">typeof</span>(cities$city_id)</code></pre></div>
+<pre class="output"><code>[1] &quot;integer&quot;
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">typeof</span>(cities$city_name)</code></pre></div>
+<pre class="output"><code>[1] &quot;integer&quot;
+</code></pre>
+<p>If you were expecting a the answer to be “character”, you would rightly be surprised by the answer. Let’s take a look at the class of this column:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">class</span>(cities$city_name)</code></pre></div>
+<pre class="output"><code>[1] &quot;factor&quot;
+</code></pre>
+<p>One of the default behaviours of R is to treat any text columns as “factors” when reading in data. The reason for this is that text columns often represent categorical data, which need to be factors to be handled appropriately by the statistical modeling functions in R.</p>
+<p>However it’s not obvious behaviour, and something that trips many people up. We can disable this behaviour and read in the data again.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">options</span>(<span class="dt">stringsAsFactors=</span><span class="ot">FALSE</span>)
+cities &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="dt">file=</span><span class="st">&quot;data/cities.csv&quot;</span>, <span class="dt">header=</span><span class="ot">TRUE</span>, <span class="dt">sep=</span><span class="st">&quot;,&quot;</span>)
+<span class="kw">class</span>(cities$city_name)</code></pre></div>
+<pre class="output"><code>[1] &quot;character&quot;
+</code></pre>
+<p>Remember, if you do turn it off automatic conversion to factors you will need to explicitly convert the variables into factors when running statistical models. This can be useful, because it forces you to think about the question you’re asking, and makes it easier to specify the ordering of the categories.</p>
+<p>However there are many in the R community who find it more sensible to leave this as the default behaviour.</p>
+<aside class="callout panel panel-info">
+<div class="panel-heading">
+<h2 id="tip-changing-options"><span class="glyphicon glyphicon-pushpin"></span>Tip: Changing options</h2>
+</div>
+<div class="panel-body">
+<p>When R starts, it runs any code in the file <code>.Rprofile</code> in the project directory. You can make permanent changes to default behaviour by storing the changes in that file. BE CAREFUL, however. If you change R’s default options, programs written by others may not run correctly in your environment and vice versa. For this reason, some argue that most such changes should be in your scripts, where they are visible.</p>
+</div>
+</aside>
+<p>Let’s merge the cities dataset with our households dataset.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hh &lt;-<span class="st"> </span><span class="kw">merge</span>(hh, cities, <span class="dt">by=</span><span class="st">&quot;city_id&quot;</span>, <span class="dt">all=</span><span class="ot">TRUE</span>)
+<span class="kw">head</span>(hh)</code></pre></div>
+<pre class="output"><code>  city_id households_2010 households_2020 households_2030 households_2040
+1       1            2617            2891            3000            3042
+2       2           23596           27690           31164           34383
+3       3           45354           49603           51937           55922
+4       4            9904           12232           14401           16365
+5       5           21511           24731           26511           28714
+6       6           16555           18963           19916           19962
+      city_name county_id
+1 Normandy Park         2
+2        Auburn         2
+3    King-Rural         2
+4       Sea Tac         2
+5     Shoreline         2
+6    Renton PAA         2
+</code></pre>
+<p>Let’s add names of counties.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">counties &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="dt">file=</span><span class="st">&quot;data/counties.csv&quot;</span>, <span class="dt">header=</span><span class="ot">TRUE</span>, <span class="dt">sep=</span><span class="st">&quot;,&quot;</span>)
+hh &lt;-<span class="st"> </span><span class="kw">merge</span>(hh, counties, <span class="dt">by=</span><span class="st">&quot;county_id&quot;</span>, <span class="dt">all=</span><span class="ot">TRUE</span>)
+<span class="kw">head</span>(hh)</code></pre></div>
+<pre class="output"><code>  county_id city_id households_2010 households_2020 households_2030
+1         0      56              NA              NA              NA
+2         0     140              NA              NA              NA
+3         1     109           14853           17874           18051
+4         1     113            9488           12157           13841
+5         1     110            4836            5808            6218
+6         1     108            4464            4986            5398
+  households_2040     city_name county_name
+1              NA Covington PAA        &lt;NA&gt;
+2              NA      Enumclaw        &lt;NA&gt;
+3           18542  Everett MUGA   Snohomish
+4           15639  Lake Stevens   Snohomish
+5            6688        Monroe   Snohomish
+6            5873 Mukilteo MUGA   Snohomish
+</code></pre>
+<p>The first thing you should do when reading data in, is check that it matches what you expect, even if the command ran without warnings or errors. The <code>str</code> function, short for “structure”, is really useful for this:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">str</span>(hh)</code></pre></div>
+<pre class="output"><code>&#39;data.frame&#39;:   142 obs. of  8 variables:
+ $ county_id      : int  0 0 1 1 1 1 1 1 1 1 ...
+ $ city_id        : num  56 140 109 113 110 108 104 105 111 103 ...
+ $ households_2010: num  NA NA 14853 9488 4836 ...
+ $ households_2020: num  NA NA 17874 12157 5808 ...
+ $ households_2030: num  NA NA 18051 13841 6218 ...
+ $ households_2040: num  NA NA 18542 15639 6688 ...
+ $ city_name      : chr  &quot;Covington PAA&quot; &quot;Enumclaw&quot; &quot;Everett MUGA&quot; &quot;Lake Stevens&quot; ...
+ $ county_name    : chr  NA NA &quot;Snohomish&quot; &quot;Snohomish&quot; ...
+</code></pre>
+<p>We can see that the object is a <code>data.frame</code> with 142 observations (rows), and 8 variables (columns). Below that, we see the name of each column, followed by a “:”, followed by the type of variable in that column, along with the first few entries.</p>
+<p>We can retrieve or modify the column or row names of the data.frame:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">colnames</span>(hh) </code></pre></div>
+<pre class="output"><code>[1] &quot;county_id&quot;       &quot;city_id&quot;         &quot;households_2010&quot; &quot;households_2020&quot;
+[5] &quot;households_2030&quot; &quot;households_2040&quot; &quot;city_name&quot;       &quot;county_name&quot;    
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">colnames</span>(hh)[<span class="dv">3</span>:<span class="dv">6</span>] &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;hh10&quot;</span>, <span class="st">&quot;hh20&quot;</span>, <span class="st">&quot;hh30&quot;</span>, <span class="st">&quot;hh40&quot;</span>)
+<span class="kw">head</span>(hh, <span class="dt">n=</span><span class="dv">10</span>)</code></pre></div>
+<pre class="output"><code>   county_id city_id  hh10  hh20  hh30  hh40         city_name county_name
+1          0      56    NA    NA    NA    NA     Covington PAA        &lt;NA&gt;
+2          0     140    NA    NA    NA    NA          Enumclaw        &lt;NA&gt;
+3          1     109 14853 17874 18051 18542      Everett MUGA   Snohomish
+4          1     113  9488 12157 13841 15639      Lake Stevens   Snohomish
+5          1     110  4836  5808  6218  6688            Monroe   Snohomish
+6          1     108  4464  4986  5398  5873     Mukilteo MUGA   Snohomish
+7          1     104  1409  1474  1836  2215 Larch Way Overlap   Snohomish
+8          1     105  7804 10878 11153 11644      Bothell MUGA   Snohomish
+9          1     111  6502  8031  9007 10019         Arlington   Snohomish
+10         1     103 12883 15834 17192 18660   Mill Creek MUGA   Snohomish
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rownames</span>(hh)[<span class="dv">1</span>:<span class="dv">20</span>]</code></pre></div>
+<pre class="output"><code> [1] &quot;1&quot;  &quot;2&quot;  &quot;3&quot;  &quot;4&quot;  &quot;5&quot;  &quot;6&quot;  &quot;7&quot;  &quot;8&quot;  &quot;9&quot;  &quot;10&quot; &quot;11&quot; &quot;12&quot; &quot;13&quot; &quot;14&quot;
+[15] &quot;15&quot; &quot;16&quot; &quot;17&quot; &quot;18&quot; &quot;19&quot; &quot;20&quot;
+</code></pre>
+<p>See those numbers in the square brackets on the left? That tells you the number of the first entry in that row of output. So we see that for the 5th row, the rowname is “5”. In this case, the rownames are simply the row numbers.</p>
+<p>There are a few related ways of retrieving and modifying this information. <code>attributes</code> will give you both the row and column names, along with the class information, while <code>dimnames</code> will give you just the rownames and column names.</p>
+<p>In both cases, the output object is stored in a <code>list</code>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">str</span>(<span class="kw">dimnames</span>(hh))</code></pre></div>
+<pre class="output"><code>List of 2
+ $ : chr [1:142] &quot;1&quot; &quot;2&quot; &quot;3&quot; &quot;4&quot; ...
+ $ : chr [1:8] &quot;county_id&quot; &quot;city_id&quot; &quot;hh10&quot; &quot;hh20&quot; ...
+</code></pre>
+<p>We can look at some summary statistics:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(hh)</code></pre></div>
+<pre class="output"><code>   county_id        city_id            hh10               hh20       
+ Min.   :0.000   Min.   :  1.00   Min.   :     0.0   Min.   :     1  
+ 1st Qu.:1.000   1st Qu.: 36.25   1st Qu.:   523.5   1st Qu.:   609  
+ Median :2.000   Median : 71.50   Median :  3501.5   Median :  4200  
+ Mean   :2.092   Mean   : 71.50   Mean   : 10433.7   Mean   : 12325  
+ 3rd Qu.:3.000   3rd Qu.:106.75   3rd Qu.:  9080.2   3rd Qu.: 10844  
+ Max.   :4.000   Max.   :142.00   Max.   :286525.0   Max.   :335516  
+                                  NA&#39;s   :2          NA&#39;s   :2       
+      hh30               hh40           city_name        
+ Min.   :     2.0   Min.   :     2.0   Length:142        
+ 1st Qu.:   776.2   1st Qu.:   869.2   Class :character  
+ Median :  4332.5   Median :  4587.5   Mode  :character  
+ Mean   : 13614.8   Mean   : 15055.1                     
+ 3rd Qu.: 11889.0   3rd Qu.: 14257.2                     
+ Max.   :363492.0   Max.   :396033.0                     
+ NA&#39;s   :2          NA&#39;s   :2                            
+ county_name       
+ Length:142        
+ Class :character  
+ Mode  :character  
+                   
+                   
+                   
+                   
+</code></pre>
+<h2 id="challenge-solutions">Challenge Solutions</h2>
+<section class="challenge panel panel-success">
+<div class="panel-heading">
+<h2 id="solution-to-challenge-2"><span class="glyphicon glyphicon-pencil"></span>Solution to Challenge 2</h2>
+</div>
+<div class="panel-body">
+<p>Create a data frame that holds the following information for yourself:</p>
+<ul>
+<li>First name</li>
+<li>Last name</li>
+<li>Age</li>
+</ul>
+<p>Then use rbind to add the same information for the people sitting near you.</p>
+<p>Now use cbind to add a column of logicals answering the question, “Is there anything in this workshop you’re finding confusing?”</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">my_df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">first_name =</span> <span class="st">&quot;Software&quot;</span>, <span class="dt">last_name =</span> <span class="st">&quot;Carpentry&quot;</span>, <span class="dt">age =</span> <span class="dv">17</span>)
+my_df &lt;-<span class="st"> </span><span class="kw">rbind</span>(my_df, <span class="kw">list</span>(<span class="st">&quot;Jane&quot;</span>, <span class="st">&quot;Smith&quot;</span>, <span class="dv">29</span>))
+my_df &lt;-<span class="st"> </span><span class="kw">rbind</span>(my_df, <span class="kw">list</span>(<span class="kw">c</span>(<span class="st">&quot;Jo&quot;</span>, <span class="st">&quot;John&quot;</span>), <span class="kw">c</span>(<span class="st">&quot;White&quot;</span>, <span class="st">&quot;Lee&quot;</span>), <span class="kw">c</span>(<span class="dv">23</span>, <span class="dv">41</span>)))
+my_df &lt;-<span class="st"> </span><span class="kw">cbind</span>(my_df, <span class="dt">confused =</span> <span class="kw">c</span>(<span class="ot">FALSE</span>, <span class="ot">FALSE</span>, <span class="ot">TRUE</span>, <span class="ot">FALSE</span>))</code></pre></div>
+</div>
+</section>
+        </div>
+      </div>
+      </article>
+      <div class="footer">
+        <a class="label swc-blue-bg" href="http://software-carpentry.org">Software Carpentry</a>
+        <a class="label swc-blue-bg" href="https://github.com/swcarpentry/lesson-template">Source</a>
+        <a class="label swc-blue-bg" href="mailto:admin@software-carpentry.org">Contact</a>
+        <a class="label swc-blue-bg" href="LICENSE.html">License</a>
+      </div>
+    </div>
+    <!-- Javascript placed at the end of the document so the pages load faster -->
+    <script src="http://software-carpentry.org/v5/js/jquery-1.9.1.min.js"></script>
+    <script src="css/bootstrap/bootstrap-js/bootstrap.js"></script>
+  </body>
+</html>
