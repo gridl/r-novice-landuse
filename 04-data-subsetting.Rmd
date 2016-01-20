@@ -1,6 +1,6 @@
 ---
 layout: page
-title: R for reproducible scientific analysis
+title: R for Data Analysis
 subtitle: Subsetting data
 minutes: 45
 ---
@@ -8,7 +8,13 @@ minutes: 45
 ```{r, include=FALSE}
 source("tools/chunk-options.R")
 # Silently load in the data so the rest of the lesson works
-gapminder <- read.csv("data/gapminder-FiveYearData.csv", header=TRUE)
+#gapminder <- read.csv("data/gapminder-FiveYearData.csv", header=TRUE)
+hh <- read.table(file="data/city__table__households.csv", header=TRUE, sep=",")
+cities <- read.table(file="data/cities.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+counties <- read.table(file="data/counties.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+hh <- merge(hh, cities, by="city_id", all=TRUE)
+hh <- merge(hh, counties, by="county_id", all=TRUE)
+colnames(hh)[3:6] <- c("hh10", "hh20", "hh30", "hh40")
 ```
 
 > ## Learning Objectives {.objectives}
@@ -152,14 +158,60 @@ x
 > print(x)
 > ```
 >
-> 1. Come up with at least 3 different commands that will produce the following output:
+> Come up with at least 3 different commands that will produce the following output:
 >
 > ```{.r, echo=FALSE}
 > x[2:4]
 > ```
 >
-> 2. Compare notes with your neighbour. Did you have different strategies?
+
+## Subsetting through logical operations
+
+We can subset through logical operations:
+
+```{r}
+x[c(TRUE, TRUE, FALSE, FALSE)]
+```
+
+
+Since comparison operators evaluate to logical vectors, we can also
+use them to succinctly subset vectors:
+
+```{r}
+x[x > 7]
+```
+
+> ## Tip: Chaining logical operations {.callout}
 >
+> There are many situations in which you will wish to combine multiple conditions.
+> To do so several logical operations exist in R:
+>
+>  * `|` logical OR (elementwise comparison): returns `TRUE`, if either the left or right are `TRUE`.
+>  * `&` logical AND (elementwise comparison): returns `TRUE` if both the left and right are `TRUE`
+>  * `!` logical NOT: converts `TRUE` to `FALSE` and `FALSE` to `TRUE`
+>  * `&&` and `||` compare the two vectors as a whole. 
+>
+
+Any function that returns a logical vector can be used for subsetting:
+```{r}
+is.na(c(x, NA))
+```
+Similarly other functions for identifying special values, e.g.`is.nan` (`Nan` values), `is.infinite` (`Inf` values), `is.finite` (values that are not `NA`, `NaN`, `Inf`).
+
+
+> ## Challenge {.challenge}
+>
+> Given the following code:
+>
+> ```{r}
+> x <- c(5.4, 6.2, 7.1, 4.8, 7.5)
+> names(x) <- c('a', 'b', 'c', 'd', 'e')
+> print(x)
+> ```
+>
+> Write a subsetting command to return the values in x that are greater than 4 and less than 7.
+>
+
 
 ## Subsetting by name
 
@@ -175,22 +227,10 @@ subsetting operations, but the names will always remain the same!
 
 Unfortunately we can't skip or remove elements so easily.
 
-To skip (or remove) a single named element:
-
-```{r}
-x[-which(names(x) == "a")]
-```
-
-The `which` function returns the indices of all `TRUE` elements of its argument.
-Remember that expressions evaluate before being passed to functions. Let's break
-this down so that its clearer what's happening.
-
-First this happens:
-
+To skip (or remove) a single named element we have to find the index of the corresponding column, say "a":
 ```{r}
 names(x) == "a"
 ```
-
 The condition operator is applied to every name of the vector `x`. Only the
 first name is "a" so that element is TRUE.
 
@@ -200,10 +240,14 @@ first name is "a" so that element is TRUE.
 which(names(x) == "a")
 ```
 
-
-
 Only the first element is `TRUE`, so `which` returns 1. Now that we have indices
 the skipping works because we have a negative index!
+
+```{r}
+x[-which(names(x) == "a")]
+```
+
+
 
 Skipping multiple named indices is similar, but uses a different comparison
 operator:
@@ -278,87 +322,6 @@ names(x) == c('a', 'c', 'e')
 This difference between `==` and `%in%` is important to remember,
 because it can introduce hard to find and subtle bugs!
 
-## Subsetting through other logical operations
-
-We can also more simply subset through logical operations:
-
-```{r}
-x[c(TRUE, TRUE, FALSE, FALSE)]
-```
-
-Note that in this case, the logical vector is also recycled to the
-length of the vector we're subsetting!
-
-```{r}
-x[c(TRUE, FALSE)]
-```
-
-Since comparison operators evaluate to logical vectors, we can also
-use them to succinctly subset vectors:
-
-```{r}
-x[x > 7]
-```
-
-> ## Tip: Chaining logical operations {.callout}
->
-> There are many situations in which you will wish to combine multiple conditions.
-> To do so several logical operations exist in R:
->
->  * `|` logical OR: returns `TRUE`, if either the left or right are `TRUE`.
->  * `&` logical AND: returns `TRUE` if both the left and right are `TRUE`
->  * `!` logical NOT: converts `TRUE` to `FALSE` and `FALSE` to `TRUE`
->  * `&&` and `||` compare the individual elements of two vectors. Recycling rules
->    also apply here.
->
-
-> ## Challenge {.challenge}
->
-> Given the following code:
->
-> ```{r}
-> x <- c(5.4, 6.2, 7.1, 4.8, 7.5)
-> names(x) <- c('a', 'b', 'c', 'd', 'e')
-> print(x)
-> ```
->
-> 1. Write a subsetting command to return the values in x that are greater than 4 and less than 7.
->
-
-## Handling special values
-
-At some point you will encounter functions in R which cannot handle missing, infinite,
-or undefined data.
-
-There are a number of special functions you can use to filter out this data:
-
- * `is.na` will return all positions in a vector, matrix, or data.frame
-   containing `NA`.
- * likewise, `is.nan`, and `is.infinite` will do the same for `NaN` and `Inf`.
- * `is.finite` will return all positions in a vector, matrix, or data.frame
-   that do not contain `NA`, `NaN` or `Inf`.
- * `na.omit` will filter out all missing values from a vector
-
-## Factor subsetting
-
-Now that we've explored the different ways to subset vectors, how
-do we subset the other data structures?
-
-Factor subsetting works the same way as vector subsetting.
-
-```{r}
-f <- factor(c("a", "a", "b", "c", "c", "d"))
-f[f == "a"]
-f[f %in% c("b", "c")]
-f[1:3]
-```
-
-An important note is that skipping elements will not remove the level
-even if no more of that category exists in the factor:
-
-```{r}
-f[-3]
-```
 
 ## Matrix subsetting
 
@@ -400,22 +363,7 @@ R will throw an error:
 m[, c(3,6)]
 ```
 
-> ## Tip: Higher dimensional arrays {.callout}
->
-> when dealing with multi-dimensional arrays, each argument to `[`
-> corresponds to a dimension. For example, a 3D array, the first three
-> arguments correspond to the rows, columns, and depth dimension.
->
-
-Because matrices are really just vectors underneath the hood, we can
-also subset using only one argument:
-
-```{r}
-m[5]
-```
-
-
-This usually isn't useful. However it is useful to note that matrices
+It is useful to note that matrices
 are laid out in *column-major format* by default. That is the elements of the
 vector are arranged column-wise:
 
@@ -431,6 +379,18 @@ matrix(1:6, nrow=2, ncol=3, byrow=TRUE)
 
 Matrices can also be subsetted using their rownames and column names
 instead of their row and column indices.
+
+> ## Tip: Higher dimensional arrays {.callout}
+>
+> When dealing with multi-dimensional arrays, each argument to `[`
+> corresponds to a dimension. For example, a 3D array, the first three
+> arguments correspond to the rows, columns, and depth dimension.
+>
+```{r}
+a <- array(1:12, dim=c(2,3,2))
+dim(a)
+a[,,2]
+```
 
 > ## Challenge 2 {.challenge}
 >
@@ -463,7 +423,7 @@ Using `[` will always return a list. If you want to *subset* a list, but not
 *extract* an element, then you will likely use `[`.
 
 ```{r}
-xlist <- list(a = "Software Carpentry", b = 1:10, data = head(iris))
+xlist <- list(a = "PSRC", b = 1:10, data = head(hh))
 xlist[1]
 ```
 
@@ -516,106 +476,104 @@ xlist$data
 > Given the following list:
 >
 > ```{r, eval=FALSE}
-> xlist <- list(a = "Software Carpentry", b = 1:10, data = head(iris))
+> xlist <- list(a = "PSRC", b = 1:10, data = head(hh))
 > ```
 >
 > Using your knowledge of both list and vector subsetting, extract the number 2 from xlist. 
 > Hint: the number 2 is contained within the "b" item in the list.
 
-> ## Challenge 4 {.challenge}
-> Given a linear model:
->
-> ```{r, eval=FALSE}
-> mod <- aov(pop ~ lifeExp, data=gapminder)
-> ```
->
-> Extract the residual degrees of freedom (hint: `attributes()` will help you)
->
 
-## Data frames
+## Subsetting data frames
 
-Remember the data frames are lists underneath the hood, so similar rules
+Data frames are lists underneath the hood, so similar rules
 apply. However they are also two dimensional objects:
 
 `[` with one argument will act the same was as for lists, where each list
 element corresponds to a column. The resulting object will be a data frame:
 
 ```{r}
-head(gapminder[3])
+head(hh[1])
 ```
 
 Similarly, `[[` will act to extract *a single column*:
 
 ```{r}
-head(gapminder[["lifeExp"]])
+head(hh[["city_id"]])
 ```
 
 And `$` provides a convenient shorthand to extract columns by name:
 
 ```{r}
-head(gapminder$year)
+head(hh$city_name)
 ```
 
 With two arguments, `[` behaves the same way as for matrices:
 
 ```{r}
-gapminder[1:3,]
+hh[1:3,]
 ```
 
 If we subset a single row, the result will be a data frame (because
 the elements are mixed types):
 
 ```{r}
-gapminder[3,]
+hh[3,]
 ```
 
 But for a single column the result will be a vector (this can
 be changed with the third argument, `drop = FALSE`).
 
+Another way of subsetting data frames is using the `subset` command:
+```{r}
+subset(hh, city_name == "Seattle")
+pierce <- subset(hh, county_name == "Pierce")
+dim(pierce)
+head(pierce)
+```
+
 > ## Challenge 5 {.challenge}
 >
 > Fix each of the following common data frame subsetting errors:
 >
-> 1. Extract observations collected for the year 1957
+> 1. Extract observations for cities in county 1
 >
 > ```{r, eval=FALSE}
-> gapminder[gapminder$year = 1957,]
+> hh[hh$county_id = 1,]
 > ```
 >
-> 2. Extract all columns except 1 through to 4
+> 2. Extract all columns except one through 5
 >
 > ```{r, eval=FALSE}
-> gapminder[,-1:4]
+> hh[,-1:5]
 > ```
 >
-> 3. Extract the rows where the life expectancy is longer the 80 years
+> 3. Extract the rows where the number of households in 2010 is larger than 50,000
 >
 > ```{r, eval=FALSE}
-> gapminder[gapminder$lifeExp > 80]
+> hh[hh$hh10 > 50000]
 > ```
 >
-> 4. Extract the first row, and the fourth and fifth columns
->   (`lifeExp` and `gdpPercap`).
+> 4. Extract the first row, and the sixth and seventh columns
+>   (`city_name` and `county_id`).
 >
 > ```{r, eval=FALSE}
-> gapminder[1, 4, 5]
+> hh[1, 6, 7]
 > ```
 >
-> 5. Advanced: extract rows that contain information for the years 2002
->    and 2007
+> 5. Advanced: extract rows that contain information for counties  3 and 4
 >
 > ```{r, eval=FALSE}
-> gapminder[gapminder$year == 2002 | 2007,]
+> hhc[hhc$county_id == 3 | 4,]
 > ```
 >
 
 > ## Challenge 6 {.challenge}
 >
-> 1. Why does `gapminder[1:20]` return an error? How does it differ from `gapminder[1:20, ]`?
+> 1. Why does `hh[1:20]` return an error? How does it differ from `hh[1:20, ]`?
 >
 >
-> 2. Create a new `data.frame` called `gapminder_small` that only contains rows 1 through 9
-> and 19 through 23. You can do this in one or two steps.
+> 2. Create a new `data.frame` called `hh_small` that only contains rows 1 through 9
+> and 19 through 23.
 >
 
 ## Challenge solutions
@@ -683,21 +641,6 @@ be changed with the third argument, `drop = FALSE`).
 > ```
 
 
-> ## Solution to challenge 4 {.challenge}
-> Given a linear model:
->
-> ```{r}
-> mod <- aov(pop ~ lifeExp, data=gapminder)
-> ```
->
-> Extract the residual degrees of freedom (hint: `attributes()` will help you)
->
-> ```{r, eval=FALSE}
-> attributes(mod) ## `df.residual` is one of the names of `mod`
-> mod$df.residual
-> ```
-
-
 > ## Solution to challenge 5 {.challenge}
 >
 > Fix each of the following common data frame subsetting errors:
@@ -705,52 +648,52 @@ be changed with the third argument, `drop = FALSE`).
 > 1. Extract observations collected for the year 1957
 >
 > ```{r, eval=FALSE}
-> # gapminder[gapminder$year = 1957,]
-> gapminder[gapminder$year == 1957,]
+> # hh[hh$county_id = 1,]
+> hh[hh$county_id == 1,]
 > ```
 >
 > 2. Extract all columns except 1 through to 4
 >
 > ```{r, eval=FALSE}
-> # gapminder[,-1:4]
-> gapminder[,-c(1:4)]
+> # hh[,-1:4]
+> hh[,-(1:5)]
 > ```
 >
-> 3. Extract the rows where the life expectancy is longer the 80 years
+> 3. Extract the rows where the number of households in 2010 is larger than 50,000
 >
 > ```{r, eval=FALSE}
-> # gapminder[gapminder$lifeExp > 80]
-> gapminder[gapminder$lifeExp > 80,]
+> # hh[hh$hh2010 > 50000]
+> hh[hh$hh10 > 50000, ]
 > ```
 >
-> 4. Extract the first row, and the fourth and fifth columns
->   (`lifeExp` and `gdpPercap`).
+> 4. Extract the first row, and the sixth and seventh columns
+>   (`city_name` and `county_id`).
 >
 > ```{r, eval=FALSE}
-> # gapminder[1, 4, 5]
-> gapminder[1, c(4, 5)]
+> # hhc[1, 6, 7]
+> hh[1, c(6, 7)]
 > ```
 >
-> 5. Advanced: extract rows that contain information for the years 2002
->    and 2007
+> 5. Advanced: extract rows that contain information for counties  3 and 4
 >
 > ```{r, eval=FALSE}
-> # gapminder[gapminder$year == 2002 | 2007,]
-> gapminder[gapminder$year == 2002 | gapminder$year == 2007,]
-> gapminder[gapminder$year %in% c(2002, 2007),]
+> # hhc[hh$county_id == 3 | 4,]
+> hh[hh$county_id == 3 | hh$county_id == 4,]
+> hh[hh$county_id %in% c(3, 4),]
+> hh[hh$county_id %in% 3:4,]
 > ```
 >
 
 > ## Solution to challenge 6 {.challenge}
 >
-> 1. Why does `gapminder[1:20]` return an error? How does it differ from `gapminder[1:20, ]`?
+> 1. Why does `hh[1:20]` return an error? How does it differ from `hh[1:20, ]`?
 >
-> Answer: `gapminder` is a data.frame so needs to be subsetted on two dimensions. `gapminder[1:20, ]` subsets the data to give the first 20 rows and all columns.
+> Answer: `hh` is a data.frame so needs to be subsetted on two dimensions. `hh[1:20, ]` subsets the data to give the first 20 rows and all columns.
 >
-> 2. Create a new `data.frame` called `gapminder_small` that only contains rows 1 through 9
+> 2. Create a new `data.frame` called `hh_small` that only contains rows 1 through 9
 > and 19 through 23. You can do this in one or two steps.
 >
 > ```{r}
-> gapminder_small <- gapminder[c(1:9, 19:23),]
+> hh_small <- hh[c(1:9, 19:23),]
 > ```
 >

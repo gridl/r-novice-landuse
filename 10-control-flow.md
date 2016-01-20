@@ -1,6 +1,6 @@
 ---
 layout: page
-title: R for reproducible scientific analysis
+title: R for Data Analysis
 subtitle: Control flow
 minutes: 35
 ---
@@ -132,11 +132,6 @@ x
 Did anyone get a warning message like this?
 
 
-~~~{.error}
-Warning in if (gapminder$year == 2012) {: the condition has length > 1 and
-only the first element will be used
-
-~~~
 
 If your condition evaluates to a vector with more than one logical element,
 the function `if` will still run, but will only evaluate the condition in the first

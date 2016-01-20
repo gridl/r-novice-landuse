@@ -1,15 +1,12 @@
 ---
 layout: page
-title: R for reproducible scientific analysis
+title: R for Data Analysis
 subtitle: Data frames and reading in data
 minutes: 45
 ---
 
 ```{r, include=FALSE}
 source("tools/chunk-options.R")
-# Silently load in the data so the rest of the lesson works
-library(gapminder)
-#gapminder <- read.csv("data/gapminder-FiveYearData.csv", header=TRUE)
 ```
 
 > ## Learning Objectives {.objectives}
@@ -29,7 +26,7 @@ will see, if we pull out one column of a data frame,we will have a
 vector. You will probably find that data frames are more complicated
 than vectors and other data structures we have considered, but they
 provide powerful capabilities.
-
+ 
 
 Data frames can be created manually with the `data.frame` function:
 
@@ -38,17 +35,17 @@ df <- data.frame(id = c('a', 'b', 'c', 'd', 'e', 'f'), x = 1:6, y = c(214:219))
 df
 ```
 
-> ## Challenge 1: Data frames {.challenge}
->
-> Try using the `length` function to query
-> your data frame `df`. Does it give the result
-> you expect?
->
+As with matrices, you can use the functions `dim`, `nrow` and `ncol` to view the dimensions of the data frame.
 
-Each column in the data frame is simply a list element, which is why
-when you ask for the `length` of the data frame, it tells you the
-number of columns. If you actually want the number of rows, you can
-use the `nrow` function.
+ We can access a column
+in a `data.frame` by using the `$` operator
+```{r}
+df$x
+```
+or
+```{r}
+df[,'x']
+```
 
 We can add columns or rows to a data.frame using `cbind` or `rbind`
 (these are the two-dimensional equivalents of the `c` function):
@@ -58,25 +55,16 @@ We can add columns or rows to a data.frame using `cbind` or `rbind`
 To add a column we can use `cbind`:
 
 ```{r}
-df <- cbind(df, 6:1)
+df <- cbind(df, z=6:1, caps=LETTERS[1:6])
 df
 ```
-
-Note that R automatically names the column. We may decide to change
-the name by assigning a value using the `names` function:
-
-```{r}
-names(df)[4] <- 'SixToOne'
-```
-
-We can also provide a name when we add the column:
-
-```{r}
-df <- cbind(df, caps=LETTERS[1:6])
-df
-```
-
 (`LETTERS` and `letters` are built-in constants.)
+
+Since under the hood data frames are lists, we can add columns just like adding new elements to lists:
+```{r}
+df$zero <- rep(0, 6)
+df
+```
 
 
 ## Adding rows to a data frame 
@@ -84,61 +72,10 @@ df
 To add a row we use `rbind`:
 
 ```{r}
-df <- rbind(df, list("g", 11, 42, 0, "G"))
-```
-
-Note that we add the row as a list, because we have multiple types
-across the columns. Nevertheless, this doesn't work as expected! What
-do the error messages tell us?
-
-It appears that R was trying to append "g" and "G" as factor
-levels. Why? Let's examine the first column.  We can access a column
-in a `data.frame` by using the `$` operator.
-
-
-```{r}
-class(df$id)
+df <- rbind(df, data.frame(id="g", x=11, y=42, z=0, caps='G', zero=NA))
 str(df)
 ```
 
-When we created the data frame, R automatically made the first
-and last columns into factors, not character vectors. There are no
-pre-existing levels "g" and "G", so the attempt to add these values
-fails. A row was added to the data frame, only there are missing
-values in the factor columns:
-
-```{r}
-df
-```
-
-
-There are two ways we can work around this issue:
-
-1. We can convert the factor columns into characters. This is
-convenient, but we lose the factor structure. 
-
-2. We can add factor levels to accomodate the new additions. If we
-really do want the columns to be factors, this is the correct way to
-proceed.
-
-We will illustrate both solutions in the same data frame:
-
-```{r}
-df$id <- as.character(df$id)  # convert to character
-class(df$id)
-levels(df$caps) <- c(levels(df$caps), 'G') # add a factor level
-class(df$caps)
-```
-
-Okay, now let's try adding that row again.
-
-```{r}
-df <- rbind(df, list("g", 11, 42, 0, 'G'))
-tail(df, n=3)
-```
-
-We successfully added the last row, but we have an undesired row with
-two `NA` values. How do delete it?
 
 ## Deleting rows and handling NA
 
@@ -147,41 +84,27 @@ There are multiple ways to delete a row containing `NA`:
 
 ```{r}
 df[-7, ]  # The minus sign tells R to delete the row
-df[complete.cases(df), ]  # Return `TRUE` when no missing values
-na.omit(df)  # Another function for the same purpose
-df <- na.omit(df)
+df[!is.na(df$zero), ]  # is.na() returns TRUE where its argument is NA
+df <- na.omit(df)  # Another function for the same purpose; checks all variables
+df
 ```
 
 ## Combining data frames
 
-We  can also row-bind data.frames together, but notice what happens to
-the rownames:
+We can also row-bind data.frames together:
 
 ```{r}
 rbind(df, df)
 ```
-
-R is making sure that rownames are unique. You can restore sequential
-numbering by setting rownames to NULL:
-
+ 
+## Merging data frames
+Data frames can be merged on one or mole columns. Create a second dataset and merge it with our `df` object:
 ```{r}
-df2 <- rbind(df, df)
-rownames(df2) <- NULL
+df2 <- data.frame(id = c('a', 'b', 'c', 'd', 'e'), X = 101:105)
 df2
-```
-
-
-<!-- 
-When we add a row we need to use a list, because each column is
-a different type!  If you want to add multiple rows to a data.frame,
-you will need to separate the new columns in the list:
-
-```{r}
-df <- rbind(df, list(c("l", "m"), c(12, 13), c(534, -20), c(-1, -2),
-c('H', 'I')))
-tail(df, n=3)
-```
--->
+df <- merge(df, df2, by="id", all=TRUE)
+df
+``` 
 
 > ## Challenge 2 {.challenge}
 >
@@ -200,30 +123,23 @@ tail(df, n=3)
 
 ## Reading in data
 
-Remember earlier we obtained the gapminder dataset.
-If you're curious about where this data comes from you might like to
-look at the [Gapminder website](http://www.gapminder.org/data/documentation/).
-
-Now we want to load the gapminder data into R.
+Now we want to load our data into R. We will use PSRC land use data, particularly in this lesson the number of households in cities.
 Before reading in data, it's a good idea to have a look at its structure.
 Let's take a look using our newly-learned shell skills:
 
 ```{r, engine='bash'}
 cd data/ # navigate to the data directory of the project folder
-head gapminder-FiveYearData.csv
+head city__table__households.csv
 ```
 
 As its file extension would suggest, the file contains comma-separated
 values, and seems to contain a header row.
 
-We can use `read.table` to read this into R
+We can use `read.table` to read this into R:
 
 ```{r}
-gapminder <- read.table(
-  file="data/gapminder-FiveYearData.csv",
-  header=TRUE, sep=","
-)
-head(gapminder)
+hh <- read.table(file="data/city__table__households.csv", header=TRUE, sep=",")
+head(hh)
 ```
 
 Because we know the structure of the data, we're able
@@ -236,16 +152,14 @@ for loading in CSV files.
 
 ```{r}
 # Here is the read.csv version of the above command
-gapminder <- read.csv(
-  file="data/gapminder-FiveYearData.csv"
-)
-head(gapminder)
+hh <- read.csv(file="data/city__table__households.csv")
+head(hh)
 ```
 
 > ## Miscellaneous Tips {.callout}
 >
 > 1. Another type of file you might encounter are tab-separated
-> format. To specify a tab as a separator, use `"\t"`.
+> format. To specify a tab as a separator, use `sep="\t"`.
 >
 > 2. You can also read in files from the Internet by replacing
 > the file paths with a web address.
@@ -260,18 +174,18 @@ into a script file so we can come back to it later.
 > ## Challenge 3 {.challenge}
 >
 > Go to file -> new file -> R script, and write an R script
-> to load in the gapminder dataset. Put it in the `scripts/`
+> to load in the households dataset. Put it in the `scripts/`
 > directory and add it to version control.
 >
 > Run the script using the `source` function, using the file path
 > as its argument (or by pressing the "source" button in RStudio).
 >
 
-## Using data frames: the `gapminder` dataset
+## Using data frames
 
 
 To recap what we've just learned, let's have a look at our example
-data (life expectancy in various countries for various years).
+data (mumber of households in various cities for various years).
 
 Remember, there are a few functions we can use to interrogate data structures in R:
 
@@ -284,54 +198,33 @@ str() # A full summary of the entire object
 dim() # Dimensions of the object - also try nrow(), ncol()
 ```
 
-Let's use them to explore the gapminder dataset.
+Let's use them to explore the household dataset.
 
 ```{r}
-typeof(gapminder)
+class(hh)
 ```
 
-Remember, data frames are lists 'under the hood'.
-
-```{r}
-class(gapminder)
-```
-
-The gapminder data is stored in a "data.frame". This is the default
+The household data is stored in a "data.frame". This is the default
 data structure when you read in data, and (as we've heard) is useful
 for storing data with mixed types of columns.
 
+Let's add a column with the name of each city and merge the two datasets:
+
+```{r}
+cities <- read.table(file="data/cities.csv", header=TRUE, sep=",")
+head(cities)
+```
 Let's look at some of the columns.
-
-> ## Challenge 4: Data types in a real dataset {.challenge}
->
-> Look at the first 6 rows of the gapminder data frame we loaded before:
->
-> ```{r}
-> head(gapminder)
-> ```
->
-> Write down what data type you think is in each column
->
-
-
 ```{r}
-typeof(gapminder$year)
-typeof(gapminder$lifeExp)
+typeof(cities$city_id)
+typeof(cities$city_name)
 ```
-
-Can anyone guess what we should expect the type of the continent column to be?
-
-```{r}
-typeof(gapminder$continent)
-```
-
 If you were expecting a the answer to be "character", you would rightly be
 surprised by the answer. Let's take a look at the class of this column:
 
 ```{r}
-class(gapminder$continent)
+class(cities$city_name)
 ```
-
 One of the default behaviours of R is to treat any text columns as "factors"
 when reading in data. The reason for this is that text columns often represent
 categorical data, which need to be factors to be handled appropriately by
@@ -342,9 +235,8 @@ disable this behaviour and read in the data again.
 
 ```{r}
 options(stringsAsFactors=FALSE)
-gapminder <- read.table(
-  file="data/gapminder-FiveYearData.csv", header=TRUE, sep=","
-)
+cities <- read.table(file="data/cities.csv", header=TRUE, sep=",")
+class(cities$city_name)
 ```
 
 Remember, if you do turn it off automatic conversion to factors you will need to
@@ -365,38 +257,43 @@ leave this as the default behaviour.
 >and vice versa. For this reason, some argue that most such changes
 >should be in your scripts, where they are visible.
 
+
+Let's merge the cities dataset with our households dataset.
+```{r}
+hh <- merge(hh, cities, by="city_id", all=TRUE)
+head(hh)
+```
+Let's add names of counties.
+```{r}
+counties <- read.table(file="data/counties.csv", header=TRUE, sep=",")
+hh <- merge(hh, counties, by="county_id", all=TRUE)
+head(hh)
+```
+
 The first thing you should do when reading data in, is check that it matches what
 you expect, even if the command ran without warnings or errors. The `str` function,
 short for "structure", is really useful for this:
 
 ```{r}
-str(gapminder)
+str(hh)
 ```
 
-We can see that the object is a `data.frame` with 1,704 observations (rows),
-and 6 variables (columns). Below that, we see the name of each column, followed
+We can see that the object is a `data.frame` with `r nrow(hh)` observations (rows),
+and `r ncol(hh)` variables (columns). Below that, we see the name of each column, followed
 by a ":", followed by the type of variable in that column, along with the first
 few entries.
 
-As discussed above, we can retrieve or modify the column or row names
+We can retrieve or modify the column or row names
 of the data.frame:
 
 ```{r}
-colnames(gapminder)  
-copy <- gapminder
-colnames(copy) <- letters[1:6]
-head(copy, n=3)
+colnames(hh) 
+colnames(hh)[3:6] <- c("hh10", "hh20", "hh30", "hh40")
+head(hh, n=10)
 ```
 
-> ## Challenge 5 {.challenge}
->
-> Recall that we also used the `names` function (above) to modify
-> column names. Does it matter which you use? You can check help with
-> `?names` and `?colnames` to see whether it should matter.
-
-
 ```{r}
-rownames(gapminder)[1:20]
+rownames(hh)[1:20]
 ```
 
 See those numbers in the square brackets on the left? That tells you
@@ -413,55 +310,13 @@ column names.
 In both cases, the output object is stored in a `list`:
 
 ```{r}
-str(dimnames(gapminder))
+str(dimnames(hh))
 ```
 
-## Understanding how lists are used in function output
-
-
-Lets run a basic linear regression on the gapminder dataset:
-
+We can look at some summary statistics:
 ```{r}
-# What is the relationship between life expectancy and year?
-reg <- lm(lifeExp ~ year, data=gapminder)
+summary(hh)
 ```
-
-We won't go into too much detail, but briefly: 
-
-* `lm` estimates linear statistical models
-* The first argument is a formula, with  `a ~ b` meaning that `a`,
-     the dependent (or response) variable, is a
-    function of `b`, the independent variable. 
-* We tell `lm` to use the gapminder data frame, so it knows where to
- find the variables `lifeExp` and `year`. 
-
-
-
-Let's look at the output:
-
-```{r}
-reg
-```
-
-Not much there right? But if we look at the structure...
-
-```{r}
-str(reg)
-```
-
-There's a great deal stored in nested lists! The structure function
-allows you to see all the data available, in this case, the data that
-was returned by the `lm` function.
-
-For now, we can look at the `summary`:
-
-```{r}
-summary(reg)
-```
-
-As you might expect, life expectancy has slowly been increasing over
-time, so we see a significant positive association!
-
 
 ## Challenge Solutions
 
@@ -483,16 +338,4 @@ time, so we see a significant positive association!
 > my_df <- rbind(my_df, list("Jane", "Smith", 29))
 > my_df <- rbind(my_df, list(c("Jo", "John"), c("White", "Lee"), c(23, 41)))
 > my_df <- cbind(my_df, confused = c(FALSE, FALSE, TRUE, FALSE))
-> ```
-
-> ## Solution to Challenge 5 {.challenge}
-> 
-> `?colnames` tells you that the `colnames` function is the same as
-> `names` for a data frame. For other structures, they may not be the
-> same. In particular, `names` does not work for matrices, but
-> `colnames` does. You can verify this with 
-> ```{r}
-> m <- matrix(1:9, nrow=3)
-> colnames(m) <- letters[1:3] # works as you would expect
-> names(m) <- letters[1:3]  # destroys the matrix
 > ```

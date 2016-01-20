@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="generator" content="pandoc">
-    <title>Software Carpentry: R for reproducible scientific analysis</title>
+    <title>Software Carpentry: R for Data Analysis</title>
     <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
@@ -26,7 +26,7 @@
       <article>
       <div class="row">
         <div class="col-md-10 col-md-offset-1">
-                    <a href="index.html"><h1 class="title">R for reproducible scientific analysis</h1></a>
+                    <a href="index.html"><h1 class="title">R for Data Analysis</h1></a>
           <h2 class="subtitle">Introduction to R and RStudio</h2>
           <section class="objectives panel panel-warning">
 <div class="panel-heading">
@@ -237,61 +237,21 @@
 </div>
 </aside>
 <p>Note here that we didn’t given any arguments to <code>ls</code>, but we still needed to give the parentheses to tell R to call the function.</p>
-<p>If we type <code>ls</code> by itself, R will print out the source code for that function!</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ls</code></pre></div>
-<pre class="output"><code>function (name, pos = -1L, envir = as.environment(pos), all.names = FALSE, 
-    pattern, sorted = TRUE) 
-{
-    if (!missing(name)) {
-        pos &lt;- tryCatch(name, error = function(e) e)
-        if (inherits(pos, &quot;error&quot;)) {
-            name &lt;- substitute(name)
-            if (!is.character(name)) 
-                name &lt;- deparse(name)
-            warning(gettextf(&quot;%s converted to character string&quot;, 
-                sQuote(name)), domain = NA)
-            pos &lt;- name
-        }
-    }
-    all.names &lt;- .Internal(ls(envir, all.names, sorted))
-    if (!missing(pattern)) {
-        if ((ll &lt;- length(grep(&quot;[&quot;, pattern, fixed = TRUE))) &amp;&amp; 
-            ll != length(grep(&quot;]&quot;, pattern, fixed = TRUE))) {
-            if (pattern == &quot;[&quot;) {
-                pattern &lt;- &quot;\\[&quot;
-                warning(&quot;replaced regular expression pattern &#39;[&#39; by  &#39;\\\\[&#39;&quot;)
-            }
-            else if (length(grep(&quot;[^\\\\]\\[&lt;-&quot;, pattern))) {
-                pattern &lt;- sub(&quot;\\[&lt;-&quot;, &quot;\\\\\\[&lt;-&quot;, pattern)
-                warning(&quot;replaced &#39;[&lt;-&#39; by &#39;\\\\[&lt;-&#39; in regular expression pattern&quot;)
-            }
-        }
-        grep(pattern, all.names, value = TRUE)
-    }
-    else all.names
-}
-&lt;bytecode: 0x7f851b927f40&gt;
-&lt;environment: namespace:base&gt;
-</code></pre>
 <p>You can use <code>rm</code> to delete objects you no longer need:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rm</span>(x)</code></pre></div>
 <p>If you have lots of things in your environment and want to delete all of them, you can pass the results of <code>ls</code> to the <code>rm</code> function:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rm</span>(<span class="dt">list =</span> <span class="kw">ls</span>())</code></pre></div>
 <p>In this case we’ve combined the two. Just like the order of operations, anything inside the innermost parentheses is evaluated first, and so on.</p>
 <p>In this case we’ve specified that the results of <code>ls</code> should be used for the <code>list</code> argument in <code>rm</code>. When assigning values to arguments by name, you <em>must</em> use the <code>=</code> operator!!</p>
-<p>If instead we use <code>&lt;-</code>, there will be unintended side effects, or you may just get an error message:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rm</span>(list &lt;-<span class="st"> </span><span class="kw">ls</span>())</code></pre></div>
-<pre class="error"><code>Error in rm(list &lt;- ls()): ... must contain names or character strings
-</code></pre>
-<aside class="callout panel panel-info">
-<div class="panel-heading">
-<h2 id="tip-warnings-vs.errors"><span class="glyphicon glyphicon-pushpin"></span>Tip: Warnings vs. Errors</h2>
-</div>
-<div class="panel-body">
-<p>Pay attention when R does something unexpected! Errors, like above, are thrown when R cannot proceed with a calculation. Warnings on the other hand usually mean that the function has run, but it probably hasn’t worked as expected.</p>
-<p>In both cases, the message that R prints out usually give you clues how to fix a problem.</p>
-</div>
-</aside>
+<h2 id="reading-help-files">Reading Help files</h2>
+<p>R, and every package, provide help files for functions. To search for help on a function from a specific function that is in a package loaded into your namespace (your interactive R session):</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">?function_name
+<span class="kw">help</span>(function_name)</code></pre></div>
+<p>This will load up a help page in RStudio (or as plain text in R by itself).</p>
+<p>To seek help on special operators, use quotes:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">?<span class="st">&quot;+&quot;</span></code></pre></div>
+<p>If you’re not sure how it’s specifically spelled you can do a fuzzy search:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">??function_name</code></pre></div>
 <h2 id="r-packages">R Packages</h2>
 <p>It is possible to add functions to R by writing a package, or by obtaining a package written by someone else. As of this writing, there are over 7,000 packages available on CRAN (the comprehensive R archive network). R and RStudio have functionality for managing packages:</p>
 <ul>
@@ -327,14 +287,6 @@ age &lt;-<span class="st"> </span>age -<span class="st"> </span><span class="dv"
 </div>
 <div class="panel-body">
 <p>Clean up your working environment by deleting the mass and age variables.</p>
-</div>
-</section>
-<section class="challenge panel panel-success">
-<div class="panel-heading">
-<h2 id="challenge-4"><span class="glyphicon glyphicon-pencil"></span>Challenge 4</h2>
-</div>
-<div class="panel-body">
-<p>Install the following packages: <code>ggplot2</code>, <code>plyr</code>, <code>gapminder</code></p>
 </div>
 </section>
         </div>

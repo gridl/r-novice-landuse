@@ -1,6 +1,6 @@
 ---
 layout: page
-title: R for reproducible scientific analysis
+title: R for Data Analysis
 subtitle: Introduction to R and RStudio
 minutes: 45
 ---
@@ -542,52 +542,6 @@ ls()
 Note here that we didn't given any arguments to `ls`, but we still
 needed to give the parentheses to tell R to call the function.
 
-If we type `ls` by itself, R will print out the source code for that function!
-
-
-~~~{.r}
-ls
-~~~
-
-
-
-~~~{.output}
-function (name, pos = -1L, envir = as.environment(pos), all.names = FALSE, 
-    pattern, sorted = TRUE) 
-{
-    if (!missing(name)) {
-        pos <- tryCatch(name, error = function(e) e)
-        if (inherits(pos, "error")) {
-            name <- substitute(name)
-            if (!is.character(name)) 
-                name <- deparse(name)
-            warning(gettextf("%s converted to character string", 
-                sQuote(name)), domain = NA)
-            pos <- name
-        }
-    }
-    all.names <- .Internal(ls(envir, all.names, sorted))
-    if (!missing(pattern)) {
-        if ((ll <- length(grep("[", pattern, fixed = TRUE))) && 
-            ll != length(grep("]", pattern, fixed = TRUE))) {
-            if (pattern == "[") {
-                pattern <- "\\["
-                warning("replaced regular expression pattern '[' by  '\\\\['")
-            }
-            else if (length(grep("[^\\\\]\\[<-", pattern))) {
-                pattern <- sub("\\[<-", "\\\\\\[<-", pattern)
-                warning("replaced '[<-' by '\\\\[<-' in regular expression pattern")
-            }
-        }
-        grep(pattern, all.names, value = TRUE)
-    }
-    else all.names
-}
-<bytecode: 0x7f851b927f40>
-<environment: namespace:base>
-
-~~~
-
 You can use `rm` to delete objects you no longer need:
 
 
@@ -610,32 +564,32 @@ In this case we've specified that the results of `ls` should be used for the
 `list` argument in `rm`. When assigning values to arguments by name, you *must*
 use the `=` operator!!
 
-If instead we use `<-`, there will be unintended side effects, or you may just
-get an error message:
+## Reading Help files
+R, and every package, provide help files for functions. To search for help on a
+function from a specific function that is in a package loaded into your
+namespace (your interactive R session):
 
 
 ~~~{.r}
-rm(list <- ls())
+?function_name
+help(function_name)
 ~~~
 
+This will load up a help page in RStudio (or as plain text in R by itself).
+
+To seek help on special operators, use quotes:
 
 
-~~~{.error}
-Error in rm(list <- ls()): ... must contain names or character strings
-
+~~~{.r}
+?"+"
 ~~~
 
-> ## Tip: Warnings vs. Errors {.callout}
->
-> Pay attention when R does something unexpected! Errors, like above,
-> are thrown when R cannot proceed with a calculation. Warnings on the
-> other hand usually mean that the function has run, but it probably
-> hasn't worked as expected.
->
-> In both cases, the message that R prints out usually give you clues
-> how to fix a problem.
->
+If you're not sure how it's specifically spelled you can do a fuzzy search:
 
+
+~~~{.r}
+??function_name
+~~~
 
 ## R Packages
 
@@ -679,7 +633,4 @@ network). R and RStudio have functionality for managing packages:
 > variables.
 >
 
-> ## Challenge 4 {.challenge}
-> 
-> Install the following packages: `ggplot2`, `plyr`, `gapminder`
-> 
+

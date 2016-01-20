@@ -1,6 +1,6 @@
 ---
 layout: page
-title: R for reproducible scientific analysis
+title: R for Data Analysis
 subtitle: Wrapping up
 minutes: 15
 ---

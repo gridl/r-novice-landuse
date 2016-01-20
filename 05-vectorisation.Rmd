@@ -1,6 +1,6 @@
 ---
 layout: page
-title: R for reproducible scientific analysis
+title: R for Data Analysis
 subtitle: Vectorisation
 minutes: 30
 ---
@@ -9,8 +9,13 @@ minutes: 30
 source("tools/chunk-options.R")
 opts_chunk$set(fig.path = "fig/09-vectorisation-")
 # Silently load in the data so the rest of the lesson works
-gapminder <- read.csv("data/gapminder-FiveYearData.csv", header=TRUE)
-library(ggplot2)
+hh <- read.table(file="data/city__table__households.csv", header=TRUE, sep=",")
+cities <- read.table(file="data/cities.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+counties <- read.table(file="data/counties.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+hh <- merge(hh, cities, by="city_id", all=TRUE)
+hh <- merge(hh, counties, by="county_id", all=TRUE)
+colnames(hh)[3:6] <- c("hh10", "hh20", "hh30", "hh40")
+pierce <- subset(hh, county_name == "Pierce")
 ```
 
 > ## Learning Objectives {.objectives}
@@ -49,56 +54,6 @@ y:  6  7  8  9
 ```
 
 
-> ## Challenge 1 {.challenge}
->
-> Let's try this on the `pop` column of the `gapminder` dataset.
->
-> Make a new column in the `gapminder` data frame that
-> contains population in units of millions of people.
-> Check the head or tail of the data frame to make sure
-> it worked.
->
-
-> ## Challenge 2 {.challenge}
->
-> On a single graph, plot population, in
-> millions, against year, for all countries. Don't worry about
->identifying which country is which.
->
-> Repeat the exercise, graphing only for China, India, and
->Indonesia. Again, don't worry about which is which.
->
-
-Comparison operators, logical operators, and many functions are also
-vectorized:
-
-
-**Comparison operators**
-
-```{r}
-x > 2
-```
-
-**Logical operators** 
-```{r}
-a <- x > 3  # or, for clarity, a <- (x > 3)
-a
-```
-
-> ## Tip: some useful functions for logical vectors {.callout}
->
-> `any()` will return `TRUE` if *any* element of a vector is `TRUE`
-> `all()` will return `TRUE` if *all* elements of a vector are `TRUE`
->
-
-Most functions also operate element-wise on vectors:
-
-**Functions**
-```{r}
-x <- 1:4
-log(x)
-```
-
 Vectorised operations work element-wise on matrices:
 
 ```{r}
@@ -119,6 +74,22 @@ m * -1
 >
 > For more on matrix algebra, see the [Quick-R reference
 > guide](http://www.statmethods.net/advstats/matrix.html)
+
+To combine a matrix with a vector, keep in mind that the element-wise combination happens by columns:
+```{r}
+m
+x
+m * x
+```
+To do it by rows, first create a matrix from the vector and then combine the two matrices:
+```{r}
+xm <- matrix(rep(x, 3), nrow=3, byrow=TRUE)
+xm
+m * xm
+```
+
+
+
 
 > ## Challenge 3 {.challenge}
 >
@@ -153,34 +124,54 @@ m * -1
 > n=10,000?
 
 
+## Applying functions across rows/columns
+
+What if we need an operation (average, sum etc.)  across rows or across columns? 
+
+<img src="fig/r-operations-across-axes.svg" alt="Operations Across Axes" />
+
+To support this, we can use the `apply` function.
+
+> ## Tip {.callout}
+>
+> To learn about a function in R, e.g. `apply`, we can read its help
+> documention by running `help(apply)` or `?apply`.
+
+`apply` allows us to repeat a function on all of the rows (`MARGIN = 1`) or columns (`MARGIN = 2`) of a data frame. For example, using the `m` matrix, instead of
+```{r}
+mean(m[1,])
+mean(m[2,])
+mean(m[3,])
+```
+we do
+```{r}
+apply(m, 1, mean) # average across rows
+```
+Also, we can do
+```{r}
+apply(m, 2, min) # minimum across columns
+apply(m, 2, sum) # sum across columns
+```
+
+Similarly, with our pierce subset dataset:
+```{r}
+apply(pierce[,3:6], 2, sum)
+```
+and the households dataset:
+```{r}
+apply(hh[,3:6], 2, sum)
+```
+because
+```{r}
+sum(c(3, NA))
+sum(c(3, NA), na.rm=TRUE)
+```
+Therefore
+```{r}
+apply(hh[,3:6], 2, sum, na.rm=TRUE)
+```
+
 ## Challenge solutions
-
-> ## Solution to challenge 1 {.challenge}
->
-> Let's try this on the `pop` column of the `gapminder` dataset.
->
-> Make a new column in the `gapminder` data frame that
-> contains population in units of millions of people.
-> Check the head or tail of the data frame to make sure
-> it worked.
->
-> ```{r}
-> gapminder$pop_millions <- gapminder$pop / 1e6
-> head(gapminder)
-> ```
->
-
-> ## Solution to challenge 2 {.challenge}
->
-> Refresh your plotting skills by plotting population in millions against year.
->
-> ```{r ch2-sol}
-> plot(gapminder$year, gapminder$pop_millions)
-> countryset <- c('China', 'India', 'Indonesia')
-> y <- gapminder[gapminder$country %in% countryset, ]
-> plot(y$year, y$pop_millions)
-> ```
->
 
 > ## Solution to challenge 3 {.challenge}
 >

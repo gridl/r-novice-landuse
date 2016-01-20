@@ -1,0 +1,132 @@
+---
+layout: page
+title: R for Data Analysis
+subtitle: Data Analysis
+minutes: 30
+---
+
+```{r, include=FALSE}
+source("tools/chunk-options.R")
+opts_chunk$set(fig.path = "fig/09-vectorisation-")
+# Silently load in the data so the rest of the lesson works
+hh <- read.table(file="data/city__table__households.csv", header=TRUE, sep=",")
+cities <- read.table(file="data/cities.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+counties <- read.table(file="data/counties.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+hh <- merge(hh, cities, by="city_id", all=TRUE)
+hh <- merge(hh, counties, by="county_id", all=TRUE)
+colnames(hh)[3:6] <- c("hh10", "hh20", "hh30", "hh40")
+pierce <- subset(hh, county_name == "Pierce")
+```
+
+> ## Learning Objectives {.objectives}
+>
+> * To be able to summarize and visualize data.
+>
+
+## Data manipulation
+
+Let's try vectorisation on the `hh40` column of the `hh` dataset.
+First remove rows with NA. Then make a new column in the `hh` data frame that
+contains households in units of thousands of people.
+```{r}
+hh <- na.omit(hh)
+hh$hh40inT <- hh$hh40 / 1000
+head(hh)
+```
+Create a log transformation:
+```{r}
+hhlog <- hh
+hhlog[,2:6] <- log(hhlog[,2:6])
+head(hhlog)
+```
+
+Create a dataset of differences:
+```{r}
+hhdif <- cbind(data.frame(city_id=hh$city_id), hh[,3:5] - hh[,2:4])
+head(hhdif)
+summary(hhdif)
+```
+
+## Scatter plot, histogram, boxplot
+
+Plot results:
+```{r}
+plot(hh$hh10, hh$hh40, xlab="2010", ylab="2040")
+abline(0,1)
+plot(hh$hh10, hh$hh40, xlab="2010", ylab="2040", log="xy")
+abline(0,1)
+hist(hh$hh40 - hh$hh10, main="Change 2040-2010")
+abline(v=0, lwd=2, col="red")
+```
+Investigate records with negative change between 2040 and 2010:
+```{r}
+neg <- hh[hh$hh40 - hh$hh10 < 0, ]
+dim(neg)
+plot(neg$hh10, neg$hh40, xlab="2010", ylab="2040", log="xy")
+text(neg$hh10, neg$hh40, labels=neg$city_name, pos=3)
+abline(0,1)
+```
+
+Let's bring in a dataset with multiple land use indicators from 2010, merge it with city names and omit records with missing values:
+```{r}
+lu <- read.table(file="data/city__dataset_table__lu_indicators__2010.tab", header=TRUE, sep="\t")
+lu <- merge(lu, cities, by="city_id", all=TRUE)
+lu <- na.omit(lu)
+summary(lu)
+```
+Say we want to look at the distribution of the average household sizes by counties. First, create a column for household size:  
+```{r}
+lu <- cbind(lu, hh_size=lu$population/lu$households)
+head(lu[order(lu$hh_size),])
+tail(lu[order(lu$hh_size),])
+```
+Second, create a histogram for all cities, and a box plot by counties:
+```{r}
+hist(lu$hh_size)
+boxplot(hh_size ~ county_id, lu)
+```
+
+## Simple regression
+Here is a simple regression for our lu dataset:
+```{r}
+plot(jobs ~ non_res_sqft, lu)
+fit <- lm(jobs ~ non_res_sqft, lu)
+summary(fit)
+abline(fit)
+cor(lu$jobs, lu$non_res_sqft)
+```
+Try to add another variable:
+```{r}
+summary(lm(jobs ~ non_res_sqft + population, lu))
+```
+
+Or remove the intercept:
+```{r}
+fit <- lm(jobs ~ -1 + non_res_sqft, lu)
+summary(fit)
+names(fit)
+```
+
+
+<!-- 
+
+Let's bring in the population and jobs dataset and merge with households:
+```{r}
+pop <- read.table(file="data/city__table__population.csv", header=TRUE, sep=",")
+head(pop)
+jobs <- read.table(file="data/city__table__employment.csv", header=TRUE, sep=",")
+head(jobs)
+hhc <- merge(hhc[,-8], pop[,c("city_id", "population_2010", "population_2040")], by="city_id", all=TRUE)
+hhc <- merge(hhc, jobs[,c("city_id", "employment_2010", "employment_2040")], by="city_id", all=TRUE)
+head(hhc)
+```
+We can do a simple linear regression:
+```{r}
+dim(hhc)
+hhc <- na.omit(hhc)
+dim(hhc)
+hhnozeros <- subset(hhc, employment_2010 > 0 & households_2010 > 0)
+
+plot(population_2040 ~ households_2040, data=hhc)
+```
+-->

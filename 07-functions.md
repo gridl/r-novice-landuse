@@ -1,6 +1,6 @@
 ---
 layout: page
-title: R for reproducible scientific analysis
+title: R for Data Analysis
 subtitle: Creating functions
 minutes: 45
 ---
@@ -16,11 +16,6 @@ minutes: 45
 > * Explain why we should divide programs into small, single-purpose functions.
 >
 
-If we only had one data set to analyze, it would probably be faster to load the
-file into a spreadsheet and use that to plot simple statistics. However, the
-gapminder data is updated periodically, and we may want to pull in that new
-information later and re-run our analysis again. We may also obtain similar data
-from a different source in the future.
 
 In this lesson, we'll learn how to write a function so that we can repeat
 several operations with a single command.
@@ -34,33 +29,21 @@ several operations with a single command.
 > * a defined set of inputs and expected outputs
 > * rich connections to the larger programming environment
 >
-> As the basic building block of most programming languages, user-defined functions constitute "programming" as much as any single abstraction can. If you have written a function, you are a computer programmer.
->
 
 
 ## Defining a function
 
-Let's open a new R script file in the `functions/` directory and call it functions-lesson.R.
+Let's open a new R script file  and call it functions-lesson.R.
 
 
 ~~~{.r}
-my_sum <- function(a, b) {
-  the_sum <- a + b
-  return(the_sum)
+sqft.to.acres <- function(a) {
+  res <- a/43560
+  return(res)
 }
 ~~~
 
-Let’s define a function fahr_to_kelvin that converts temperatures from Fahrenheit to Kelvin:
-
-
-~~~{.r}
-fahr_to_kelvin <- function(temp) {
-  kelvin <- ((temp - 32) * (5 / 9)) + 273.15
-  return(kelvin)
-}
-~~~
-
-We define `fahr_to_kelvin` by assigning it to the output of `function`.
+We define `sqft.to.acres` by assigning it to the output of `function`.
 The list of argument names are contained within parentheses.
 Next, the [body](reference.html#function-body) of the function--the statements that are executed when it runs--is contained within curly braces (`{}`).
 The statements in the body are indented by two spaces.
@@ -81,37 +64,30 @@ Calling our own function is no different from calling any other function:
 
 
 ~~~{.r}
-# freezing point of water
-fahr_to_kelvin(32)
+sqft.to.acres(43560)
 ~~~
 
 
 
 ~~~{.output}
-[1] 273.15
+[1] 1
 
 ~~~
+
 
 
 ~~~{.r}
-# boiling point of water
-fahr_to_kelvin(212)
+tmp <- 10000
+sqft.to.acres(tmp)
 ~~~
 
 
 
 ~~~{.output}
-[1] 373.15
+[1] 0.2295684
 
 ~~~
 
-> ## Challenge 1 {.challenge}
->
-> Write a function called `kelvin_to_celsius` that takes a temperature in Kelvin
-> and returns that temperature in Celsius
->
-> Hint: To convert from Kelvin to Celsius you minus 273.15
->
 
 ## Combining functions
 
@@ -123,88 +99,92 @@ Kelvin, and Kelvin to Celsius:
 
 
 ~~~{.r}
-fahr_to_kelvin <- function(temp) {
-  kelvin <- ((temp - 32) * (5 / 9)) + 273.15
-  return(kelvin)
+add.acres <- function(dat) {
+  myacres <- sqft.to.acres(dat$sqft)
+  res <- cbind(dat, acres=myacres)
+  return(res)
 }
-
-kelvin_to_celsius <- function(temp) {
-  celsius <- temp - 273.15
-  return(celsius)
-}
-~~~
-
-> ## Challenge 2 {.challenge}
->
-> Define the function to convert directly from Fahrenheit to Celsius,
-> by reusing the two functions above (or using your own functions if you prefer).
->
-
-
-We're going to define
-a function that calculates the Gross Domestic Product of a nation from the data
-available in our dataset:
-
-
-~~~{.r}
-# Takes a dataset and multiplies the population column
-# with the GDP per capita column.
-calcGDP <- function(dat) {
-  gdp <- dat$pop * dat$gdpPercap
-  return(gdp)
-}
-~~~
-
-We define `calcGDP` by assigning it to the output of `function`.
-The list of argument names are contained within parentheses.
-Next, the body of the function -- the statements executed when you
-call the function -- is contained within curly braces (`{}`).
-
-We've indented the statements in the body by two spaces. This makes
-the code easier to read but does not affect how it operates.
-
-When we call the function, the values we pass to it are assigned
-to the arguments, which become variables inside the body of the
-function.
-
-Inside the function, we use the `return` function to send back the
-result. This return function is optional: R will automatically
-return the results of whatever command is executed on the last line
-of the function.
-
-
-
-~~~{.r}
-calcGDP(head(gapminder))
+add.acres(head(lu))
 ~~~
 
 
 
 ~~~{.output}
-[1]  6567086330  7585448670  8758855797  9648014150  9678553274 11697659231
+  city_id  jobs households population res_units non_res_sqft land_value
+1       1   922       2617       6611      2755       615598  275640912
+2       2 38502      23596      60745     26346     35964539 1509291684
+3       3 22881      45354     127118     48953      9079211 6964260859
+4       4 26873       9904      24794     10741     17998962  955239156
+5       5 17837      21511      52300     23408      9504741 1978268350
+6       6  5029      16555      44472     18417      2588666 1020261165
+  buildings occupied_res_units sf_res_units        sqft     city_name
+1      2334               2617         2292    58644448 Normandy Park
+2     15119              23596        13672   683027700        Auburn
+3     47772              45354        47548 45768604944    King-Rural
+4      6304               9904         6029   233889021       Sea Tac
+5     17112              21511        16438   261146157     Shoreline
+6     13713              16555        13525   272113873    Renton PAA
+  county_id       acres
+1         2    1346.291
+2         2   15680.158
+3         2 1050702.593
+4         2    5369.353
+5         2    5995.091
+6         2    6246.875
 
 ~~~
 
-That's not very informative. Let's add some more arguments so we can extract
-that per year and country.
+Now we're going to define
+a function that returns cities with sqft per job ratio above certain threshold:
 
 
 ~~~{.r}
-# Takes a dataset and multiplies the population column
-# with the GDP per capita column.
-calcGDP <- function(dat, year=NULL, country=NULL) {
-  if(!is.null(year)) {
-    dat <- dat[dat$year %in% year, ]
-  }
-  if (!is.null(country)) {
-    dat <- dat[dat$country %in% country,]
-  }
-  gdp <- dat$pop * dat$gdpPercap
-
-  new <- cbind(dat, gdp=gdp)
-  return(new)
+cities.above <- function(dat, threshold=700) {
+  idx <- which(dat$jobs > 0)
+  ratio <- dat$non_res_sqft[idx]/dat$jobs[idx]
+  return(dat$city_name[ratio > threshold])
 }
+cities.above(lu)
 ~~~
+
+
+
+~~~{.output}
+ [1] "Auburn"            "Kent"              "Tukwila"          
+ [4] "Kent PAA"          "Enumclaw"          "Pierce-Rural"     
+ [7] "Algona"            "Newcastle PAA"     "Snoqualmie"       
+[10] "Black Diamond PAA" "Beaux Arts"        "Skykomish"        
+[13] "UU"                "Milton"            "Carnation"        
+[16] "Milton PAA"        "Bellevue PAA"      "Poulsbo PUTA"     
+[19] "Steilacoom"        "DuPont"            "University Place" 
+[22] "Fircrest"          "Ruston"            "Eatonville"       
+[25] "Puyallup"          "Orting"            "Edgewood"         
+[28] "Sumner"            "Bonney Lake"       "Carbonado"        
+[31] "Buckley"           "Brier"             "Edmonds"          
+[34] "Meadowdale Gap"    "Mill Creek"        "Mountlake Terrace"
+[37] "Mill Creek MUGA"   "Larch Way Overlap" "Bothell MUGA"     
+[40] "Lake Stickney Gap" "Mukilteo MUGA"     "Everett MUGA"     
+[43] "Monroe"            "Snohomish"         "Sultan"           
+[46] "Woodway"           "Darrington"        "Marysville UGA"   
+[49] "Arlington UGA"     "Snohomish UGA"     "Silver Firs Gap"  
+[52] "Granite Falls"     "Stanwood UGA"      "Index"            
+[55] "Granite Falls UGA" "Bothell"          
+
+~~~
+
+
+
+~~~{.r}
+cities.above(lu, 2000)
+~~~
+
+
+
+~~~{.output}
+[1] "Black Diamond PAA" "UU"                "Granite Falls UGA"
+
+~~~
+
 
 If you've been writing these functions down into a separate R script
 (a good idea!), you can load in the functions into our R session by using the
@@ -212,114 +192,14 @@ If you've been writing these functions down into a separate R script
 
 
 ~~~{.r}
-source("functions/functions-lesson.R")
+source("functions-lesson.R")
 ~~~
 
-Ok, so there's a lot going on in this function now. In plain English,
-the function now subsets the provided data by year if the year argument isn't
-empty, then subsets the result by country if the country argument isn't empty.
-Then it calculates the GDP for whatever subset emerges from the previous two steps.
-The function then adds the GDP as a new column to the subsetted data and returns
-this as the final result.
-You can see that the output is much more informative than just getting a vector of numbers.
+We've set a
+*default argument* to `700` using the `=` operator
+in the function definition. This means that this argument will
+take on that value unless the user specifies otherwise.
 
-Let's take a look at what happens when we specify the year:
-
-
-~~~{.r}
-head(calcGDP(gapminder, year=2007))
-~~~
-
-
-
-~~~{.output}
-       country year      pop continent lifeExp  gdpPercap          gdp
-12 Afghanistan 2007 31889923      Asia  43.828   974.5803  31079291949
-24     Albania 2007  3600523    Europe  76.423  5937.0295  21376411360
-36     Algeria 2007 33333216    Africa  72.301  6223.3675 207444851958
-48      Angola 2007 12420476    Africa  42.731  4797.2313  59583895818
-60   Argentina 2007 40301927  Americas  75.320 12779.3796 515033625357
-72   Australia 2007 20434176   Oceania  81.235 34435.3674 703658358894
-
-~~~
-
-Or for a specific country:
-
-
-~~~{.r}
-calcGDP(gapminder, country="Australia")
-~~~
-
-
-
-~~~{.output}
-     country year      pop continent lifeExp gdpPercap          gdp
-61 Australia 1952  8691212   Oceania  69.120  10039.60  87256254102
-62 Australia 1957  9712569   Oceania  70.330  10949.65 106349227169
-63 Australia 1962 10794968   Oceania  70.930  12217.23 131884573002
-64 Australia 1967 11872264   Oceania  71.100  14526.12 172457986742
-65 Australia 1972 13177000   Oceania  71.930  16788.63 221223770658
-66 Australia 1977 14074100   Oceania  73.490  18334.20 258037329175
-67 Australia 1982 15184200   Oceania  74.740  19477.01 295742804309
-68 Australia 1987 16257249   Oceania  76.320  21888.89 355853119294
-69 Australia 1992 17481977   Oceania  77.560  23424.77 409511234952
-70 Australia 1997 18565243   Oceania  78.830  26997.94 501223252921
-71 Australia 2002 19546792   Oceania  80.370  30687.75 599847158654
-72 Australia 2007 20434176   Oceania  81.235  34435.37 703658358894
-
-~~~
-
-Or both:
-
-
-~~~{.r}
-calcGDP(gapminder, year=2007, country="Australia")
-~~~
-
-
-
-~~~{.output}
-     country year      pop continent lifeExp gdpPercap          gdp
-72 Australia 2007 20434176   Oceania  81.235  34435.37 703658358894
-
-~~~
-
-Let's walk through the body of the function:
-
-
-~~~{.r}
-calcGDP <- function(dat, year=NULL, country=NULL) {
-~~~
-
-Here we've added two arguments, `year`, and `country`. We've set
-*default arguments* for both as `NULL` using the `=` operator
-in the function definition. This means that those arguments will
-take on those values unless the user specifies otherwise.
-
-
-~~~{.r}
-  if(!is.null(year)) {
-    dat <- dat[dat$year %in% year, ]
-  }
-  if (!is.null(country)) {
-    dat <- dat[dat$country %in% country,]
-  }
-~~~
-
-Here, we check whether each additional argument is set to `null`,
-and whenever they're not `null` overwrite the dataset stored in `dat` with
-a subset given by the non-`null` argument.
-
-I did this so that our function is more flexible for later. We
-can ask it to calculate the GDP for:
-
- * The whole dataset;
- * A single year;
- * A single country;
- * A single combination of year and country.
-
-By using `%in%` instead, we can also give multiple years or countries
-to those arguments.
 
 > ## Tip: Pass by value {.callout}
 >
@@ -337,26 +217,14 @@ to those arguments.
 >
 > Another important concept is scoping: any variables (or functions!) you
 > create or modify inside the body of a function only exist for the lifetime
-> of the function's execution. When we call `calcGDP`, the variables `dat`,
-> `gdp` and `new` only exist inside the body of the function. Even if we
+> of the function's execution. When we call `cities.above`, the variables `dat`,
+> `threshold`, `idx` and `ratio` only exist inside the body of the function. Even if we
 > have variables of the same name in our interactive R session, they are
 > not modified in any way when executing a function.
 >
 
 
-~~~{.r}
-  gdp <- dat$pop * dat$gdpPercap
-  new <- cbind(dat, gdp=gdp)
-  return(new)
-}
-~~~
-
-Finally, we calculated the GDP on our new subset, and created a new
-data frame with that column added. This means when we call the function
-later we can see the context for the returned GDP values,
-which is much better than in our first attempt where we just got a vector of numbers.
-
-> ## Challenge 3 {.challenge}
+> ## Challenge 1 {.challenge}
 >
 > The `paste` function can be used to combine text together, e.g:
 >
@@ -434,38 +302,8 @@ which is much better than in our first attempt where we just got a vector of num
 
 ## Challenge solutions
 
+
 > ## Solution to challenge 1 {.challenge}
->
-> Write a function called `kelvin_to_celsius` that takes a temperature in Kelvin
-> and returns that temperature in Celsius
->
-> 
-> ~~~{.r}
-> kelvin_to_celsius <- function(temp) {
->  celsius <- temp - 273.15
->  return(celsius)
-> }
-> ~~~
-
-
-> ## Solution to challenge 2 {.challenge}
->
-> Define the function to convert directly from Fahrenheit to Celsius,
-> by reusing these two functions above
->
->
-> 
-> ~~~{.r}
-> fahr_to_celsius <- function(temp) {
->   temp_k <- fahr_to_kelvin(temp)
->   result <- kelvin_to_celsius(temp_k)
->   return(result)
-> }
-> ~~~
->
-
-
-> ## Solution to challenge 3 {.challenge}
 >
 >  Write a function called `fence` that takes two vectors as arguments, called
 > `text` and `wrapper`, and prints out the text wrapped with the `wrapper`:
