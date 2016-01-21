@@ -18,13 +18,20 @@ minutes: 45
 > * Introduction to package management
 > 
 
+## Motivation
+R was designed by **Ross Ihaka** and **Robert Gentleman** in the 90's at the University of Auckland. 
+
+<img src="img/Ihaka-Gentleman.jpg " alt="Rcreators" />
+
+Since then R increased on popularity enormously. Currently R has several million users. A recent poll shows that about **76% of data scientists** use R in their daily work.
+
+
 ## Introduction to RStudio
 
 Welcome to the R portion of the Software Carpentry workshop.
 
 Throughout this lesson, we're going to teach you some of the fundamentals of
-the R language as well as some best practices for organising code for
-scientific projects that will make your life easier.
+the R language. However it will not teach statistical analysis.
 
 We'll be using RStudio: a free, open source R integrated development
 environment. It provides a built in editor, works on all platforms (including
@@ -65,7 +72,7 @@ interactive R console.
 > or Linux or Command-Enter on OS X. (This shortcut can also be seen by hovering
 > the mouse over the button). To run a block of code, select it and then `Run`.
 > If you have modified a line of code within a block of code you have just run,
-> there is no need to reselct the section and `Run`, you can use the next button
+> there is no need to reselect the section and `Run`, you can use the next button
 > along, `Re-run the previous region`. This will run the previous code block
 > inculding the modifications you have made.
 
@@ -465,6 +472,22 @@ But this is much less common among R users.  The most important thing is to
 where it is less confusing to use `<-` than `=`, and it is the most common
 symbol used in the community. So the recommendation is to use `<-`.
 
+Unlike in Python, variables are not pointers!
+
+~~~{.r}
+x <- 100
+y <- x
+x <- 200
+y
+~~~
+
+
+
+~~~{.output}
+[1] 100
+
+~~~
+
 ## Vectorization
 
 One final thing to be aware of is that R is *vectorized*, meaning that
@@ -528,7 +551,7 @@ ls()
 
 
 ~~~{.output}
-[1] "hook_error" "hook_in"    "hook_out"   "x"         
+[1] "hook_error" "hook_in"    "hook_out"   "x"          "y"         
 
 ~~~
 
@@ -595,8 +618,12 @@ If you're not sure how it's specifically spelled you can do a fuzzy search:
 
 It is possible to add functions to R by writing a package, or by
 obtaining a package written by someone else. As of this writing, there
-are over 7,000 packages available on CRAN (the comprehensive R archive
-network). R and RStudio have functionality for managing packages:
+are 7,814 packages available on CRAN (the comprehensive R archive
+network). Their number increases every day:
+
+<img src="img/NewRpackages.png  " alt="Rpackages" />
+
+R and RStudio have functionality for managing packages:
 
 * You can see what packages are installed by typing
   `installed.packages()`
@@ -607,30 +634,5 @@ network). R and RStudio have functionality for managing packages:
 * You can make a package available for use with `library(packagename)`
 
 
-> ## Challenge 1 {.challenge}
->
-> What will be the value of each  variable  after each
-> statement in the following program?
->
-> 
-> ~~~{.r}
-> mass <- 47.5
-> age <- 122
-> mass <- mass * 2.3
-> age <- age - 20
-> ~~~
->
-
-> ## Challenge 2 {.challenge}
->
-> Run the code from the previous challenge, and write a command to
-> compare mass to age. Is mass larger than age?
->
-
-> ## Challenge 3 {.challenge}
->
-> Clean up your working environment by deleting the mass and age
-> variables.
->
 
 

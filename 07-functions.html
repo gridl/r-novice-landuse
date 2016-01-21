@@ -28,11 +28,8 @@
         <div class="col-md-10 col-md-offset-1">
                     <a href="index.html"><h1 class="title">R for Data Analysis</h1></a>
           <h2 class="subtitle">Creating functions</h2>
-          <section class="objectives panel panel-warning">
-<div class="panel-heading">
-<h2 id="learning-objectives"><span class="glyphicon glyphicon-certificate"></span>Learning Objectives</h2>
-</div>
-<div class="panel-body">
+          <blockquote>
+<h2>Learning Objectives</h2>
 <ul>
 <li>Define a function that takes arguments.</li>
 <li>Return a value from a function.</li>
@@ -40,14 +37,10 @@
 <li>Set default values for function arguments.</li>
 <li>Explain why we should divide programs into small, single-purpose functions.</li>
 </ul>
-</div>
-</section>
+</blockquote>
 <p>In this lesson, we’ll learn how to write a function so that we can repeat several operations with a single command.</p>
-<aside class="callout panel panel-info">
-<div class="panel-heading">
-<h2 id="what-is-a-function"><span class="glyphicon glyphicon-pushpin"></span>What is a function?</h2>
-</div>
-<div class="panel-body">
+<blockquote>
+<h2>What is a function?</h2>
 <p>Functions gather a sequence of operations into a whole, preserving it for ongoing use. Functions provide:</p>
 <ul>
 <li>a name we can remember and invoke it by</li>
@@ -55,41 +48,36 @@
 <li>a defined set of inputs and expected outputs</li>
 <li>rich connections to the larger programming environment</li>
 </ul>
-</div>
-</aside>
+</blockquote>
 <h2 id="defining-a-function">Defining a function</h2>
 <p>Let’s open a new R script file and call it functions-lesson.R.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sqft.to.acres &lt;-<span class="st"> </span>function(a) {
+<pre class="sourceCode r"><code class="sourceCode r">sqft.to.acres &lt;-<span class="st"> </span>function(a) {
   res &lt;-<span class="st"> </span>a/<span class="dv">43560</span>
   <span class="kw">return</span>(res)
-}</code></pre></div>
+}</code></pre>
 <p>We define <code>sqft.to.acres</code> by assigning it to the output of <code>function</code>. The list of argument names are contained within parentheses. Next, the <a href="reference.html#function-body">body</a> of the function–the statements that are executed when it runs–is contained within curly braces (<code>{}</code>). The statements in the body are indented by two spaces. This makes the code easier to read but does not affect how the code operates.</p>
 <p>When we call the function, the values we pass to it are assigned to those variables so that we can use them inside the function. Inside the function, we use a <a href="reference.html#return-statement">return statement</a> to send a result back to whoever asked for it.</p>
-<aside class="callout panel panel-info">
-<div class="panel-heading">
-<h2 id="tip"><span class="glyphicon glyphicon-pushpin"></span>Tip</h2>
-</div>
-<div class="panel-body">
+<blockquote>
+<h2>Tip</h2>
 <p>One feature unique to R is that the return statement is not required. R automatically returns whichever variable is on the last line of the body of the function. Since we are just learning, we will explicitly define the return statement.</p>
-</div>
-</aside>
+</blockquote>
 <p>Let’s try running our function. Calling our own function is no different from calling any other function:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sqft.to.acres</span>(<span class="dv">43560</span>)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sqft.to.acres</span>(<span class="dv">43560</span>)</code></pre>
 <pre class="output"><code>[1] 1
 </code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tmp &lt;-<span class="st"> </span><span class="dv">10000</span>
-<span class="kw">sqft.to.acres</span>(tmp)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r">tmp &lt;-<span class="st"> </span><span class="dv">10000</span>
+<span class="kw">sqft.to.acres</span>(tmp)</code></pre>
 <pre class="output"><code>[1] 0.2295684
 </code></pre>
 <h2 id="combining-functions">Combining functions</h2>
 <p>The real power of functions comes from mixing, matching and combining them into ever large chunks to get the effect we want.</p>
-<p>Let’s define two functions that will convert temperature from Fahrenheit to Kelvin, and Kelvin to Celsius:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">add.acres &lt;-<span class="st"> </span>function(dat) {
+<p>Here we convert sqft to acres and append it as an additional column of the dataset:</p>
+<pre class="sourceCode r"><code class="sourceCode r">add.acres &lt;-<span class="st"> </span>function(dat) {
   myacres &lt;-<span class="st"> </span><span class="kw">sqft.to.acres</span>(dat$sqft)
   res &lt;-<span class="st"> </span><span class="kw">cbind</span>(dat, <span class="dt">acres=</span>myacres)
   <span class="kw">return</span>(res)
 }
-<span class="kw">add.acres</span>(<span class="kw">head</span>(lu))</code></pre></div>
+<span class="kw">add.acres</span>(<span class="kw">head</span>(lu))</code></pre>
 <pre class="output"><code>  city_id  jobs households population res_units non_res_sqft land_value
 1       1   922       2617       6611      2755       615598  275640912
 2       2 38502      23596      60745     26346     35964539 1509291684
@@ -113,12 +101,12 @@
 6         2    6246.875
 </code></pre>
 <p>Now we’re going to define a function that returns cities with sqft per job ratio above certain threshold:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cities.above &lt;-<span class="st"> </span>function(dat, <span class="dt">threshold=</span><span class="dv">700</span>) {
+<pre class="sourceCode r"><code class="sourceCode r">job.space.above &lt;-<span class="st"> </span>function(dat, <span class="dt">threshold=</span><span class="dv">700</span>) {
   idx &lt;-<span class="st"> </span><span class="kw">which</span>(dat$jobs &gt;<span class="st"> </span><span class="dv">0</span>)
   ratio &lt;-<span class="st"> </span>dat$non_res_sqft[idx]/dat$jobs[idx]
   <span class="kw">return</span>(dat$city_name[ratio &gt;<span class="st"> </span>threshold])
 }
-<span class="kw">cities.above</span>(lu)</code></pre></div>
+<span class="kw">job.space.above</span>(lu)</code></pre>
 <pre class="output"><code> [1] &quot;Auburn&quot;            &quot;Kent&quot;              &quot;Tukwila&quot;          
  [4] &quot;Kent PAA&quot;          &quot;Enumclaw&quot;          &quot;Pierce-Rural&quot;     
  [7] &quot;Algona&quot;            &quot;Newcastle PAA&quot;     &quot;Snoqualmie&quot;       
@@ -139,89 +127,169 @@
 [52] &quot;Granite Falls&quot;     &quot;Stanwood UGA&quot;      &quot;Index&quot;            
 [55] &quot;Granite Falls UGA&quot; &quot;Bothell&quot;          
 </code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cities.above</span>(lu, <span class="dv">2000</span>)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">job.space.above</span>(lu, <span class="dv">2000</span>)</code></pre>
 <pre class="output"><code>[1] &quot;Black Diamond PAA&quot; &quot;UU&quot;                &quot;Granite Falls UGA&quot;
 </code></pre>
 <p>If you’ve been writing these functions down into a separate R script (a good idea!), you can load in the functions into our R session by using the <code>source</code> function:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">source</span>(<span class="st">&quot;functions-lesson.R&quot;</span>)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">source</span>(<span class="st">&quot;functions-lesson.R&quot;</span>)</code></pre>
 <p>We’ve set a <em>default argument</em> to <code>700</code> using the <code>=</code> operator in the function definition. This means that this argument will take on that value unless the user specifies otherwise.</p>
-<aside class="callout panel panel-info">
-<div class="panel-heading">
-<h2 id="tip-pass-by-value"><span class="glyphicon glyphicon-pushpin"></span>Tip: Pass by value</h2>
-</div>
-<div class="panel-body">
+<blockquote>
+<h2>Tip: Pass by value</h2>
 <p>Functions in R almost always make copies of the data to operate on inside of a function body. When we modify <code>dat</code> inside the function we are modifying the copy of the gapminder dataset stored in <code>dat</code>, not the original variable we gave as the first argument.</p>
 <p>This is called “pass-by-value” and it makes writing code much safer: you can always be sure that whatever changes you make within the body of the function, stay inside the body of the function.</p>
-</div>
-</aside>
-<aside class="callout panel panel-info">
-<div class="panel-heading">
-<h2 id="tip-function-scope"><span class="glyphicon glyphicon-pushpin"></span>Tip: Function scope</h2>
-</div>
-<div class="panel-body">
+</blockquote>
+<blockquote>
+<h2>Tip: Function scope</h2>
 <p>Another important concept is scoping: any variables (or functions!) you create or modify inside the body of a function only exist for the lifetime of the function’s execution. When we call <code>cities.above</code>, the variables <code>dat</code>, <code>threshold</code>, <code>idx</code> and <code>ratio</code> only exist inside the body of the function. Even if we have variables of the same name in our interactive R session, they are not modified in any way when executing a function.</p>
-</div>
-</aside>
-<section class="challenge panel panel-success">
-<div class="panel-heading">
-<h2 id="challenge-1"><span class="glyphicon glyphicon-pencil"></span>Challenge 1</h2>
-</div>
-<div class="panel-body">
+</blockquote>
+<blockquote>
+<h2>Challenge 1</h2>
 <p>The <code>paste</code> function can be used to combine text together, e.g:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">best_practice &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Write&quot;</span>, <span class="st">&quot;programs&quot;</span>, <span class="st">&quot;for&quot;</span>, <span class="st">&quot;people&quot;</span>, <span class="st">&quot;not&quot;</span>, <span class="st">&quot;computers&quot;</span>)
-<span class="kw">paste</span>(best_practice, <span class="dt">collapse=</span><span class="st">&quot; &quot;</span>)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r">best_practice &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Write&quot;</span>, <span class="st">&quot;programs&quot;</span>, <span class="st">&quot;for&quot;</span>, <span class="st">&quot;people&quot;</span>, <span class="st">&quot;not&quot;</span>, <span class="st">&quot;computers&quot;</span>)
+<span class="kw">paste</span>(best_practice, <span class="dt">collapse=</span><span class="st">&quot; &quot;</span>)</code></pre>
 <pre class="output"><code>[1] &quot;Write programs for people not computers&quot;
 </code></pre>
 <p>Write a function called <code>fence</code> that takes two vectors as arguments, called <code>text</code> and <code>wrapper</code>, and prints out the text wrapped with the <code>wrapper</code>:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">fence</span>(<span class="dt">text=</span>best_practice, <span class="dt">wrapper=</span><span class="st">&quot;***&quot;</span>)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">fence</span>(<span class="dt">text=</span>best_practice, <span class="dt">wrapper=</span><span class="st">&quot;***&quot;</span>)</code></pre>
 <p><em>Note:</em> the <code>paste</code> function has an argument called <code>sep</code>, which specifies the separator between text. The default is a space: &quot; “. The default for <code>paste0</code> is no space”“.</p>
-</div>
-</section>
-<aside class="callout panel panel-info">
-<div class="panel-heading">
-<h2 id="tip-1"><span class="glyphicon glyphicon-pushpin"></span>Tip</h2>
-</div>
-<div class="panel-body">
+</blockquote>
+<blockquote>
+<h2>Tip</h2>
 <p>R has some unique aspects that can be exploited when performing more complicated operations. We will not be writing anything that requires knowledge of these more advanced concepts. In the future when you are comfortable writing functions in R, you can learn more by reading the <a href="http://cran.r-project.org/doc/manuals/r-release/R-lang.html#Environment-objects">R Language Manual</a> or this <a href="http://adv-r.had.co.nz/Environments.html">chapter</a> from <a href="http://adv-r.had.co.nz/">Advanced R Programming</a> by Hadley Wickham. For context, R uses the terminology “environments” instead of frames.</p>
-</div>
-</aside>
-<aside class="callout panel panel-info">
-<div class="panel-heading">
-<h2 id="tip-testing-and-documenting"><span class="glyphicon glyphicon-pushpin"></span>Tip: Testing and documenting</h2>
-</div>
-<div class="panel-body">
-<p>It’s important to both test functions and document them: Documentation helps you, and others, understand what the purpose of your function is, and how to use it, and its important to make sure that your function actually does what you think.</p>
-<p>When you first start out, your workflow will probably look a lot like this:</p>
-<ol style="list-style-type: decimal">
-<li>Write a function</li>
-<li>Comment parts of the function to document its behaviour</li>
-<li>Load in the source file</li>
-<li>Experiment with it in the console to make sure it behaves as you expect</li>
-<li>Make any necessary bug fixes</li>
-<li>Rinse and repeat.</li>
-</ol>
-<p>Formal documentation for functions, written in separate <code>.Rd</code> files, gets turned into the documentation you see in help files. The <a href="http://cran.r-project.org/web/packages/roxygen2/vignettes/rd.html">roxygen2</a> package allows R coders to write documentation alongside the function code and then process it into the appropriate <code>.Rd</code> files. You will want to switch to this more formal method of writing documentation when you start writing more complicated R projects.</p>
-<p>Formal automated tests can be written using the <a href="http://r-pkgs.had.co.nz/tests.html">testthat</a> package.</p>
-</div>
-</aside>
+</blockquote>
+<h2 id="control-flow">Control Flow</h2>
+<p>The meaning of the control flow structures <code>if else</code>, <code>for</code> and <code>while</code> is the same as in Python or other programming languages. What differs is the syntax. Let’s learn these construct on examples.</p>
+<p>First let’s modify our <code>job.space.above</code> funtion to control for both ends of the distribution:</p>
+<pre class="sourceCode r"><code class="sourceCode r">job.space.outliers &lt;-<span class="st"> </span>function(dat, <span class="dt">threshold=</span><span class="dv">700</span>, <span class="dt">above=</span><span class="ot">TRUE</span>) {
+  idx &lt;-<span class="st"> </span><span class="kw">which</span>(dat$jobs &gt;<span class="st"> </span><span class="dv">0</span>)
+  ratio &lt;-<span class="st"> </span>dat$non_res_sqft[idx]/dat$jobs[idx]
+  if(above) {
+    res &lt;-<span class="st"> </span>dat$city_name[ratio &gt;<span class="st"> </span>threshold]
+  } else {
+    res &lt;-<span class="st"> </span>dat$city_name[ratio &lt;=<span class="st"> </span>threshold]
+  }
+  <span class="kw">return</span>(res)
+}
+outl.above &lt;-<span class="st"> </span><span class="kw">job.space.outliers</span>(lu, <span class="dv">2000</span>)
+outl.above</code></pre>
+<pre class="output"><code>[1] &quot;Black Diamond PAA&quot; &quot;UU&quot;                &quot;Granite Falls UGA&quot;
+</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">outl.below &lt;-<span class="st"> </span><span class="kw">job.space.outliers</span>(lu, <span class="dv">50</span>, <span class="dt">above=</span><span class="ot">FALSE</span>)
+outl.below </code></pre>
+<pre class="output"><code> [1] &quot;Pacific&quot;          &quot;Issaquah PAA&quot;     &quot;UUU&quot;             
+ [4] &quot;Yarrow Point&quot;     &quot;Medina&quot;           &quot;Auburn PAA&quot;      
+ [7] &quot;Kingston UGA&quot;     &quot;Lake Stevens&quot;     &quot;Gold Bar UGA&quot;    
+[10] &quot;Lake Stevens UGA&quot; &quot;Maltby UGA&quot;      
+</code></pre>
+<p>We have our vectors of cities obtained <code>outl.above</code> and <code>outl.below</code> and we want to extract data corresponding to those cities from the households dataset:</p>
+<pre class="sourceCode r"><code class="sourceCode r">for(city in outl.above) {
+    idx &lt;-<span class="st"> </span><span class="kw">which</span>(hh$city_name ==<span class="st"> </span>city)
+    <span class="kw">print</span>(hh[idx,])
+}</code></pre>
+<pre class="output"><code>   county_id city_id hh10 hh20 hh30 hh40         city_name county_name
+91         2      45   64   36   38   40 Black Diamond PAA        King
+    county_id city_id  hh10  hh20  hh30  hh40 city_name county_name
+119         4      53 67417 85491 93594 93893        UU      Pierce
+   county_id city_id hh10 hh20 hh30 hh40         city_name county_name
+37         1     133   92  116  244  390 Granite Falls UGA   Snohomish
+</code></pre>
+<p>This does not look very pretty. We can improve by binding the rows together:</p>
+<pre class="sourceCode r"><code class="sourceCode r">res &lt;-<span class="st"> </span><span class="ot">NULL</span>
+for(city in outl.above) {
+    idx &lt;-<span class="st"> </span><span class="kw">which</span>(hh$city_name ==<span class="st"> </span>city)
+    res &lt;-<span class="st"> </span><span class="kw">rbind</span>(res, hh[idx,])
+}
+<span class="kw">print</span>(res)</code></pre>
+<pre class="output"><code>    county_id city_id  hh10  hh20  hh30  hh40         city_name
+91          2      45    64    36    38    40 Black Diamond PAA
+119         4      53 67417 85491 93594 93893                UU
+37          1     133    92   116   244   390 Granite Falls UGA
+    county_name
+91         King
+119      Pierce
+37    Snohomish
+</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">res &lt;-<span class="st"> </span><span class="ot">NULL</span>
+for(city in outl.below) {
+    idx &lt;-<span class="st"> </span><span class="kw">which</span>(hh$city_name ==<span class="st"> </span>city)
+    res &lt;-<span class="st"> </span><span class="kw">rbind</span>(res, hh[idx,])
+}
+<span class="kw">print</span>(res)</code></pre>
+<pre class="output"><code>    county_id city_id hh10  hh20  hh30  hh40        city_name county_name
+85          2      39 2291  2490  2473  2469          Pacific        King
+133         4     142   51    35    43    45          Pacific      Pierce
+90          2      44 3887  4363  4553  4565     Issaquah PAA        King
+92          2      46  889  1459  1530  1528              UUU        King
+93          2      47  416   432   444   447     Yarrow Point        King
+96          2      50 1126  1160  1193  1203           Medina        King
+105         2      60  187   138   136   135       Auburn PAA        King
+113         3      73  867  1573  2359  2638     Kingston UGA      Kitsap
+4           1     113 9488 12157 13841 15639     Lake Stevens   Snohomish
+21          1     117  330   346   348   355     Gold Bar UGA   Snohomish
+26          1     122 1647  2093  2335  2586 Lake Stevens UGA   Snohomish
+36          1     132   56    67    66    66       Maltby UGA   Snohomish
+</code></pre>
+<p>Sometimes you will find yourself needing to repeat an operation until a certain condition is met. You can do this with a <code>while</code> loop.</p>
+<p>Say we want the above data frame but with maximum of five rows:</p>
+<pre class="sourceCode r"><code class="sourceCode r">res &lt;-<span class="st"> </span><span class="ot">NULL</span>
+i &lt;-<span class="st"> </span><span class="dv">1</span>
+while(i &lt;=<span class="st"> </span><span class="dv">5</span>) {
+    idx &lt;-<span class="st"> </span><span class="kw">which</span>(hh$city_name ==<span class="st"> </span>outl.below[i])
+    res &lt;-<span class="st"> </span><span class="kw">rbind</span>(res, hh[idx,])
+    i =<span class="st"> </span>i +<span class="st"> </span><span class="dv">1</span>
+}
+<span class="kw">print</span>(res)</code></pre>
+<pre class="output"><code>    county_id city_id hh10 hh20 hh30 hh40    city_name county_name
+85          2      39 2291 2490 2473 2469      Pacific        King
+133         4     142   51   35   43   45      Pacific      Pierce
+90          2      44 3887 4363 4553 4565 Issaquah PAA        King
+92          2      46  889 1459 1530 1528          UUU        King
+93          2      47  416  432  444  447 Yarrow Point        King
+96          2      50 1126 1160 1193 1203       Medina        King
+</code></pre>
+<blockquote>
+<h2>Challenge 2</h2>
+<p>How would you vectorise the following loop</p>
+<pre class="sourceCode r"><code class="sourceCode r">res &lt;-<span class="st"> </span><span class="ot">NULL</span>
+for(city in outl.below) {
+  idx &lt;-<span class="st"> </span><span class="kw">which</span>(hh$city_name ==<span class="st"> </span>city)
+  res &lt;-<span class="st"> </span><span class="kw">rbind</span>(res, hh[idx,])
+}</code></pre>
+</blockquote>
 <h2 id="challenge-solutions">Challenge solutions</h2>
-<section class="challenge panel panel-success">
-<div class="panel-heading">
-<h2 id="solution-to-challenge-1"><span class="glyphicon glyphicon-pencil"></span>Solution to challenge 1</h2>
-</div>
-<div class="panel-body">
+<blockquote>
+<h2>Solution to challenge 1</h2>
 <p>Write a function called <code>fence</code> that takes two vectors as arguments, called <code>text</code> and <code>wrapper</code>, and prints out the text wrapped with the <code>wrapper</code>:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fence &lt;-<span class="st"> </span>function(text, wrapper){
+<pre class="sourceCode r"><code class="sourceCode r">fence &lt;-<span class="st"> </span>function(text, wrapper){
   text &lt;-<span class="st"> </span><span class="kw">c</span>(wrapper, text, wrapper)
   result &lt;-<span class="st"> </span><span class="kw">paste</span>(text, <span class="dt">collapse =</span> <span class="st">&quot; &quot;</span>)
   <span class="kw">return</span>(result)
 }
 best_practice &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Write&quot;</span>, <span class="st">&quot;programs&quot;</span>, <span class="st">&quot;for&quot;</span>, <span class="st">&quot;people&quot;</span>, <span class="st">&quot;not&quot;</span>, <span class="st">&quot;computers&quot;</span>)
-<span class="kw">fence</span>(<span class="dt">text=</span>best_practice, <span class="dt">wrapper=</span><span class="st">&quot;***&quot;</span>)</code></pre></div>
+<span class="kw">fence</span>(<span class="dt">text=</span>best_practice, <span class="dt">wrapper=</span><span class="st">&quot;***&quot;</span>)</code></pre>
 <pre class="output"><code>[1] &quot;*** Write programs for people not computers ***&quot;
 </code></pre>
-</div>
-</section>
+</blockquote>
+<blockquote>
+<h2>Solution to challenge 2</h2>
+<pre class="sourceCode r"><code class="sourceCode r">idx &lt;-<span class="st"> </span><span class="kw">which</span>(hh$city_name %in%<span class="st"> </span>outl.below)
+res &lt;-<span class="st"> </span>hh[idx,]
+res</code></pre>
+<pre class="output"><code>    county_id city_id hh10  hh20  hh30  hh40        city_name county_name
+4           1     113 9488 12157 13841 15639     Lake Stevens   Snohomish
+21          1     117  330   346   348   355     Gold Bar UGA   Snohomish
+26          1     122 1647  2093  2335  2586 Lake Stevens UGA   Snohomish
+36          1     132   56    67    66    66       Maltby UGA   Snohomish
+85          2      39 2291  2490  2473  2469          Pacific        King
+90          2      44 3887  4363  4553  4565     Issaquah PAA        King
+92          2      46  889  1459  1530  1528              UUU        King
+93          2      47  416   432   444   447     Yarrow Point        King
+96          2      50 1126  1160  1193  1203           Medina        King
+105         2      60  187   138   136   135       Auburn PAA        King
+113         3      73  867  1573  2359  2638     Kingston UGA      Kitsap
+133         4     142   51    35    43    45          Pacific      Pierce
+</code></pre>
+</blockquote>
         </div>
       </div>
       </article>

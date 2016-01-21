@@ -9,57 +9,9 @@ minutes: 20
 
 > ## Learning Objectives {.objectives}
 >
-> * To be able to write out plots and data from R
+> * To be able to write out data from R
 >
 
-## Saving plots
-
-You have already seen how to save the most recent plot you create in `ggplot2`,
-using the command `ggsave`. As a refresher:
-
-
-~~~{.r}
-ggsave("My_most_recent_plot.pdf")
-~~~
-
-You can save a plot from within RStudio using the 'Export' button
-in the 'Plot' window. This will give you the option of saving as a
-.pdf or as .png, .jpg or other image formats.
-
-Sometimes you will want to save plots without creating them in the
-'Plot' window first. Perhaps you want to make a pdf document with
-multiple pages: each one a different plot, for example. Or perhaps
-you're looping through multiple subsets of a file, plotting data from
-each subset, and you want to save each plot, but obviously can't stop
-the loop to click 'Export' for each one.
-
-In this case you can use a more flexible approach. The function
-`pdf` creates a new pdf device. You can control the size and resolution
-using the arguments to this function.
-
-
-~~~{.r}
-pdf("Life_Exp_vs_time.pdf", width=12, height=4)
-ggplot(data=gapminder, aes(x=year, y=lifeExp, colour=country)) +
-  geom_line()
-
-# You then have to make sure to turn off the pdf device!
-
-dev.off()
-~~~
-
-Open up this document and have a look.
-
-> ## Challenge 1 {.challenge}
->
-> Rewrite your 'pdf' command to print a second
-> page in the pdf, showing a facet plot (hint: use `facet_grid`)
-> of the same data with one panel per continent.
->
-
-
-The commands `jpeg`, `png` etc. are used similarly to produce
-documents in different formats.
 
 ## Writing data
 
@@ -68,15 +20,13 @@ At some point, you'll also want to write out data from R.
 We can use the `write.table` function for this, which is
 very similar to `read.table` from before.
 
-Let's create a data-cleaning script, for this analysis, we
-only want to focus on the gapminder data for Australia:
 
 
 ~~~{.r}
-aust_subset <- gapminder[gapminder$country == "Australia",]
+lu.subset <- lu[county_id==2,]
 
-write.table(aust_subset,
-  file="cleaned-data/gapminder-aus.csv",
+write.table(lu.subset,
+  file="cleaned-data/lu-King.csv",
   sep=","
 )
 ~~~
@@ -86,7 +36,7 @@ OK:
 
 
 ~~~{.r}
-# head cleaned-data/gapminder-aus.csv
+# head cleaned-data/lu-King.csv
 ~~~
 
 Hmm, that's not quite what we wanted. Where did all these
@@ -110,8 +60,8 @@ Let's fix this:
 
 ~~~{.r}
 write.table(
-  gapminder[gapminder$country == "Australia",],
-  file="cleaned-data/gapminder-aus.csv",
+  lu.subset,
+  file="cleaned-data/lu-King.csv",
   sep=",", quote=FALSE, row.names=FALSE
 )
 ~~~
@@ -120,18 +70,10 @@ Now lets look at the data again using our shell skills:
 
 
 ~~~{.r}
-# head cleaned-data/gapminder-aus.csv
+# head cleaned-data/lu-King.csv
 ~~~
 
 That looks better!
 
-> ## Challenge 2 {.challenge}
->
-> Write a data-cleaning script file that subsets the gapminder
-> data to include only data points collected since 1990.
->
-> Use this script to write out the new subset to a file
-> in the `cleaned-data/` directory.
->
 
 

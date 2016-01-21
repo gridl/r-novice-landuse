@@ -94,8 +94,7 @@ sqft.to.acres(tmp)
 The real power of functions comes from mixing, matching and combining them
 into ever large chunks to get the effect we want.
 
-Let's define two functions that will convert temperature from Fahrenheit to
-Kelvin, and Kelvin to Celsius:
+Here we convert sqft to acres and append it as an additional column of the dataset:
 
 
 ~~~{.r}
@@ -139,12 +138,12 @@ a function that returns cities with sqft per job ratio above certain threshold:
 
 
 ~~~{.r}
-cities.above <- function(dat, threshold=700) {
+job.space.above <- function(dat, threshold=700) {
   idx <- which(dat$jobs > 0)
   ratio <- dat$non_res_sqft[idx]/dat$jobs[idx]
   return(dat$city_name[ratio > threshold])
 }
-cities.above(lu)
+job.space.above(lu)
 ~~~
 
 
@@ -175,7 +174,7 @@ cities.above(lu)
 
 
 ~~~{.r}
-cities.above(lu, 2000)
+job.space.above(lu, 2000)
 ~~~
 
 
@@ -268,37 +267,167 @@ take on that value unless the user specifies otherwise.
 [chapter]: http://adv-r.had.co.nz/Environments.html
 [adv-r]: http://adv-r.had.co.nz/
 
+## Control Flow
 
-> ## Tip: Testing and documenting {.callout}
->
-> It's important to both test functions and document them:
-> Documentation helps you, and others, understand what the
-> purpose of your function is, and how to use it, and its
-> important to make sure that your function actually does
-> what you think.
->
-> When you first start out, your workflow will probably look a lot
-> like this:
->
->  1. Write a function
->  2. Comment parts of the function to document its behaviour
->  3. Load in the source file
->  4. Experiment with it in the console to make sure it behaves
->     as you expect
->  5. Make any necessary bug fixes
->  6. Rinse and repeat.
->
-> Formal documentation for functions, written in separate `.Rd`
-> files, gets turned into the documentation you see in help
-> files. The [roxygen2][] package allows R coders to write documentation alongside
-> the function code and then process it into the appropriate `.Rd` files.
-> You will want to switch to this more formal method of writing documentation
-> when you start writing more complicated R projects.
->
-> Formal automated tests can be written using the [testthat][] package.
+The meaning of the control flow structures `if else`, `for` and `while` is the same as in Python or other programming languages. What differs is the syntax. Let's learn these construct on examples.
 
-[roxygen2]: http://cran.r-project.org/web/packages/roxygen2/vignettes/rd.html
-[testthat]: http://r-pkgs.had.co.nz/tests.html
+First let's modify our `job.space.above` funtion to control for both ends of the distribution:
+
+~~~{.r}
+job.space.outliers <- function(dat, threshold=700, above=TRUE) {
+  idx <- which(dat$jobs > 0)
+  ratio <- dat$non_res_sqft[idx]/dat$jobs[idx]
+  if(above) {
+  	res <- dat$city_name[ratio > threshold]
+  } else {
+  	res <- dat$city_name[ratio <= threshold]
+  }
+  return(res)
+}
+outl.above <- job.space.outliers(lu, 2000)
+outl.above
+~~~
+
+
+
+~~~{.output}
+[1] "Black Diamond PAA" "UU"                "Granite Falls UGA"
+
+~~~
+
+
+
+~~~{.r}
+outl.below <- job.space.outliers(lu, 50, above=FALSE)
+outl.below 
+~~~
+
+
+
+~~~{.output}
+ [1] "Pacific"          "Issaquah PAA"     "UUU"             
+ [4] "Yarrow Point"     "Medina"           "Auburn PAA"      
+ [7] "Kingston UGA"     "Lake Stevens"     "Gold Bar UGA"    
+[10] "Lake Stevens UGA" "Maltby UGA"      
+
+~~~
+
+We have our vectors of cities obtained `outl.above` and `outl.below` and we want to extract data corresponding to those cities from the households dataset:
+
+~~~{.r}
+for(city in outl.above) {
+	idx <- which(hh$city_name == city)
+	print(hh[idx,])
+}
+~~~
+
+
+
+~~~{.output}
+   county_id city_id hh10 hh20 hh30 hh40         city_name county_name
+91         2      45   64   36   38   40 Black Diamond PAA        King
+    county_id city_id  hh10  hh20  hh30  hh40 city_name county_name
+119         4      53 67417 85491 93594 93893        UU      Pierce
+   county_id city_id hh10 hh20 hh30 hh40         city_name county_name
+37         1     133   92  116  244  390 Granite Falls UGA   Snohomish
+
+~~~
+This does not look very pretty. We can improve by binding the rows together:
+
+~~~{.r}
+res <- NULL
+for(city in outl.above) {
+	idx <- which(hh$city_name == city)
+	res <- rbind(res, hh[idx,])
+}
+print(res)
+~~~
+
+
+
+~~~{.output}
+    county_id city_id  hh10  hh20  hh30  hh40         city_name
+91          2      45    64    36    38    40 Black Diamond PAA
+119         4      53 67417 85491 93594 93893                UU
+37          1     133    92   116   244   390 Granite Falls UGA
+    county_name
+91         King
+119      Pierce
+37    Snohomish
+
+~~~
+
+
+
+~~~{.r}
+res <- NULL
+for(city in outl.below) {
+	idx <- which(hh$city_name == city)
+	res <- rbind(res, hh[idx,])
+}
+print(res)
+~~~
+
+
+
+~~~{.output}
+    county_id city_id hh10  hh20  hh30  hh40        city_name county_name
+85          2      39 2291  2490  2473  2469          Pacific        King
+133         4     142   51    35    43    45          Pacific      Pierce
+90          2      44 3887  4363  4553  4565     Issaquah PAA        King
+92          2      46  889  1459  1530  1528              UUU        King
+93          2      47  416   432   444   447     Yarrow Point        King
+96          2      50 1126  1160  1193  1203           Medina        King
+105         2      60  187   138   136   135       Auburn PAA        King
+113         3      73  867  1573  2359  2638     Kingston UGA      Kitsap
+4           1     113 9488 12157 13841 15639     Lake Stevens   Snohomish
+21          1     117  330   346   348   355     Gold Bar UGA   Snohomish
+26          1     122 1647  2093  2335  2586 Lake Stevens UGA   Snohomish
+36          1     132   56    67    66    66       Maltby UGA   Snohomish
+
+~~~
+
+Sometimes you will find yourself needing to repeat an operation until a certain
+condition is met. You can do this with a `while` loop.
+
+Say we want the above data frame but with maximum of five rows:
+
+~~~{.r}
+res <- NULL
+i <- 1
+while(i <= 5) {
+	idx <- which(hh$city_name == outl.below[i])
+	res <- rbind(res, hh[idx,])
+	i = i + 1
+}
+print(res)
+~~~
+
+
+
+~~~{.output}
+    county_id city_id hh10 hh20 hh30 hh40    city_name county_name
+85          2      39 2291 2490 2473 2469      Pacific        King
+133         4     142   51   35   43   45      Pacific      Pierce
+90          2      44 3887 4363 4553 4565 Issaquah PAA        King
+92          2      46  889 1459 1530 1528          UUU        King
+93          2      47  416  432  444  447 Yarrow Point        King
+96          2      50 1126 1160 1193 1203       Medina        King
+
+~~~
+
+> ## Challenge 2 {.challenge}
+>
+> How would you vectorise the following loop
+> 
+> 
+> ~~~{.r}
+> res <- NULL
+> for(city in outl.below) {
+>   idx <- which(hh$city_name == city)
+>   res <- rbind(res, hh[idx,])
+> }
+> ~~~
 
 ## Challenge solutions
 
@@ -323,5 +452,33 @@ take on that value unless the user specifies otherwise.
 > 
 > ~~~{.output}
 > [1] "*** Write programs for people not computers ***"
+> 
+> ~~~
+
+> ## Solution to challenge 2 {.challenge}
+>
+> 
+> ~~~{.r}
+> idx <- which(hh$city_name %in% outl.below)
+> res <- hh[idx,]
+> res
+> ~~~
+> 
+> 
+> 
+> ~~~{.output}
+>     county_id city_id hh10  hh20  hh30  hh40        city_name county_name
+> 4           1     113 9488 12157 13841 15639     Lake Stevens   Snohomish
+> 21          1     117  330   346   348   355     Gold Bar UGA   Snohomish
+> 26          1     122 1647  2093  2335  2586 Lake Stevens UGA   Snohomish
+> 36          1     132   56    67    66    66       Maltby UGA   Snohomish
+> 85          2      39 2291  2490  2473  2469          Pacific        King
+> 90          2      44 3887  4363  4553  4565     Issaquah PAA        King
+> 92          2      46  889  1459  1530  1528              UUU        King
+> 93          2      47  416   432   444   447     Yarrow Point        King
+> 96          2      50 1126  1160  1193  1203           Medina        King
+> 105         2      60  187   138   136   135       Auburn PAA        King
+> 113         3      73  867  1573  2359  2638     Kingston UGA      Kitsap
+> 133         4     142   51    35    43    45          Pacific      Pierce
 > 
 > ~~~

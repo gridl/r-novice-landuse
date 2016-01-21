@@ -420,149 +420,33 @@ names(fit)
 
 ~~~
 
+## Saving plots
+You can save a plot from within RStudio using the 'Export' button
+in the 'Plot' window. This will give you the option of saving as a
+.pdf or as .png, .jpg or other image formats.
 
-<!-- 
+Sometimes you will want to save plots without creating them in the
+'Plot' window first. Perhaps you want to make a pdf document with
+multiple pages: each one a different plot, for example. Or perhaps
+you're looping through multiple subsets of a file, plotting data from
+each subset, and you want to save each plot, but obviously can't stop
+the loop to click 'Export' for each one.
 
-Let's bring in the population and jobs dataset and merge with households:
-
-~~~{.r}
-pop <- read.table(file="data/city__table__population.csv", header=TRUE, sep=",")
-head(pop)
-~~~
-
-
-
-~~~{.output}
-  city_id population_2010 population_2020 population_2030 population_2040
-1      49          121615          133008          136286          146476
-2      94           33959           39114           46440           55807
-3      95           96490          116305          137138          161535
-4      96            6543            6859            7041            7335
-5      97            2065            1892            1898            1954
-6      98           38639           44734           46361           48795
-
-~~~
-
+In this case you can use a more flexible approach. The function
+`pdf` creates a new pdf device. You can control the size and resolution
+using the arguments to this function.
 
 
 ~~~{.r}
-jobs <- read.table(file="data/city__table__employment.csv", header=TRUE, sep=",")
-head(jobs)
+pdf("myplot.pdf", width=12, height=4)
+par(mfrow=c(1,2))
+hist(lu$hh_size)
+boxplot(hh_size ~ county_id, lu)
+# You then have to make sure to turn off the pdf device!
+dev.off()
 ~~~
+Open up this document and have a look.
 
+The commands `jpeg`, `png` etc. are used similarly to produce
+documents in different formats.
 
-
-~~~{.output}
-  city_id employment_2010 employment_2020 employment_2030 employment_2040
-1      49           18393           27222           27780           28628
-2      94           24610           31962           36532           46699
-3      95           81516          108938          117279          158310
-4      96             489             567             533             690
-5      97             105             187             164             144
-6      98           13157           16091           14897           15913
-
-~~~
-
-
-
-~~~{.r}
-hhc <- merge(hhc[,-8], pop[,c("city_id", "population_2010", "population_2040")], by="city_id", all=TRUE)
-~~~
-
-
-
-~~~{.error}
-Error in merge(hhc[, -8], pop[, c("city_id", "population_2010", "population_2040")], : object 'hhc' not found
-
-~~~
-
-
-
-~~~{.r}
-hhc <- merge(hhc, jobs[,c("city_id", "employment_2010", "employment_2040")], by="city_id", all=TRUE)
-~~~
-
-
-
-~~~{.error}
-Error in merge(hhc, jobs[, c("city_id", "employment_2010", "employment_2040")], : object 'hhc' not found
-
-~~~
-
-
-
-~~~{.r}
-head(hhc)
-~~~
-
-
-
-~~~{.error}
-Error in head(hhc): object 'hhc' not found
-
-~~~
-We can do a simple linear regression:
-
-~~~{.r}
-dim(hhc)
-~~~
-
-
-
-~~~{.error}
-Error in eval(expr, envir, enclos): object 'hhc' not found
-
-~~~
-
-
-
-~~~{.r}
-hhc <- na.omit(hhc)
-~~~
-
-
-
-~~~{.error}
-Error in na.omit(hhc): object 'hhc' not found
-
-~~~
-
-
-
-~~~{.r}
-dim(hhc)
-~~~
-
-
-
-~~~{.error}
-Error in eval(expr, envir, enclos): object 'hhc' not found
-
-~~~
-
-
-
-~~~{.r}
-hhnozeros <- subset(hhc, employment_2010 > 0 & households_2010 > 0)
-~~~
-
-
-
-~~~{.error}
-Error in subset(hhc, employment_2010 > 0 & households_2010 > 0): object 'hhc' not found
-
-~~~
-
-
-
-~~~{.r}
-plot(population_2040 ~ households_2040, data=hhc)
-~~~
-
-
-
-~~~{.error}
-Error in eval(expr, envir, enclos): object 'hhc' not found
-
-~~~
--->

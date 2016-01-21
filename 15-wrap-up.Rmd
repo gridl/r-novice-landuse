@@ -7,60 +7,54 @@ minutes: 15
 
 > ## Learning Objectives {.objectives}
 >
-> * To review the best practices for using R for
->   scientific analysis.
+> * To be aware of useful packages
 >
 
-## Best practices for writing nice code
+```{r, include=FALSE}
+source("tools/chunk-options.R")
+# Silently load in the data so the rest of the lesson works
+hh <- read.table(file="data/city__table__households.csv", header=TRUE, sep=",")
+cities <- read.table(file="data/cities.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+counties <- read.table(file="data/counties.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+hh <- merge(hh, cities, by="city_id", all=TRUE)
+hh <- merge(hh, counties, by="county_id", all=TRUE)
+colnames(hh)[3:6] <- c("hh10", "hh20", "hh30", "hh40")
+hh <- na.omit(hh)
+```
 
-## Make code readable
+## Useful packages
 
-The most important part of writing code is making it readable and understandable.
-You want someone else to be able to pick up your code and be able to understand
-what it does: more often than not this someone will be you 6 months down the line,
-who will otherwise be cursing past-self.
+### ggplot2
+For fancy graphs.
 
-## Documentation: tell us what and why, not how
+<img src="fig/08-plot-ggplot2-ch5-sol-1.png" alt="ggplot2-example" />
 
-When you first start out, your comments will often describe what a command does,
-since you're still learning yourself and it can help to clarify concepts and
-remind you later. However, these comments aren't particularly useful later on
-when you don't remember what problem your code is trying to solve. Try to also
-include comments that tell you *why* you're solving a problem, and *what* problem
-that is. The *how* can come after that: it's an implementation detail you ideally
-shouldn't have to worry about.
+### data.table
 
-## Keep your code modular
+For convenient operations on tables. Example:
 
-Our recommendation is that you should separate your functions from your analysis
-scripts, and store them in a separate file that you `source` when you open the R
-session in your project. This approach is nice because it leaves you with an
-uncluttered analysis script, and a repository of useful functions that can be
-loaded into any analysis script in your project. It also lets you group related
-functions together easily.
+```{r}
+library(data.table)
+dt <- data.table(hh)
+dt[, sum(hh40), by=county_id]
+dt[,list(hh10=sum(hh10), hh40=sum(hh40), N=.N), by=county_id]
+```
 
-## Break down problem into bite size pieces
+Another useful package for this kind of operations is **dplyr**.
 
-When you first start out, problem solving and function writing can be daunting
-tasks, and hard to separate from code inexperience. Try to break down your
-problem into digestible chunks and worry about the implementation details later:
-keep breaking down the problem into smaller and smaller functions until you
-reach a point where you can code a solution, and build back up from there.
+### shiny
+For creating web-based interfaces. [Example](https://rstudio.stat.washington.edu/shiny/wppExplorer/inst/explore/)
 
-## Know that your code is doing the right thing
+### googleVis
+For plotting on google maps. Example:
+```{r, eval=FALSE}
+library(googleVis)
+coord <- read.table('data/cities_coordinates.csv', header=TRUE, sep=",")
+hhc <- merge(hh, coord, by="city_id")
+hhc <- cbind(hh, tip = paste(hh$city_name, "HH2040: ", hh$hh40, sep=','))
+map <- gvisMap(hhc, "latlon", tipvar="tip", options=list(height="30cm"))
+plot(map)
+```
 
-Make sure to test your functions!
+Package **maptools** can be used with shapefiles.
 
-## Don't repeat yourself
-
-Functions enable easy reuse within a project. If you see blocks of similar
-lines of code through your project, those are usually candidates for being
-moved into functions.
-
-If your calculations are performed through a series of functions, then the
-project becomes more modular and easier to change. This is especially the case
-for which a particular input always gives a particular output.
-
-## Remember to be stylish
-
-Apply consistent style to your code.

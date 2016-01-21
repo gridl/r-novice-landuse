@@ -7,60 +7,73 @@ minutes: 15
 
 > ## Learning Objectives {.objectives}
 >
-> * To review the best practices for using R for
->   scientific analysis.
+> * To be aware of useful packages
 >
 
-## Best practices for writing nice code
 
-## Make code readable
 
-The most important part of writing code is making it readable and understandable.
-You want someone else to be able to pick up your code and be able to understand
-what it does: more often than not this someone will be you 6 months down the line,
-who will otherwise be cursing past-self.
+## Useful packages
 
-## Documentation: tell us what and why, not how
+### ggplot2
+For fancy graphs.
 
-When you first start out, your comments will often describe what a command does,
-since you're still learning yourself and it can help to clarify concepts and
-remind you later. However, these comments aren't particularly useful later on
-when you don't remember what problem your code is trying to solve. Try to also
-include comments that tell you *why* you're solving a problem, and *what* problem
-that is. The *how* can come after that: it's an implementation detail you ideally
-shouldn't have to worry about.
+<img src="fig/08-plot-ggplot2-ch5-sol-1.png" alt="ggplot2-example" />
 
-## Keep your code modular
+### data.table
 
-Our recommendation is that you should separate your functions from your analysis
-scripts, and store them in a separate file that you `source` when you open the R
-session in your project. This approach is nice because it leaves you with an
-uncluttered analysis script, and a repository of useful functions that can be
-loaded into any analysis script in your project. It also lets you group related
-functions together easily.
+For convenient operations on tables. Example:
 
-## Break down problem into bite size pieces
 
-When you first start out, problem solving and function writing can be daunting
-tasks, and hard to separate from code inexperience. Try to break down your
-problem into digestible chunks and worry about the implementation details later:
-keep breaking down the problem into smaller and smaller functions until you
-reach a point where you can code a solution, and build back up from there.
+~~~{.r}
+library(data.table)
+dt <- data.table(hh)
+dt[, sum(hh40), by=county_id]
+~~~
 
-## Know that your code is doing the right thing
 
-Make sure to test your functions!
 
-## Don't repeat yourself
+~~~{.output}
+   county_id      V1
+1:         1  404472
+2:         2 1088531
+3:         3  151853
+4:         4  462854
 
-Functions enable easy reuse within a project. If you see blocks of similar
-lines of code through your project, those are usually candidates for being
-moved into functions.
+~~~
 
-If your calculations are performed through a series of functions, then the
-project becomes more modular and easier to change. This is especially the case
-for which a particular input always gives a particular output.
 
-## Remember to be stylish
 
-Apply consistent style to your code.
+~~~{.r}
+dt[,list(hh10=sum(hh10), hh40=sum(hh40), N=.N), by=county_id]
+~~~
+
+
+
+~~~{.output}
+   county_id   hh10    hh40  N
+1:         1 266135  404472 46
+2:         2 797467 1088531 57
+3:         3  98059  151853 11
+4:         4 299055  462854 26
+
+~~~
+
+Another useful package for this kind of operations is **dplyr**.
+
+### shiny
+For creating web-based interfaces. [Example](https://rstudio.stat.washington.edu/shiny/wppExplorer/inst/explore/)
+
+### googleVis
+For plotting on google maps. Example:
+
+~~~{.r}
+library(googleVis)
+coord <- read.table('data/cities_coordinates.csv', header=TRUE, sep=",")
+hhc <- merge(hh, coord, by="city_id")
+hhc <- cbind(hh, tip = paste(hh$city_name, "HH2040: ", hh$hh40, sep=','))
+map <- gvisMap(hhc, "latlon", tipvar="tip", options=list(height="30cm"))
+plot(map)
+~~~
+
+Package **maptools** can be used with shapefiles.
+

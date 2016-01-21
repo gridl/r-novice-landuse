@@ -45,20 +45,6 @@ is.character() # is it character data?
 str()  # what is it?
 ~~~
 
-> ## Challenge 1: Data types {.challenge}
->
-> Use your knowledge of how to assign a value to
-> a variable, to create examples of data with the
-> following characteristics:
->
-> 1) Variable name: 'answer', Type: logical
-> 2) Variable name: 'height', Type: numeric
-> 3) Variable name: 'dog_name', Type: character
->
-> For each variable you've created, test that it
-> has the data type you intended. Do you find
-> anything unexpected?
->
 
 ## Data Structures
 
@@ -78,14 +64,6 @@ A vector is the most common and basic data structure in `R` and is pretty much
 the workhorse of R. They are sometimes referred to as atomic vectors, because
 importantly, they can **only contain one data type**. They are the building blocks of
 every other data structure.
-
-A vector can contain any of the five types we introduced before:
-
-* logical (e.g., `TRUE`, `FALSE`)
-* integer (e.g., `2L`, `as.integer(3)`)
-* numeric (real or decimal) (e.g, `2`, `2.0`, `pi`)
-* complex (e.g, `1 + 0i`, `1 + 4i`)
-* character (e.g, `"a"`, `"swc"`)
 
 Create a vector of empty strings of length 10
 
@@ -182,6 +160,47 @@ seq(1, 10, by = 0.1)
 > specifically want to create a vector of integers (whole numbers only),
 > you need to append each number with an L, i.e. `c(10L, 12L, 45L, 33L)`.
 >
+> 
+> ~~~{.r}
+> x <- c(10, 12, 45, 33)
+> typeof(x)
+> ~~~
+> 
+> 
+> 
+> ~~~{.output}
+> [1] "double"
+> 
+> ~~~
+> 
+> 
+> 
+> ~~~{.r}
+> is.integer(x)
+> ~~~
+> 
+> 
+> 
+> ~~~{.output}
+> [1] FALSE
+> 
+> ~~~
+> 
+> 
+> 
+> ~~~{.r}
+> y <- as.integer(x)
+> z <- c(10L, 12L, 45L, 33L)
+> is.integer(z)
+> ~~~
+> 
+> 
+> 
+> ~~~{.output}
+> [1] TRUE
+> 
+> ~~~
+>
 
 You can also use the concatenate function to add elements to a vector:
 
@@ -207,7 +226,7 @@ c(x,y)
 
 
 ~~~{.output}
- [1] 10 12 45 33 57  1  2  3  4  5  6  7  8  9 10
+[1] 10 12 45 33 57 10 12 45 33
 
 ~~~
 
@@ -254,7 +273,7 @@ all(z)
 
 ~~~
 
-> ## Challenge 2 {.challenge}
+> ## Challenge 1 {.challenge}
 >
 > Vectors can only contain one atomic type. If you try to combine different
 > types, R will create a vector that is the least common denominator: the
@@ -502,7 +521,7 @@ You can use `rownames`, `colnames`, and `dimnames` to set or
 retrieve the column and rownames of a matrix. The function `length` will tell you the number of elements.
 
 >
-> ## Challenge 3 {.challenge}
+> ## Challenge 2 {.challenge}
 >
 > What do you think will be the result of
 > `length(x)`?
@@ -511,7 +530,7 @@ retrieve the column and rownames of a matrix. The function `length` will tell yo
 >
 
 >
-> ## Challenge 4 {.challenge}
+> ## Challenge 3 {.challenge}
 >
 > Make another matrix, this time containing the numbers 1:50,
 > with 5 columns and 10 rows.
@@ -632,79 +651,14 @@ one of R's many preloaded datasets (see `?data`). We've also given
 each list element a name, which is why you see `$a` instead of `[[1]]`.
 
 
-> ## Challenge 5 {.challenge}
->
-> Create a list of length two containing a character vector for each of the 
-> sections in this part of the workshop:
->
-> * Data types
-> * Data structures
->
-> Populate each character vector with the names of the data types and data
-> structures we've seen so far.
->
-
 Lists are extremely useful inside functions. You can "staple" together lots of
 different kinds of results into a single object that a function can return. In
 fact many R functions which return complex output store their results in a list.
 
 ## Challenge solutions
 
-> ## Solution to challenge 1: Data types {.challenge}
->
-> Use your knowledge of how to assign a value to
-> a variable, to create examples of data with the
-> following characteristics:
->
-> 1) Variable name: 'answer', Type: logical
-> 2) Variable name: 'height', Type: numeric
-> 3) Variable name: 'dog_name', Type: character
->
-> For each variable you've created, test that it
-> has the data type you intended. Do you find
-> anything unexpected?
->
-> 
-> ~~~{.r}
-> answer <- TRUE
-> height <- 150
-> dog_name <- "Snoopy"
-> is.logical(answer)
-> ~~~
-> 
-> 
-> 
-> ~~~{.output}
-> [1] TRUE
-> 
-> ~~~
->
-> 
-> ~~~{.r}
-> is.numeric(height)
-> ~~~
-> 
-> 
-> 
-> ~~~{.output}
-> [1] TRUE
-> 
-> ~~~
->
-> 
-> ~~~{.r}
-> is.character(dog_name)
-> ~~~
-> 
-> 
-> 
-> ~~~{.output}
-> [1] TRUE
-> 
-> ~~~
->
 
-> ## Solution to challenge 2 {.challenge}
+> ## Solution to challenge 1 {.challenge}
 >
 > Vectors can only contain one atomic type. If you try to combine different
 > types, R will create a vector that is the least common denominator: the
@@ -790,7 +744,7 @@ fact many R functions which return complex output store their results in a list.
 >
 
 >
-> ## Solution to challenge 3 {.challenge}
+> ## Solution to challenge 2 {.challenge}
 >
 > What do you think will be the result of
 > `length(x)`?
@@ -813,7 +767,7 @@ fact many R functions which return complex output store their results in a list.
 >
 
 >
-> ## Solution to challenge 4 {.challenge}
+> ## Solution to challenge 3 {.challenge}
 >
 > Make another matrix, this time containing the numbers 1:50,
 > with 5 columns and 10 rows.
@@ -826,26 +780,5 @@ fact many R functions which return complex output store their results in a list.
 > ~~~{.r}
 > x <- matrix(1:50, ncol=5, nrow=10)
 > x <- matrix(1:50, ncol=5, nrow=10, byrow = TRUE) # to fill by row
-> ~~~
->
-
-
-> ## Solution to challenge 5 {.challenge}
->
-> Create a list of length two containing a character vector for each of the 
-> sections in this part of the workshop:
->
-> * Data types
-> * Data structures
->
-> Populate each character vector with the names of the data types and data
-> structures we've seen so far.
->
-> 
-> ~~~{.r}
-> my_list <- list(
->   data_types = c("logical", "integer", "double", "complex", "character"),
->   data_structures = c("vector", "matrix", "factor", "list")
-> )
 > ~~~
 >

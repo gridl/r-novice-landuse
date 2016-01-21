@@ -12,6 +12,12 @@ lu <- read.table(file="data/city__dataset_table__lu_indicators__2010.tab", heade
 cities <- read.table(file="data/cities.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
 lu <- merge(lu, cities, by="city_id", all=TRUE)
 lu <- na.omit(lu)
+hh <- read.table(file="data/city__table__households.csv", header=TRUE, sep=",")
+cities <- read.table(file="data/cities.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+counties <- read.table(file="data/counties.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+hh <- merge(hh, cities, by="city_id", all=TRUE)
+hh <- merge(hh, counties, by="county_id", all=TRUE)
+colnames(hh)[3:6] <- c("hh10", "hh20", "hh30", "hh40")
 ```
 
 > ## Learning Objectives {.objectives}
@@ -80,8 +86,7 @@ sqft.to.acres(tmp)
 The real power of functions comes from mixing, matching and combining them
 into ever large chunks to get the effect we want.
 
-Let's define two functions that will convert temperature from Fahrenheit to
-Kelvin, and Kelvin to Celsius:
+Here we convert sqft to acres and append it as an additional column of the dataset:
 
 ```{r}
 add.acres <- function(dat) {
@@ -96,13 +101,13 @@ Now we're going to define
 a function that returns cities with sqft per job ratio above certain threshold:
 
 ```{r}
-cities.above <- function(dat, threshold=700) {
+job.space.above <- function(dat, threshold=700) {
   idx <- which(dat$jobs > 0)
   ratio <- dat$non_res_sqft[idx]/dat$jobs[idx]
   return(dat$city_name[ratio > threshold])
 }
-cities.above(lu)
-cities.above(lu, 2000)
+job.space.above(lu)
+job.space.above(lu, 2000)
 ```
 
 
@@ -178,37 +183,77 @@ take on that value unless the user specifies otherwise.
 [chapter]: http://adv-r.had.co.nz/Environments.html
 [adv-r]: http://adv-r.had.co.nz/
 
+## Control Flow
 
-> ## Tip: Testing and documenting {.callout}
->
-> It's important to both test functions and document them:
-> Documentation helps you, and others, understand what the
-> purpose of your function is, and how to use it, and its
-> important to make sure that your function actually does
-> what you think.
->
-> When you first start out, your workflow will probably look a lot
-> like this:
->
->  1. Write a function
->  2. Comment parts of the function to document its behaviour
->  3. Load in the source file
->  4. Experiment with it in the console to make sure it behaves
->     as you expect
->  5. Make any necessary bug fixes
->  6. Rinse and repeat.
->
-> Formal documentation for functions, written in separate `.Rd`
-> files, gets turned into the documentation you see in help
-> files. The [roxygen2][] package allows R coders to write documentation alongside
-> the function code and then process it into the appropriate `.Rd` files.
-> You will want to switch to this more formal method of writing documentation
-> when you start writing more complicated R projects.
->
-> Formal automated tests can be written using the [testthat][] package.
+The meaning of the control flow structures `if else`, `for` and `while` is the same as in Python or other programming languages. What differs is the syntax. Let's learn these construct on examples.
 
-[roxygen2]: http://cran.r-project.org/web/packages/roxygen2/vignettes/rd.html
-[testthat]: http://r-pkgs.had.co.nz/tests.html
+First let's modify our `job.space.above` funtion to control for both ends of the distribution:
+```{r}
+job.space.outliers <- function(dat, threshold=700, above=TRUE) {
+  idx <- which(dat$jobs > 0)
+  ratio <- dat$non_res_sqft[idx]/dat$jobs[idx]
+  if(above) {
+  	res <- dat$city_name[ratio > threshold]
+  } else {
+  	res <- dat$city_name[ratio <= threshold]
+  }
+  return(res)
+}
+outl.above <- job.space.outliers(lu, 2000)
+outl.above
+outl.below <- job.space.outliers(lu, 50, above=FALSE)
+outl.below 
+```
+
+We have our vectors of cities obtained `outl.above` and `outl.below` and we want to extract data corresponding to those cities from the households dataset:
+```{r}
+for(city in outl.above) {
+	idx <- which(hh$city_name == city)
+	print(hh[idx,])
+}
+```
+This does not look very pretty. We can improve by binding the rows together:
+```{r}
+res <- NULL
+for(city in outl.above) {
+	idx <- which(hh$city_name == city)
+	res <- rbind(res, hh[idx,])
+}
+print(res)
+res <- NULL
+for(city in outl.below) {
+	idx <- which(hh$city_name == city)
+	res <- rbind(res, hh[idx,])
+}
+print(res)
+```
+
+Sometimes you will find yourself needing to repeat an operation until a certain
+condition is met. You can do this with a `while` loop.
+
+Say we want the above data frame but with maximum of five rows:
+```{r}
+res <- NULL
+i <- 1
+while(i <= 5) {
+	idx <- which(hh$city_name == outl.below[i])
+	res <- rbind(res, hh[idx,])
+	i = i + 1
+}
+print(res)
+```
+
+> ## Challenge 2 {.challenge}
+>
+> How would you vectorise the following loop
+> 
+> ```{r}
+> res <- NULL
+> for(city in outl.below) {
+>   idx <- which(hh$city_name == city)
+>   res <- rbind(res, hh[idx,])
+> }
+> ```
 
 ## Challenge solutions
 
@@ -226,4 +271,12 @@ take on that value unless the user specifies otherwise.
 > }
 > best_practice <- c("Write", "programs", "for", "people", "not", "computers")
 > fence(text=best_practice, wrapper="***")
+> ```
+
+> ## Solution to challenge 2 {.challenge}
+>
+> ```{r}
+> idx <- which(hh$city_name %in% outl.below)
+> res <- hh[idx,]
+> res
 > ```

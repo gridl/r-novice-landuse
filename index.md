@@ -29,10 +29,9 @@ Note that this lesson is a modified version of the "R for Reproducible Scientifi
 4.  [Subsetting data](04-data-subsetting.html)
 5.  [Vectorisation](05-vectorisation.html)
 6.  [Data Analysis](06-data-analysis.html)
-7.  [Creating functions](07-functions.html)
-10. [Control flow](10-control-flow.html)
+7.  [Creating functions and Control flow](07-functions.html)
 11. [Writing data](11-writing-data.html)
-15. [Wrapping up](15-wrap-up.html)
+15. [Extras](15-wrap-up.html)
 
 
 ## Other Resources
