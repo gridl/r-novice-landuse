@@ -28,17 +28,21 @@
         <div class="col-md-10 col-md-offset-1">
                     <a href="index.html"><h1 class="title">R for Data Analysis</h1></a>
           <h2 class="subtitle">Data Analysis</h2>
-          <blockquote>
-<h2>Learning Objectives</h2>
+          <section class="objectives panel panel-warning">
+<div class="panel-heading">
+<h2 id="learning-objectives"><span class="glyphicon glyphicon-certificate"></span>Learning Objectives</h2>
+</div>
+<div class="panel-body">
 <ul>
 <li>To be able to summarize and visualize data.</li>
 </ul>
-</blockquote>
+</div>
+</section>
 <h2 id="data-manipulation">Data manipulation</h2>
 <p>Let’s try vectorisation on the <code>hh40</code> column of the <code>hh</code> dataset. First remove rows with NA. Then make a new column in the <code>hh</code> data frame that contains households in units of thousands of people.</p>
-<pre class="sourceCode r"><code class="sourceCode r">hh &lt;-<span class="st"> </span><span class="kw">na.omit</span>(hh)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hh &lt;-<span class="st"> </span><span class="kw">na.omit</span>(hh)
 hh$hh40inT &lt;-<span class="st"> </span>hh$hh40 /<span class="st"> </span><span class="dv">1000</span>
-<span class="kw">head</span>(hh)</code></pre>
+<span class="kw">head</span>(hh)</code></pre></div>
 <pre class="output"><code>  county_id city_id  hh10  hh20  hh30  hh40         city_name county_name
 3         1     109 14853 17874 18051 18542      Everett MUGA   Snohomish
 4         1     113  9488 12157 13841 15639      Lake Stevens   Snohomish
@@ -55,9 +59,9 @@ hh$hh40inT &lt;-<span class="st"> </span>hh$hh40 /<span class="st"> </span><span
 8  11.644
 </code></pre>
 <p>Create a log transformation:</p>
-<pre class="sourceCode r"><code class="sourceCode r">hhlog &lt;-<span class="st"> </span>hh
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hhlog &lt;-<span class="st"> </span>hh
 hhlog[,<span class="dv">2</span>:<span class="dv">6</span>] &lt;-<span class="st"> </span><span class="kw">log</span>(hhlog[,<span class="dv">2</span>:<span class="dv">6</span>])
-<span class="kw">head</span>(hhlog)</code></pre>
+<span class="kw">head</span>(hhlog)</code></pre></div>
 <pre class="output"><code>  county_id  city_id     hh10     hh20     hh30     hh40         city_name
 3         1 4.691348 9.605957 9.791102 9.800956 9.827794      Everett MUGA
 4         1 4.727388 9.157783 9.405660 9.535390 9.657523      Lake Stevens
@@ -74,8 +78,8 @@ hhlog[,<span class="dv">2</span>:<span class="dv">6</span>] &lt;-<span class="st
 8   Snohomish  11.644
 </code></pre>
 <p>Create a dataset of differences:</p>
-<pre class="sourceCode r"><code class="sourceCode r">hhdif &lt;-<span class="st"> </span><span class="kw">cbind</span>(<span class="kw">data.frame</span>(<span class="dt">city_id=</span>hh$city_id), hh[,<span class="dv">3</span>:<span class="dv">5</span>] -<span class="st"> </span>hh[,<span class="dv">2</span>:<span class="dv">4</span>])
-<span class="kw">head</span>(hhdif)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hhdif &lt;-<span class="st"> </span><span class="kw">cbind</span>(<span class="kw">data.frame</span>(<span class="dt">city_id=</span>hh$city_id), hh[,<span class="dv">3</span>:<span class="dv">5</span>] -<span class="st"> </span>hh[,<span class="dv">2</span>:<span class="dv">4</span>])
+<span class="kw">head</span>(hhdif)</code></pre></div>
 <pre class="output"><code>  city_id  hh10 hh20 hh30
 3     109 14744 3021  177
 4     113  9375 2669 1684
@@ -84,7 +88,7 @@ hhlog[,<span class="dv">2</span>:<span class="dv">6</span>] &lt;-<span class="st
 7     104  1305   65  362
 8     105  7699 3074  275
 </code></pre>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(hhdif)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(hhdif)</code></pre></div>
 <pre class="output"><code>    city_id            hh10               hh20              hh30         
  Min.   :  1.00   Min.   :  -136.0   Min.   :  -92.0   Min.   : -359.00  
  1st Qu.: 35.75   1st Qu.:   408.8   1st Qu.:   46.0   1st Qu.:   46.75  
@@ -95,31 +99,31 @@ hhlog[,<span class="dv">2</span>:<span class="dv">6</span>] &lt;-<span class="st
 </code></pre>
 <h2 id="scatter-plot-histogram-boxplot">Scatter plot, histogram, boxplot</h2>
 <p>Plot results:</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(hh$hh10, hh$hh40, <span class="dt">xlab=</span><span class="st">&quot;2010&quot;</span>, <span class="dt">ylab=</span><span class="st">&quot;2040&quot;</span>)
-<span class="kw">abline</span>(<span class="dv">0</span>,<span class="dv">1</span>)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(hh$hh10, hh$hh40, <span class="dt">xlab=</span><span class="st">&quot;2010&quot;</span>, <span class="dt">ylab=</span><span class="st">&quot;2040&quot;</span>)
+<span class="kw">abline</span>(<span class="dv">0</span>,<span class="dv">1</span>)</code></pre></div>
 <p><img src="fig/09-vectorisation-unnamed-chunk-5-1.png" title="plot of chunk unnamed-chunk-5" alt="plot of chunk unnamed-chunk-5" style="display: block; margin: auto;" /></p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(hh$hh10, hh$hh40, <span class="dt">xlab=</span><span class="st">&quot;2010&quot;</span>, <span class="dt">ylab=</span><span class="st">&quot;2040&quot;</span>, <span class="dt">log=</span><span class="st">&quot;xy&quot;</span>)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(hh$hh10, hh$hh40, <span class="dt">xlab=</span><span class="st">&quot;2010&quot;</span>, <span class="dt">ylab=</span><span class="st">&quot;2040&quot;</span>, <span class="dt">log=</span><span class="st">&quot;xy&quot;</span>)</code></pre></div>
 <pre class="error"><code>Warning in xy.coords(x, y, xlabel, ylabel, log): 2 x values &lt;= 0 omitted
 from logarithmic plot
 </code></pre>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">abline</span>(<span class="dv">0</span>,<span class="dv">1</span>)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">abline</span>(<span class="dv">0</span>,<span class="dv">1</span>)</code></pre></div>
 <p><img src="fig/09-vectorisation-unnamed-chunk-5-2.png" title="plot of chunk unnamed-chunk-5" alt="plot of chunk unnamed-chunk-5" style="display: block; margin: auto;" /></p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">hist</span>(hh$hh40 -<span class="st"> </span>hh$hh10, <span class="dt">main=</span><span class="st">&quot;Change 2040-2010&quot;</span>)
-<span class="kw">abline</span>(<span class="dt">v=</span><span class="dv">0</span>, <span class="dt">lwd=</span><span class="dv">2</span>, <span class="dt">col=</span><span class="st">&quot;red&quot;</span>)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">hist</span>(hh$hh40 -<span class="st"> </span>hh$hh10, <span class="dt">main=</span><span class="st">&quot;Change 2040-2010&quot;</span>)
+<span class="kw">abline</span>(<span class="dt">v=</span><span class="dv">0</span>, <span class="dt">lwd=</span><span class="dv">2</span>, <span class="dt">col=</span><span class="st">&quot;red&quot;</span>)</code></pre></div>
 <p><img src="fig/09-vectorisation-unnamed-chunk-5-3.png" title="plot of chunk unnamed-chunk-5" alt="plot of chunk unnamed-chunk-5" style="display: block; margin: auto;" /> Investigate records with negative change between 2040 and 2010:</p>
-<pre class="sourceCode r"><code class="sourceCode r">neg &lt;-<span class="st"> </span>hh[hh$hh40 -<span class="st"> </span>hh$hh10 &lt;<span class="st"> </span><span class="dv">0</span>, ]
-<span class="kw">dim</span>(neg)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">neg &lt;-<span class="st"> </span>hh[hh$hh40 -<span class="st"> </span>hh$hh10 &lt;<span class="st"> </span><span class="dv">0</span>, ]
+<span class="kw">dim</span>(neg)</code></pre></div>
 <pre class="output"><code>[1] 6 9
 </code></pre>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(neg$hh10, neg$hh40, <span class="dt">xlab=</span><span class="st">&quot;2010&quot;</span>, <span class="dt">ylab=</span><span class="st">&quot;2040&quot;</span>, <span class="dt">log=</span><span class="st">&quot;xy&quot;</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(neg$hh10, neg$hh40, <span class="dt">xlab=</span><span class="st">&quot;2010&quot;</span>, <span class="dt">ylab=</span><span class="st">&quot;2040&quot;</span>, <span class="dt">log=</span><span class="st">&quot;xy&quot;</span>)
 <span class="kw">text</span>(neg$hh10, neg$hh40, <span class="dt">labels=</span>neg$city_name, <span class="dt">pos=</span><span class="dv">3</span>)
-<span class="kw">abline</span>(<span class="dv">0</span>,<span class="dv">1</span>)</code></pre>
+<span class="kw">abline</span>(<span class="dv">0</span>,<span class="dv">1</span>)</code></pre></div>
 <p><img src="fig/09-vectorisation-unnamed-chunk-6-1.png" title="plot of chunk unnamed-chunk-6" alt="plot of chunk unnamed-chunk-6" style="display: block; margin: auto;" /></p>
 <p>Let’s bring in a dataset with multiple land use indicators from 2010, merge it with city names and omit records with missing values:</p>
-<pre class="sourceCode r"><code class="sourceCode r">lu &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="dt">file=</span><span class="st">&quot;data/city__dataset_table__lu_indicators__2010.tab&quot;</span>, <span class="dt">header=</span><span class="ot">TRUE</span>, <span class="dt">sep=</span><span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">lu &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="dt">file=</span><span class="st">&quot;data/city__dataset_table__lu_indicators__2010.tab&quot;</span>, <span class="dt">header=</span><span class="ot">TRUE</span>, <span class="dt">sep=</span><span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span>)
 lu &lt;-<span class="st"> </span><span class="kw">merge</span>(lu, cities, <span class="dt">by=</span><span class="st">&quot;city_id&quot;</span>, <span class="dt">all=</span><span class="ot">TRUE</span>)
 lu &lt;-<span class="st"> </span><span class="kw">na.omit</span>(lu)
-<span class="kw">summary</span>(lu)</code></pre>
+<span class="kw">summary</span>(lu)</code></pre></div>
 <pre class="output"><code>    city_id            jobs            households         population    
  Min.   :  1.00   Min.   :     0.0   Min.   :     0.0   Min.   :     0  
  1st Qu.: 35.75   1st Qu.:   213.5   1st Qu.:   523.5   1st Qu.:  1302  
@@ -150,8 +154,8 @@ lu &lt;-<span class="st"> </span><span class="kw">na.omit</span>(lu)
  Max.   :4.748e+10                      Max.   :4.000  
 </code></pre>
 <p>Say we want to look at the distribution of the average household sizes by counties. First, create a column for household size:</p>
-<pre class="sourceCode r"><code class="sourceCode r">lu &lt;-<span class="st"> </span><span class="kw">cbind</span>(lu, <span class="dt">hh_size=</span>lu$population/lu$households)
-<span class="kw">head</span>(lu[<span class="kw">order</span>(lu$hh_size),])</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">lu &lt;-<span class="st"> </span><span class="kw">cbind</span>(lu, <span class="dt">hh_size=</span>lu$population/lu$households)
+<span class="kw">head</span>(lu[<span class="kw">order</span>(lu$hh_size),])</code></pre></div>
 <pre class="output"><code>    city_id   jobs households population res_units non_res_sqft
 9         9 487626     286525     589269    310493    265491636
 119     119      6         34         73        62            0
@@ -174,7 +178,7 @@ lu &lt;-<span class="st"> </span><span class="kw">na.omit</span>(lu)
 65               Bremerton         3 2.272436
 82                  Ruston         4 2.306590
 </code></pre>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">tail</span>(lu[<span class="kw">order</span>(lu$hh_size),])</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">tail</span>(lu[<span class="kw">order</span>(lu$hh_size),])</code></pre></div>
 <pre class="output"><code>    city_id  jobs households population res_units non_res_sqft land_value
 132     132  3555         56        183        57      2852584  104873190
 75       75 11949       1389       4604      2418       116203  373175945
@@ -198,15 +202,15 @@ lu &lt;-<span class="st"> </span><span class="kw">na.omit</span>(lu)
 136         1      NaN
 </code></pre>
 <p>Second, create a histogram for all cities, and a box plot by counties:</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">hist</span>(lu$hh_size)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">hist</span>(lu$hh_size)</code></pre></div>
 <p><img src="fig/09-vectorisation-unnamed-chunk-9-1.png" title="plot of chunk unnamed-chunk-9" alt="plot of chunk unnamed-chunk-9" style="display: block; margin: auto;" /></p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">boxplot</span>(hh_size ~<span class="st"> </span>county_id, lu)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">boxplot</span>(hh_size ~<span class="st"> </span>county_id, lu)</code></pre></div>
 <p><img src="fig/09-vectorisation-unnamed-chunk-9-2.png" title="plot of chunk unnamed-chunk-9" alt="plot of chunk unnamed-chunk-9" style="display: block; margin: auto;" /></p>
 <h2 id="simple-regression">Simple regression</h2>
 <p>Here is a simple regression for our lu dataset:</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(jobs ~<span class="st"> </span>non_res_sqft, lu)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(jobs ~<span class="st"> </span>non_res_sqft, lu)
 fit &lt;-<span class="st"> </span><span class="kw">lm</span>(jobs ~<span class="st"> </span>non_res_sqft, lu)
-<span class="kw">summary</span>(fit)</code></pre>
+<span class="kw">summary</span>(fit)</code></pre></div>
 <pre class="output"><code>
 Call:
 lm(formula = jobs ~ non_res_sqft, data = lu)
@@ -226,13 +230,13 @@ Residual standard error: 7092 on 138 degrees of freedom
 Multiple R-squared:  0.975, Adjusted R-squared:  0.9748 
 F-statistic:  5372 on 1 and 138 DF,  p-value: &lt; 2.2e-16
 </code></pre>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">abline</span>(fit)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">abline</span>(fit)</code></pre></div>
 <p><img src="fig/09-vectorisation-unnamed-chunk-10-1.png" title="plot of chunk unnamed-chunk-10" alt="plot of chunk unnamed-chunk-10" style="display: block; margin: auto;" /></p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cor</span>(lu$jobs, lu$non_res_sqft)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cor</span>(lu$jobs, lu$non_res_sqft)</code></pre></div>
 <pre class="output"><code>[1] 0.9873986
 </code></pre>
 <p>Try to add another variable:</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(<span class="kw">lm</span>(jobs ~<span class="st"> </span>non_res_sqft +<span class="st"> </span>population, lu))</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(<span class="kw">lm</span>(jobs ~<span class="st"> </span>non_res_sqft +<span class="st"> </span>population, lu))</code></pre></div>
 <pre class="output"><code>
 Call:
 lm(formula = jobs ~ non_res_sqft + population, data = lu)
@@ -254,8 +258,8 @@ Multiple R-squared:  0.975, Adjusted R-squared:  0.9746
 F-statistic:  2673 on 2 and 137 DF,  p-value: &lt; 2.2e-16
 </code></pre>
 <p>Or remove the intercept:</p>
-<pre class="sourceCode r"><code class="sourceCode r">fit &lt;-<span class="st"> </span><span class="kw">lm</span>(jobs ~<span class="st"> </span>-<span class="dv">1</span> +<span class="st"> </span>non_res_sqft, lu)
-<span class="kw">summary</span>(fit)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fit &lt;-<span class="st"> </span><span class="kw">lm</span>(jobs ~<span class="st"> </span>-<span class="dv">1</span> +<span class="st"> </span>non_res_sqft, lu)
+<span class="kw">summary</span>(fit)</code></pre></div>
 <pre class="output"><code>
 Call:
 lm(formula = jobs ~ -1 + non_res_sqft, data = lu)
@@ -274,7 +278,7 @@ Residual standard error: 7119 on 139 degrees of freedom
 Multiple R-squared:  0.9765,    Adjusted R-squared:  0.9763 
 F-statistic:  5775 on 1 and 139 DF,  p-value: &lt; 2.2e-16
 </code></pre>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">names</span>(fit)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">names</span>(fit)</code></pre></div>
 <pre class="output"><code> [1] &quot;coefficients&quot;  &quot;residuals&quot;     &quot;effects&quot;       &quot;rank&quot;         
  [5] &quot;fitted.values&quot; &quot;assign&quot;        &quot;qr&quot;            &quot;df.residual&quot;  
  [9] &quot;xlevels&quot;       &quot;call&quot;          &quot;terms&quot;         &quot;model&quot;        
@@ -283,12 +287,12 @@ F-statistic:  5775 on 1 and 139 DF,  p-value: &lt; 2.2e-16
 <p>You can save a plot from within RStudio using the ‘Export’ button in the ‘Plot’ window. This will give you the option of saving as a .pdf or as .png, .jpg or other image formats.</p>
 <p>Sometimes you will want to save plots without creating them in the ‘Plot’ window first. Perhaps you want to make a pdf document with multiple pages: each one a different plot, for example. Or perhaps you’re looping through multiple subsets of a file, plotting data from each subset, and you want to save each plot, but obviously can’t stop the loop to click ‘Export’ for each one.</p>
 <p>In this case you can use a more flexible approach. The function <code>pdf</code> creates a new pdf device. You can control the size and resolution using the arguments to this function.</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">pdf</span>(<span class="st">&quot;myplot.pdf&quot;</span>, <span class="dt">width=</span><span class="dv">12</span>, <span class="dt">height=</span><span class="dv">4</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">pdf</span>(<span class="st">&quot;myplot.pdf&quot;</span>, <span class="dt">width=</span><span class="dv">12</span>, <span class="dt">height=</span><span class="dv">4</span>)
 <span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))
 <span class="kw">hist</span>(lu$hh_size)
 <span class="kw">boxplot</span>(hh_size ~<span class="st"> </span>county_id, lu)
 <span class="co"># You then have to make sure to turn off the pdf device!</span>
-<span class="kw">dev.off</span>()</code></pre>
+<span class="kw">dev.off</span>()</code></pre></div>
 <p>Open up this document and have a look.</p>
 <p>The commands <code>jpeg</code>, <code>png</code> etc. are used similarly to produce documents in different formats.</p>
         </div>

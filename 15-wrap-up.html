@@ -28,28 +28,32 @@
         <div class="col-md-10 col-md-offset-1">
                     <a href="index.html"><h1 class="title">R for Data Analysis</h1></a>
           <h2 class="subtitle">Wrapping up</h2>
-          <blockquote>
-<h2>Learning Objectives</h2>
+          <section class="objectives panel panel-warning">
+<div class="panel-heading">
+<h2 id="learning-objectives"><span class="glyphicon glyphicon-certificate"></span>Learning Objectives</h2>
+</div>
+<div class="panel-body">
 <ul>
 <li>To be aware of useful packages</li>
 </ul>
-</blockquote>
+</div>
+</section>
 <h2 id="useful-packages">Useful packages</h2>
 <h3 id="ggplot2">ggplot2</h3>
 <p>For fancy graphs.</p>
 <p><img src="fig/08-plot-ggplot2-ch5-sol-1.png" alt="ggplot2-example" /></p>
 <h3 id="data.table">data.table</h3>
 <p>For convenient operations on tables. Example:</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(data.table)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(data.table)
 dt &lt;-<span class="st"> </span><span class="kw">data.table</span>(hh)
-dt[, <span class="kw">sum</span>(hh40), by=county_id]</code></pre>
+dt[, <span class="kw">sum</span>(hh40), by=county_id]</code></pre></div>
 <pre class="output"><code>   county_id      V1
 1:         1  404472
 2:         2 1088531
 3:         3  151853
 4:         4  462854
 </code></pre>
-<pre class="sourceCode r"><code class="sourceCode r">dt[,<span class="kw">list</span>(<span class="dt">hh10=</span><span class="kw">sum</span>(hh10), <span class="dt">hh40=</span><span class="kw">sum</span>(hh40), <span class="dt">N=</span>.N), by=county_id]</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dt[,<span class="kw">list</span>(<span class="dt">hh10=</span><span class="kw">sum</span>(hh10), <span class="dt">hh40=</span><span class="kw">sum</span>(hh40), <span class="dt">N=</span>.N), by=county_id]</code></pre></div>
 <pre class="output"><code>   county_id   hh10    hh40  N
 1:         1 266135  404472 46
 2:         2 797467 1088531 57
@@ -61,12 +65,12 @@ dt[, <span class="kw">sum</span>(hh40), by=county_id]</code></pre>
 <p>For creating web-based interfaces. <a href="https://rstudio.stat.washington.edu/shiny/wppExplorer/inst/explore/">Example</a></p>
 <h3 id="googlevis">googleVis</h3>
 <p>For plotting on google maps. Example:</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(googleVis)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(googleVis)
 coord &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="st">&#39;data/cities_coordinates.csv&#39;</span>, <span class="dt">header=</span><span class="ot">TRUE</span>, <span class="dt">sep=</span><span class="st">&quot;,&quot;</span>)
 hhc &lt;-<span class="st"> </span><span class="kw">merge</span>(hh, coord, <span class="dt">by=</span><span class="st">&quot;city_id&quot;</span>)
 hhc &lt;-<span class="st"> </span><span class="kw">cbind</span>(hh, <span class="dt">tip =</span> <span class="kw">paste</span>(hh$city_name, <span class="st">&quot;HH2040: &quot;</span>, hh$hh40, <span class="dt">sep=</span><span class="st">&#39;,&#39;</span>))
 map &lt;-<span class="st"> </span><span class="kw">gvisMap</span>(hhc, <span class="st">&quot;latlon&quot;</span>, <span class="dt">tipvar=</span><span class="st">&quot;tip&quot;</span>, <span class="dt">options=</span><span class="kw">list</span>(<span class="dt">height=</span><span class="st">&quot;30cm&quot;</span>))
-<span class="kw">plot</span>(map)</code></pre>
+<span class="kw">plot</span>(map)</code></pre></div>
 <p>Package <strong>maptools</strong> can be used with shapefiles.</p>
         </div>
       </div>
