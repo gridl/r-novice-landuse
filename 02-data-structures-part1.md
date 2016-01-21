@@ -51,9 +51,9 @@ str()  # what is it?
 There are five data structures you will commonly encounter in R. These are:
 
 * vector
+* matrix
 * factor
 * list
-* matrix
 * data.frame
 
 For now, let's focus on vectors in more detail, to discover more about data types.

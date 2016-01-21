@@ -238,7 +238,7 @@ rbind(df, df)
 ~~~
  
 ## Merging data frames
-Data frames can be merged on one or mole columns. Create a second dataset and merge it with our `df` object:
+Data frames can be merged on one or more columns. Create a second dataset and merge it with our `df` object:
 
 ~~~{.r}
 df2 <- data.frame(id = c('a', 'b', 'c', 'd', 'e'), X = 101:105)
@@ -277,13 +277,13 @@ df
 
 ~~~
 
-> ## Challenge 2 {.challenge}
+> ## Challenge 1 {.challenge}
 >
 > Create a data frame that holds the following information for yourself:
 >
 > * First name
 > * Last name
-> * Age
+> * Height
 >
 > Then use rbind to add the same information for the people sitting near you.
 >
@@ -386,17 +386,8 @@ head(hh)
 >
 
 To make sure our analysis is reproducible, we should put the code
-into a script file so we can come back to it later.
-
-> ## Challenge 3 {.challenge}
->
-> Go to file -> new file -> R script, and write an R script
-> to load in the households dataset. Put it in the `scripts/`
-> directory and add it to version control.
->
-> Run the script using the `source` function, using the file path
-> as its argument (or by pressing the "source" button in RStudio).
->
+into a script file so we can come back to it later. It can be then run using the `source` function, using the file path
+as its argument (or by pressing the "source" button in RStudio).
 
 ## Using data frames
 
@@ -735,13 +726,13 @@ summary(hh)
 
 ## Challenge Solutions
 
-> ## Solution to Challenge 2 {.challenge}
+> ## Solution to Challenge 1 {.challenge}
 >
 > Create a data frame that holds the following information for yourself:
 >
 > * First name
 > * Last name
-> * Age
+> * Height
 >
 > Then use rbind to add the same information for the people sitting near you.
 >
@@ -750,8 +741,8 @@ summary(hh)
 >
 > 
 > ~~~{.r}
-> my_df <- data.frame(first_name = "Software", last_name = "Carpentry", age = 17)
-> my_df <- rbind(my_df, list("Jane", "Smith", 29))
-> my_df <- rbind(my_df, list(c("Jo", "John"), c("White", "Lee"), c(23, 41)))
+> my_df <- data.frame(first_name = "Software", last_name = "Carpentry", height = 170)
+> my_df <- rbind(my_df, list("Jane", "Smith", 160))
+> my_df <- rbind(my_df, list(c("Jo", "John"), c("White", "Lee"), c(165, 179)))
 > my_df <- cbind(my_df, confused = c(FALSE, FALSE, TRUE, FALSE))
 > ~~~

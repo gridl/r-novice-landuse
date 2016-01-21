@@ -146,7 +146,7 @@ df</code></pre></div>
 12  f 6 219 1    F    0
 </code></pre>
 <h2 id="merging-data-frames">Merging data frames</h2>
-<p>Data frames can be merged on one or mole columns. Create a second dataset and merge it with our <code>df</code> object:</p>
+<p>Data frames can be merged on one or more columns. Create a second dataset and merge it with our <code>df</code> object:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df2 &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">id =</span> <span class="kw">c</span>(<span class="st">&#39;a&#39;</span>, <span class="st">&#39;b&#39;</span>, <span class="st">&#39;c&#39;</span>, <span class="st">&#39;d&#39;</span>, <span class="st">&#39;e&#39;</span>), <span class="dt">X =</span> <span class="dv">101</span>:<span class="dv">105</span>)
 df2</code></pre></div>
 <pre class="output"><code>  id   X
@@ -168,14 +168,14 @@ df</code></pre></div>
 </code></pre>
 <section class="challenge panel panel-success">
 <div class="panel-heading">
-<h2 id="challenge-2"><span class="glyphicon glyphicon-pencil"></span>Challenge 2</h2>
+<h2 id="challenge-1"><span class="glyphicon glyphicon-pencil"></span>Challenge 1</h2>
 </div>
 <div class="panel-body">
 <p>Create a data frame that holds the following information for yourself:</p>
 <ul>
 <li>First name</li>
 <li>Last name</li>
-<li>Age</li>
+<li>Height</li>
 </ul>
 <p>Then use rbind to add the same information for the people sitting near you.</p>
 <p>Now use cbind to add a column of logicals that will, for each person, hold the answer to the question, “Is there anything in this workshop you’re finding confusing?”</p>
@@ -232,16 +232,7 @@ hh &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="d
 </ol>
 </div>
 </aside>
-<p>To make sure our analysis is reproducible, we should put the code into a script file so we can come back to it later.</p>
-<section class="challenge panel panel-success">
-<div class="panel-heading">
-<h2 id="challenge-3"><span class="glyphicon glyphicon-pencil"></span>Challenge 3</h2>
-</div>
-<div class="panel-body">
-<p>Go to file -&gt; new file -&gt; R script, and write an R script to load in the households dataset. Put it in the <code>scripts/</code> directory and add it to version control.</p>
-<p>Run the script using the <code>source</code> function, using the file path as its argument (or by pressing the “source” button in RStudio).</p>
-</div>
-</section>
+<p>To make sure our analysis is reproducible, we should put the code into a script file so we can come back to it later. It can be then run using the <code>source</code> function, using the file path as its argument (or by pressing the “source” button in RStudio).</p>
 <h2 id="using-data-frames">Using data frames</h2>
 <p>To recap what we’ve just learned, let’s have a look at our example data (mumber of households in various cities for various years).</p>
 <p>Remember, there are a few functions we can use to interrogate data structures in R:</p>
@@ -406,20 +397,20 @@ hh &lt;-<span class="st"> </span><span class="kw">merge</span>(hh, counties, <sp
 <h2 id="challenge-solutions">Challenge Solutions</h2>
 <section class="challenge panel panel-success">
 <div class="panel-heading">
-<h2 id="solution-to-challenge-2"><span class="glyphicon glyphicon-pencil"></span>Solution to Challenge 2</h2>
+<h2 id="solution-to-challenge-1"><span class="glyphicon glyphicon-pencil"></span>Solution to Challenge 1</h2>
 </div>
 <div class="panel-body">
 <p>Create a data frame that holds the following information for yourself:</p>
 <ul>
 <li>First name</li>
 <li>Last name</li>
-<li>Age</li>
+<li>Height</li>
 </ul>
 <p>Then use rbind to add the same information for the people sitting near you.</p>
 <p>Now use cbind to add a column of logicals answering the question, “Is there anything in this workshop you’re finding confusing?”</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">my_df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">first_name =</span> <span class="st">&quot;Software&quot;</span>, <span class="dt">last_name =</span> <span class="st">&quot;Carpentry&quot;</span>, <span class="dt">age =</span> <span class="dv">17</span>)
-my_df &lt;-<span class="st"> </span><span class="kw">rbind</span>(my_df, <span class="kw">list</span>(<span class="st">&quot;Jane&quot;</span>, <span class="st">&quot;Smith&quot;</span>, <span class="dv">29</span>))
-my_df &lt;-<span class="st"> </span><span class="kw">rbind</span>(my_df, <span class="kw">list</span>(<span class="kw">c</span>(<span class="st">&quot;Jo&quot;</span>, <span class="st">&quot;John&quot;</span>), <span class="kw">c</span>(<span class="st">&quot;White&quot;</span>, <span class="st">&quot;Lee&quot;</span>), <span class="kw">c</span>(<span class="dv">23</span>, <span class="dv">41</span>)))
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">my_df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">first_name =</span> <span class="st">&quot;Software&quot;</span>, <span class="dt">last_name =</span> <span class="st">&quot;Carpentry&quot;</span>, <span class="dt">height =</span> <span class="dv">170</span>)
+my_df &lt;-<span class="st"> </span><span class="kw">rbind</span>(my_df, <span class="kw">list</span>(<span class="st">&quot;Jane&quot;</span>, <span class="st">&quot;Smith&quot;</span>, <span class="dv">160</span>))
+my_df &lt;-<span class="st"> </span><span class="kw">rbind</span>(my_df, <span class="kw">list</span>(<span class="kw">c</span>(<span class="st">&quot;Jo&quot;</span>, <span class="st">&quot;John&quot;</span>), <span class="kw">c</span>(<span class="st">&quot;White&quot;</span>, <span class="st">&quot;Lee&quot;</span>), <span class="kw">c</span>(<span class="dv">165</span>, <span class="dv">179</span>)))
 my_df &lt;-<span class="st"> </span><span class="kw">cbind</span>(my_df, <span class="dt">confused =</span> <span class="kw">c</span>(<span class="ot">FALSE</span>, <span class="ot">FALSE</span>, <span class="ot">TRUE</span>, <span class="ot">FALSE</span>))</code></pre></div>
 </div>
 </section>
