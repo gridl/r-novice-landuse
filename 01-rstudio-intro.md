@@ -25,6 +25,8 @@ R was designed by **Ross Ihaka** and **Robert Gentleman** in the 90's at the Uni
 
 Since then R increased on popularity enormously. Currently R has several million users. A recent poll shows that about **76% of data scientists** use R in their daily work.
 
+Last year R Consortium was founded by several big tech companies (Microsoft, Google, Oracle, HP, ...). Microsoft just released their first version of "Microsoft R Open" (MRO). Bottom line: **R has gone mainstream!**
+
 
 ## Introduction to RStudio
 
