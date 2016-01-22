@@ -49,7 +49,7 @@
 <p>There are six different ways we can subset any kind of object, and three different subsetting operators for the different data structures.</p>
 <p>Let’s start with the workhorse of R: atomic vectors.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">5.4</span>, <span class="fl">6.2</span>, <span class="fl">7.1</span>, <span class="fl">4.8</span>, <span class="fl">7.5</span>)
-<span class="kw">names</span>(x) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;a&#39;</span>, <span class="st">&#39;b&#39;</span>, <span class="st">&#39;c&#39;</span>, <span class="st">&#39;d&#39;</span>, <span class="st">&#39;e&#39;</span>)
+<span class="kw">names</span>(x) &lt;-<span class="st"> </span>letters[<span class="dv">1</span>:<span class="dv">5</span>]
 x</code></pre></div>
 <pre class="output"><code>  a   b   c   d   e 
 5.4 6.2 7.1 4.8 7.5 
@@ -174,7 +174,7 @@ x</code></pre></div>
 <li><code>|</code> logical OR (elementwise comparison): returns <code>TRUE</code>, if either the left or right are <code>TRUE</code>.</li>
 <li><code>&amp;</code> logical AND (elementwise comparison): returns <code>TRUE</code> if both the left and right are <code>TRUE</code></li>
 <li><code>!</code> logical NOT: converts <code>TRUE</code> to <code>FALSE</code> and <code>FALSE</code> to <code>TRUE</code></li>
-<li><code>&amp;&amp;</code> and <code>||</code> compare the two vectors as a whole.</li>
+<li><code>&amp;&amp;</code> and <code>||</code> evaluates left to right looking at the first element only.</li>
 </ul>
 </div>
 </aside>

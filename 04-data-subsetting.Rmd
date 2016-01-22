@@ -37,7 +37,7 @@ Let's start with the workhorse of R: atomic vectors.
 
 ```{r}
 x <- c(5.4, 6.2, 7.1, 4.8, 7.5)
-names(x) <- c('a', 'b', 'c', 'd', 'e')
+names(x) <- letters[1:5]
 x
 ```
 
@@ -189,7 +189,7 @@ x[x > 7]
 >  * `|` logical OR (elementwise comparison): returns `TRUE`, if either the left or right are `TRUE`.
 >  * `&` logical AND (elementwise comparison): returns `TRUE` if both the left and right are `TRUE`
 >  * `!` logical NOT: converts `TRUE` to `FALSE` and `FALSE` to `TRUE`
->  * `&&` and `||` compare the two vectors as a whole. 
+>  * `&&` and `||` evaluates left to right looking at the first element only. 
 >
 
 Any function that returns a logical vector can be used for subsetting:

@@ -288,10 +288,7 @@ rownames(hh)[1:20]
 ```
 
 See those numbers in the square brackets on the left? That tells you
-the number of the first entry in that row of output. So we see that
-for the 5th row, the rowname is "5". In this case, the rownames are
-simply the row numbers.
-
+the number of the first entry in that row of output. 
 
 There are a few related ways of retrieving and modifying this information.
 `attributes` will give you both the row and column names, along with the
