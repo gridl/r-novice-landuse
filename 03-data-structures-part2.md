@@ -554,7 +554,7 @@ head(hh)
 Let's add names of counties.
 
 ~~~{.r}
-counties <- read.table(file="data/counties.csv", header=TRUE, sep=",")
+counties <- data.frame(county_id=1:4, county_name=c("Snohomish", "King", "Kitsap", "Pierce"))
 hh <- merge(hh, counties, by="county_id", all=TRUE)
 head(hh)
 ~~~
@@ -627,7 +627,7 @@ colnames(hh)
 
 
 ~~~{.r}
-colnames(hh)[3:6] <- c("hh10", "hh20", "hh30", "hh40")
+colnames(hh)[3:6] <- paste0("hh", seq(10, 40, by=10))
 head(hh, n=10)
 ~~~
 

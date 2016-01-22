@@ -152,6 +152,23 @@ z</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">all</span>(z)</code></pre></div>
 <pre class="output"><code>[1] FALSE
 </code></pre>
+<p>Character vectors can be created using the <code>paste</code> function:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">paste</span>(<span class="dv">1</span>:<span class="dv">5</span>, <span class="dv">6</span>:<span class="dv">10</span>, <span class="dt">sep=</span><span class="st">&quot;,&quot;</span>)</code></pre></div>
+<pre class="output"><code>[1] &quot;1,6&quot;  &quot;2,7&quot;  &quot;3,8&quot;  &quot;4,9&quot;  &quot;5,10&quot;
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">paste</span>(<span class="dv">1</span>:<span class="dv">5</span>, <span class="dv">6</span>:<span class="dv">10</span>, <span class="dt">sep=</span><span class="st">&quot;,&quot;</span>, <span class="dt">collapse=</span><span class="st">&quot; ; &quot;</span>)</code></pre></div>
+<pre class="output"><code>[1] &quot;1,6 ; 2,7 ; 3,8 ; 4,9 ; 5,10&quot;
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">paste</span>(<span class="st">&quot;Section&quot;</span>, <span class="dv">1</span>:<span class="dv">3</span>)</code></pre></div>
+<pre class="output"><code>[1] &quot;Section 1&quot; &quot;Section 2&quot; &quot;Section 3&quot;
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">paste</span>(<span class="st">&quot;Section&quot;</span>, <span class="dv">1</span>:<span class="dv">3</span>, <span class="dt">sep=</span><span class="st">&quot;&quot;</span>)</code></pre></div>
+<pre class="output"><code>[1] &quot;Section1&quot; &quot;Section2&quot; &quot;Section3&quot;
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># the same as </span>
+<span class="kw">paste0</span>(<span class="st">&quot;Section&quot;</span>, <span class="dv">1</span>:<span class="dv">3</span>)</code></pre></div>
+<pre class="output"><code>[1] &quot;Section1&quot; &quot;Section2&quot; &quot;Section3&quot;
+</code></pre>
 <section class="challenge panel panel-success">
 <div class="panel-heading">
 <h2 id="challenge-1"><span class="glyphicon glyphicon-pencil"></span>Challenge 1</h2>

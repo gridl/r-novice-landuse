@@ -305,7 +305,7 @@ cities &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span cl
 6    Renton PAA         2
 </code></pre>
 <p>Let’s add names of counties.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">counties &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="dt">file=</span><span class="st">&quot;data/counties.csv&quot;</span>, <span class="dt">header=</span><span class="ot">TRUE</span>, <span class="dt">sep=</span><span class="st">&quot;,&quot;</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">counties &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">county_id=</span><span class="dv">1</span>:<span class="dv">4</span>, <span class="dt">county_name=</span><span class="kw">c</span>(<span class="st">&quot;Snohomish&quot;</span>, <span class="st">&quot;King&quot;</span>, <span class="st">&quot;Kitsap&quot;</span>, <span class="st">&quot;Pierce&quot;</span>))
 hh &lt;-<span class="st"> </span><span class="kw">merge</span>(hh, counties, <span class="dt">by=</span><span class="st">&quot;county_id&quot;</span>, <span class="dt">all=</span><span class="ot">TRUE</span>)
 <span class="kw">head</span>(hh)</code></pre></div>
 <pre class="output"><code>  county_id city_id households_2010 households_2020 households_2030
@@ -341,7 +341,7 @@ hh &lt;-<span class="st"> </span><span class="kw">merge</span>(hh, counties, <sp
 <pre class="output"><code>[1] &quot;county_id&quot;       &quot;city_id&quot;         &quot;households_2010&quot; &quot;households_2020&quot;
 [5] &quot;households_2030&quot; &quot;households_2040&quot; &quot;city_name&quot;       &quot;county_name&quot;    
 </code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">colnames</span>(hh)[<span class="dv">3</span>:<span class="dv">6</span>] &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;hh10&quot;</span>, <span class="st">&quot;hh20&quot;</span>, <span class="st">&quot;hh30&quot;</span>, <span class="st">&quot;hh40&quot;</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">colnames</span>(hh)[<span class="dv">3</span>:<span class="dv">6</span>] &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;hh&quot;</span>, <span class="kw">seq</span>(<span class="dv">10</span>, <span class="dv">40</span>, <span class="dt">by=</span><span class="dv">10</span>))
 <span class="kw">head</span>(hh, <span class="dt">n=</span><span class="dv">10</span>)</code></pre></div>
 <pre class="output"><code>   county_id city_id  hh10  hh20  hh30  hh40         city_name county_name
 1          0      56    NA    NA    NA    NA     Covington PAA        &lt;NA&gt;

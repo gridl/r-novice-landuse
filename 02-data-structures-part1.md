@@ -273,6 +273,72 @@ all(z)
 
 ~~~
 
+Character vectors can be created using the `paste` function:
+
+~~~{.r}
+paste(1:5, 6:10, sep=",")
+~~~
+
+
+
+~~~{.output}
+[1] "1,6"  "2,7"  "3,8"  "4,9"  "5,10"
+
+~~~
+
+
+
+~~~{.r}
+paste(1:5, 6:10, sep=",", collapse=" ; ")
+~~~
+
+
+
+~~~{.output}
+[1] "1,6 ; 2,7 ; 3,8 ; 4,9 ; 5,10"
+
+~~~
+
+
+
+~~~{.r}
+paste("Section", 1:3)
+~~~
+
+
+
+~~~{.output}
+[1] "Section 1" "Section 2" "Section 3"
+
+~~~
+
+
+
+~~~{.r}
+paste("Section", 1:3, sep="")
+~~~
+
+
+
+~~~{.output}
+[1] "Section1" "Section2" "Section3"
+
+~~~
+
+
+
+~~~{.r}
+# the same as 
+paste0("Section", 1:3)
+~~~
+
+
+
+~~~{.output}
+[1] "Section1" "Section2" "Section3"
+
+~~~
+
 > ## Challenge 1 {.challenge}
 >
 > Vectors can only contain one atomic type. If you try to combine different
