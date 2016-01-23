@@ -541,7 +541,7 @@ head(pierce)
 > hh[hh$county_id = 1,]
 > ```
 >
-> 2. Extract all columns except one through 5
+> 2. Extract all columns except one through five
 >
 > ```{r, eval=FALSE}
 > hh[,-1:5]
@@ -563,7 +563,7 @@ head(pierce)
 > 5. Advanced: extract rows that contain information for counties  3 and 4
 >
 > ```{r, eval=FALSE}
-> hhc[hhc$county_id == 3 | 4,]
+> hh[hh$county_id == 3 | 4,]
 > ```
 >
 
@@ -628,7 +628,7 @@ head(pierce)
 > Given the following list:
 >
 > ```{r}
-> xlist <- list(a = "Software Carpentry", b = 1:10, data = head(iris))
+> xlist <- list(a = "PSRC", b = 1:10, data = head(hh))
 > ```
 >
 > Using your knowledge of both list and vector subsetting, extract the number 2 from xlist. 
@@ -670,14 +670,14 @@ head(pierce)
 >   (`city_name` and `county_id`).
 >
 > ```{r, eval=FALSE}
-> # hhc[1, 6, 7]
+> # hh[1, 6, 7]
 > hh[1, c(6, 7)]
 > ```
 >
 > 5. Advanced: extract rows that contain information for counties  3 and 4
 >
 > ```{r, eval=FALSE}
-> # hhc[hh$county_id == 3 | 4,]
+> # hh[hh$county_id == 3 | 4,]
 > hh[hh$county_id == 3 | hh$county_id == 4,]
 > hh[hh$county_id %in% c(3, 4),]
 > hh[hh$county_id %in% 3:4,]

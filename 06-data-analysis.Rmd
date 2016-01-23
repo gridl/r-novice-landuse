@@ -36,13 +36,13 @@ head(hh)
 Create a log transformation:
 ```{r}
 hhlog <- hh
-hhlog[,2:6] <- log(hhlog[,2:6])
+hhlog[,3:6] <- log(hhlog[,3:6])
 head(hhlog)
 ```
 
 Create a dataset of differences:
 ```{r}
-hhdif <- cbind(data.frame(city_id=hh$city_id), hh[,3:5] - hh[,2:4])
+hhdif <- cbind(data.frame(city_id=hh$city_id), hh[,4:6] - hh[,3:5])
 head(hhdif)
 summary(hhdif)
 ```
@@ -60,7 +60,7 @@ abline(v=0, lwd=2, col="red")
 ```
 Investigate records with negative change between 2040 and 2010:
 ```{r}
-neg <- hh[hh$hh40 - hh$hh10 < 0, ]
+neg <- subset(hh, hh40 - hh10 < 0)
 dim(neg)
 plot(neg$hh10, neg$hh40, xlab="2010", ylab="2040", log="xy")
 text(neg$hh10, neg$hh40, labels=neg$city_name, pos=3)
@@ -76,7 +76,7 @@ summary(lu)
 ```
 Say we want to look at the distribution of the average household sizes by counties. First, create a column for household size:  
 ```{r}
-lu <- cbind(lu, hh_size=lu$population/lu$households)
+lu$hh_size <- lu$population/lu$households
 head(lu[order(lu$hh_size),])
 tail(lu[order(lu$hh_size),])
 ```

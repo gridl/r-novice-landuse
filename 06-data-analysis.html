@@ -60,15 +60,15 @@ hh$hh40inT &lt;-<span class="st"> </span>hh$hh40 /<span class="st"> </span><span
 </code></pre>
 <p>Create a log transformation:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hhlog &lt;-<span class="st"> </span>hh
-hhlog[,<span class="dv">2</span>:<span class="dv">6</span>] &lt;-<span class="st"> </span><span class="kw">log</span>(hhlog[,<span class="dv">2</span>:<span class="dv">6</span>])
+hhlog[,<span class="dv">3</span>:<span class="dv">6</span>] &lt;-<span class="st"> </span><span class="kw">log</span>(hhlog[,<span class="dv">3</span>:<span class="dv">6</span>])
 <span class="kw">head</span>(hhlog)</code></pre></div>
-<pre class="output"><code>  county_id  city_id     hh10     hh20     hh30     hh40         city_name
-3         1 4.691348 9.605957 9.791102 9.800956 9.827794      Everett MUGA
-4         1 4.727388 9.157783 9.405660 9.535390 9.657523      Lake Stevens
-5         1 4.700480 8.483843 8.666992 8.735204 8.808070            Monroe
-6         1 4.682131 8.403801 8.514389 8.593784 8.678121     Mukilteo MUGA
-7         1 4.644391 7.250636 7.295735 7.515345 7.703008 Larch Way Overlap
-8         1 4.653960 8.962392 9.294498 9.319464 9.362546      Bothell MUGA
+<pre class="output"><code>  county_id city_id     hh10     hh20     hh30     hh40         city_name
+3         1     109 9.605957 9.791102 9.800956 9.827794      Everett MUGA
+4         1     113 9.157783 9.405660 9.535390 9.657523      Lake Stevens
+5         1     110 8.483843 8.666992 8.735204 8.808070            Monroe
+6         1     108 8.403801 8.514389 8.593784 8.678121     Mukilteo MUGA
+7         1     104 7.250636 7.295735 7.515345 7.703008 Larch Way Overlap
+8         1     105 8.962392 9.294498 9.319464 9.362546      Bothell MUGA
   county_name hh40inT
 3   Snohomish  18.542
 4   Snohomish  15.639
@@ -78,24 +78,24 @@ hhlog[,<span class="dv">2</span>:<span class="dv">6</span>] &lt;-<span class="st
 8   Snohomish  11.644
 </code></pre>
 <p>Create a dataset of differences:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hhdif &lt;-<span class="st"> </span><span class="kw">cbind</span>(<span class="kw">data.frame</span>(<span class="dt">city_id=</span>hh$city_id), hh[,<span class="dv">3</span>:<span class="dv">5</span>] -<span class="st"> </span>hh[,<span class="dv">2</span>:<span class="dv">4</span>])
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hhdif &lt;-<span class="st"> </span><span class="kw">cbind</span>(<span class="kw">data.frame</span>(<span class="dt">city_id=</span>hh$city_id), hh[,<span class="dv">4</span>:<span class="dv">6</span>] -<span class="st"> </span>hh[,<span class="dv">3</span>:<span class="dv">5</span>])
 <span class="kw">head</span>(hhdif)</code></pre></div>
-<pre class="output"><code>  city_id  hh10 hh20 hh30
-3     109 14744 3021  177
-4     113  9375 2669 1684
-5     110  4726  972  410
-6     108  4356  522  412
-7     104  1305   65  362
-8     105  7699 3074  275
+<pre class="output"><code>  city_id hh20 hh30 hh40
+3     109 3021  177  491
+4     113 2669 1684 1798
+5     110  972  410  470
+6     108  522  412  475
+7     104   65  362  379
+8     105 3074  275  491
 </code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(hhdif)</code></pre></div>
-<pre class="output"><code>    city_id            hh10               hh20              hh30         
- Min.   :  1.00   Min.   :  -136.0   Min.   :  -92.0   Min.   : -359.00  
- 1st Qu.: 35.75   1st Qu.:   408.8   1st Qu.:   46.0   1st Qu.:   46.75  
- Median : 71.50   Median :  3419.5   Median :  601.5   Median :  285.00  
- Mean   : 71.12   Mean   : 10362.6   Mean   : 1891.5   Mean   : 1289.60  
- 3rd Qu.:106.25   3rd Qu.:  9040.5   3rd Qu.: 1778.2   3rd Qu.: 1229.50  
- Max.   :142.00   Max.   :286516.0   Max.   :48991.0   Max.   :27976.00  
+<pre class="output"><code>    city_id            hh20              hh30               hh40        
+ Min.   :  1.00   Min.   :  -92.0   Min.   : -359.00   Min.   : -221.0  
+ 1st Qu.: 35.75   1st Qu.:   46.0   1st Qu.:   46.75   1st Qu.:   11.5  
+ Median : 71.50   Median :  601.5   Median :  285.00   Median :  241.5  
+ Mean   : 71.12   Mean   : 1891.5   Mean   : 1289.60   Mean   : 1440.2  
+ 3rd Qu.:106.25   3rd Qu.: 1778.2   3rd Qu.: 1229.50   3rd Qu.: 1155.0  
+ Max.   :142.00   Max.   :48991.0   Max.   :27976.00   Max.   :32541.0  
 </code></pre>
 <h2 id="scatter-plot-histogram-boxplot">Scatter plot, histogram, boxplot</h2>
 <p>Plot results:</p>
@@ -111,7 +111,7 @@ from logarithmic plot
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">hist</span>(hh$hh40 -<span class="st"> </span>hh$hh10, <span class="dt">main=</span><span class="st">&quot;Change 2040-2010&quot;</span>)
 <span class="kw">abline</span>(<span class="dt">v=</span><span class="dv">0</span>, <span class="dt">lwd=</span><span class="dv">2</span>, <span class="dt">col=</span><span class="st">&quot;red&quot;</span>)</code></pre></div>
 <p><img src="fig/09-vectorisation-unnamed-chunk-5-3.png" title="plot of chunk unnamed-chunk-5" alt="plot of chunk unnamed-chunk-5" style="display: block; margin: auto;" /> Investigate records with negative change between 2040 and 2010:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">neg &lt;-<span class="st"> </span>hh[hh$hh40 -<span class="st"> </span>hh$hh10 &lt;<span class="st"> </span><span class="dv">0</span>, ]
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">neg &lt;-<span class="st"> </span><span class="kw">subset</span>(hh, hh40 -<span class="st"> </span>hh10 &lt;<span class="st"> </span><span class="dv">0</span>)
 <span class="kw">dim</span>(neg)</code></pre></div>
 <pre class="output"><code>[1] 6 9
 </code></pre>
@@ -154,7 +154,7 @@ lu &lt;-<span class="st"> </span><span class="kw">na.omit</span>(lu)
  Max.   :4.748e+10                      Max.   :4.000  
 </code></pre>
 <p>Say we want to look at the distribution of the average household sizes by counties. First, create a column for household size:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">lu &lt;-<span class="st"> </span><span class="kw">cbind</span>(lu, <span class="dt">hh_size=</span>lu$population/lu$households)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">lu$hh_size &lt;-<span class="st"> </span>lu$population/lu$households
 <span class="kw">head</span>(lu[<span class="kw">order</span>(lu$hh_size),])</code></pre></div>
 <pre class="output"><code>    city_id   jobs households population res_units non_res_sqft
 9         9 487626     286525     589269    310493    265491636

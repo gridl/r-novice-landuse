@@ -1071,7 +1071,7 @@ head(pierce)
 > hh[hh$county_id = 1,]
 > ~~~
 >
-> 2. Extract all columns except one through 5
+> 2. Extract all columns except one through five
 >
 > 
 > ~~~{.r}
@@ -1097,7 +1097,7 @@ head(pierce)
 >
 > 
 > ~~~{.r}
-> hhc[hhc$county_id == 3 | 4,]
+> hh[hh$county_id == 3 | 4,]
 > ~~~
 >
 
@@ -1187,7 +1187,7 @@ head(pierce)
 >
 > 
 > ~~~{.r}
-> xlist <- list(a = "Software Carpentry", b = 1:10, data = head(iris))
+> xlist <- list(a = "PSRC", b = 1:10, data = head(hh))
 > ~~~
 >
 > Using your knowledge of both list and vector subsetting, extract the number 2 from xlist. 
@@ -1234,7 +1234,7 @@ head(pierce)
 >
 > 
 > ~~~{.r}
-> # hhc[1, 6, 7]
+> # hh[1, 6, 7]
 > hh[1, c(6, 7)]
 > ~~~
 >
@@ -1242,7 +1242,7 @@ head(pierce)
 >
 > 
 > ~~~{.r}
-> # hhc[hh$county_id == 3 | 4,]
+> # hh[hh$county_id == 3 | 4,]
 > hh[hh$county_id == 3 | hh$county_id == 4,]
 > hh[hh$county_id %in% c(3, 4),]
 > hh[hh$county_id %in% 3:4,]

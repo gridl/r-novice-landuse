@@ -47,20 +47,20 @@ Create a log transformation:
 
 ~~~{.r}
 hhlog <- hh
-hhlog[,2:6] <- log(hhlog[,2:6])
+hhlog[,3:6] <- log(hhlog[,3:6])
 head(hhlog)
 ~~~
 
 
 
 ~~~{.output}
-  county_id  city_id     hh10     hh20     hh30     hh40         city_name
-3         1 4.691348 9.605957 9.791102 9.800956 9.827794      Everett MUGA
-4         1 4.727388 9.157783 9.405660 9.535390 9.657523      Lake Stevens
-5         1 4.700480 8.483843 8.666992 8.735204 8.808070            Monroe
-6         1 4.682131 8.403801 8.514389 8.593784 8.678121     Mukilteo MUGA
-7         1 4.644391 7.250636 7.295735 7.515345 7.703008 Larch Way Overlap
-8         1 4.653960 8.962392 9.294498 9.319464 9.362546      Bothell MUGA
+  county_id city_id     hh10     hh20     hh30     hh40         city_name
+3         1     109 9.605957 9.791102 9.800956 9.827794      Everett MUGA
+4         1     113 9.157783 9.405660 9.535390 9.657523      Lake Stevens
+5         1     110 8.483843 8.666992 8.735204 8.808070            Monroe
+6         1     108 8.403801 8.514389 8.593784 8.678121     Mukilteo MUGA
+7         1     104 7.250636 7.295735 7.515345 7.703008 Larch Way Overlap
+8         1     105 8.962392 9.294498 9.319464 9.362546      Bothell MUGA
   county_name hh40inT
 3   Snohomish  18.542
 4   Snohomish  15.639
@@ -74,20 +74,20 @@ head(hhlog)
 Create a dataset of differences:
 
 ~~~{.r}
-hhdif <- cbind(data.frame(city_id=hh$city_id), hh[,3:5] - hh[,2:4])
+hhdif <- cbind(data.frame(city_id=hh$city_id), hh[,4:6] - hh[,3:5])
 head(hhdif)
 ~~~
 
 
 
 ~~~{.output}
-  city_id  hh10 hh20 hh30
-3     109 14744 3021  177
-4     113  9375 2669 1684
-5     110  4726  972  410
-6     108  4356  522  412
-7     104  1305   65  362
-8     105  7699 3074  275
+  city_id hh20 hh30 hh40
+3     109 3021  177  491
+4     113 2669 1684 1798
+5     110  972  410  470
+6     108  522  412  475
+7     104   65  362  379
+8     105 3074  275  491
 
 ~~~
 
@@ -100,13 +100,13 @@ summary(hhdif)
 
 
 ~~~{.output}
-    city_id            hh10               hh20              hh30         
- Min.   :  1.00   Min.   :  -136.0   Min.   :  -92.0   Min.   : -359.00  
- 1st Qu.: 35.75   1st Qu.:   408.8   1st Qu.:   46.0   1st Qu.:   46.75  
- Median : 71.50   Median :  3419.5   Median :  601.5   Median :  285.00  
- Mean   : 71.12   Mean   : 10362.6   Mean   : 1891.5   Mean   : 1289.60  
- 3rd Qu.:106.25   3rd Qu.:  9040.5   3rd Qu.: 1778.2   3rd Qu.: 1229.50  
- Max.   :142.00   Max.   :286516.0   Max.   :48991.0   Max.   :27976.00  
+    city_id            hh20              hh30               hh40        
+ Min.   :  1.00   Min.   :  -92.0   Min.   : -359.00   Min.   : -221.0  
+ 1st Qu.: 35.75   1st Qu.:   46.0   1st Qu.:   46.75   1st Qu.:   11.5  
+ Median : 71.50   Median :  601.5   Median :  285.00   Median :  241.5  
+ Mean   : 71.12   Mean   : 1891.5   Mean   : 1289.60   Mean   : 1440.2  
+ 3rd Qu.:106.25   3rd Qu.: 1778.2   3rd Qu.: 1229.50   3rd Qu.: 1155.0  
+ Max.   :142.00   Max.   :48991.0   Max.   :27976.00   Max.   :32541.0  
 
 ~~~
 
@@ -150,7 +150,7 @@ abline(v=0, lwd=2, col="red")
 Investigate records with negative change between 2040 and 2010:
 
 ~~~{.r}
-neg <- hh[hh$hh40 - hh$hh10 < 0, ]
+neg <- subset(hh, hh40 - hh10 < 0)
 dim(neg)
 ~~~
 
@@ -216,7 +216,7 @@ summary(lu)
 Say we want to look at the distribution of the average household sizes by counties. First, create a column for household size:  
 
 ~~~{.r}
-lu <- cbind(lu, hh_size=lu$population/lu$households)
+lu$hh_size <- lu$population/lu$households
 head(lu[order(lu$hh_size),])
 ~~~
 
