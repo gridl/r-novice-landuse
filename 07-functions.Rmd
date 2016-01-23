@@ -104,7 +104,7 @@ a function that returns cities with sqft per job ratio above certain threshold:
 job.space.above <- function(dat, threshold=700) {
   idx <- which(dat$jobs > 0)
   ratio <- dat$non_res_sqft[idx]/dat$jobs[idx]
-  return(dat$city_name[ratio > threshold])
+  return(dat[idx,]$city_name[ratio > threshold])
 }
 job.space.above(lu)
 job.space.above(lu, 2000)
@@ -276,7 +276,5 @@ print(res)
 > ## Solution to challenge 2 {.challenge}
 >
 > ```{r}
-> idx <- which(hh$city_name %in% outl.below)
-> res <- hh[idx,]
-> res
+> hh[which(hh$city_name %in% outl.below),]
 > ```

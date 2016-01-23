@@ -116,31 +116,31 @@
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">job.space.above &lt;-<span class="st"> </span>function(dat, <span class="dt">threshold=</span><span class="dv">700</span>) {
   idx &lt;-<span class="st"> </span><span class="kw">which</span>(dat$jobs &gt;<span class="st"> </span><span class="dv">0</span>)
   ratio &lt;-<span class="st"> </span>dat$non_res_sqft[idx]/dat$jobs[idx]
-  <span class="kw">return</span>(dat$city_name[ratio &gt;<span class="st"> </span>threshold])
+  <span class="kw">return</span>(dat[idx,]$city_name[ratio &gt;<span class="st"> </span>threshold])
 }
 <span class="kw">job.space.above</span>(lu)</code></pre></div>
 <pre class="output"><code> [1] &quot;Auburn&quot;            &quot;Kent&quot;              &quot;Tukwila&quot;          
  [4] &quot;Kent PAA&quot;          &quot;Enumclaw&quot;          &quot;Pierce-Rural&quot;     
- [7] &quot;Algona&quot;            &quot;Newcastle PAA&quot;     &quot;Snoqualmie&quot;       
-[10] &quot;Black Diamond PAA&quot; &quot;Beaux Arts&quot;        &quot;Skykomish&quot;        
-[13] &quot;UU&quot;                &quot;Milton&quot;            &quot;Carnation&quot;        
-[16] &quot;Milton PAA&quot;        &quot;Bellevue PAA&quot;      &quot;Poulsbo PUTA&quot;     
-[19] &quot;Steilacoom&quot;        &quot;DuPont&quot;            &quot;University Place&quot; 
-[22] &quot;Fircrest&quot;          &quot;Ruston&quot;            &quot;Eatonville&quot;       
-[25] &quot;Puyallup&quot;          &quot;Orting&quot;            &quot;Edgewood&quot;         
-[28] &quot;Sumner&quot;            &quot;Bonney Lake&quot;       &quot;Carbonado&quot;        
-[31] &quot;Buckley&quot;           &quot;Brier&quot;             &quot;Edmonds&quot;          
-[34] &quot;Meadowdale Gap&quot;    &quot;Mill Creek&quot;        &quot;Mountlake Terrace&quot;
-[37] &quot;Mill Creek MUGA&quot;   &quot;Larch Way Overlap&quot; &quot;Bothell MUGA&quot;     
-[40] &quot;Lake Stickney Gap&quot; &quot;Mukilteo MUGA&quot;     &quot;Everett MUGA&quot;     
-[43] &quot;Monroe&quot;            &quot;Snohomish&quot;         &quot;Sultan&quot;           
-[46] &quot;Woodway&quot;           &quot;Darrington&quot;        &quot;Marysville UGA&quot;   
-[49] &quot;Arlington UGA&quot;     &quot;Snohomish UGA&quot;     &quot;Silver Firs Gap&quot;  
-[52] &quot;Granite Falls&quot;     &quot;Stanwood UGA&quot;      &quot;Index&quot;            
-[55] &quot;Granite Falls UGA&quot; &quot;Bothell&quot;          
+ [7] &quot;Algona&quot;            &quot;Snoqualmie&quot;        &quot;Bear Creek UPD&quot;   
+[10] &quot;UUU&quot;               &quot;Skykomish&quot;         &quot;UU&quot;               
+[13] &quot;Milton&quot;            &quot;Carnation&quot;         &quot;Milton PAA&quot;       
+[16] &quot;Bellevue PAA&quot;      &quot;Tacoma&quot;            &quot;Steilacoom&quot;       
+[19] &quot;DuPont&quot;            &quot;Roy&quot;               &quot;Ruston&quot;           
+[22] &quot;Fife&quot;              &quot;Eatonville&quot;        &quot;Orting&quot;           
+[25] &quot;Edgewood&quot;          &quot;Sumner&quot;            &quot;Bonney Lake&quot;      
+[28] &quot;South Prairie&quot;     &quot;Carbonado&quot;         &quot;Wilkeson&quot;         
+[31] &quot;Lynnwood&quot;          &quot;Edmonds&quot;           &quot;Mill Creek&quot;       
+[34] &quot;Mountlake Terrace&quot; &quot;Lynnwood MUGA&quot;     &quot;Mill Creek MUGA&quot;  
+[37] &quot;Bothell MUGA&quot;      &quot;Marysville&quot;        &quot;Lake Stickney Gap&quot;
+[40] &quot;Everett MUGA&quot;      &quot;Monroe&quot;            &quot;Arlington&quot;        
+[43] &quot;Snohomish&quot;         &quot;Sultan&quot;            &quot;Darrington&quot;       
+[46] &quot;Gold Bar UGA&quot;      &quot;Edmonds MUGA&quot;      &quot;Stanwood&quot;         
+[49] &quot;Snohomish UGA&quot;     &quot;Gold Bar&quot;          &quot;Granite Falls&quot;    
+[52] &quot;Index&quot;             &quot;Maltby UGA&quot;        &quot;PAINE FIELD AREA&quot; 
+[55] &quot;Darrington UGA&quot;   
 </code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">job.space.above</span>(lu, <span class="dv">2000</span>)</code></pre></div>
-<pre class="output"><code>[1] &quot;Black Diamond PAA&quot; &quot;UU&quot;                &quot;Granite Falls UGA&quot;
+<pre class="output"><code>[1] &quot;UUU&quot;            &quot;Milton&quot;         &quot;Darrington UGA&quot;
 </code></pre>
 <p>If you’ve been writing these functions down into a separate R script (a good idea!), you can load in the functions into our R session by using the <code>source</code> function:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">source</span>(<span class="st">&quot;functions-lesson.R&quot;</span>)</code></pre></div>
@@ -311,9 +311,7 @@ best_practice &lt;-<span class="st"> </span><span class="kw">c</span>(<span clas
 <h2 id="solution-to-challenge-2"><span class="glyphicon glyphicon-pencil"></span>Solution to challenge 2</h2>
 </div>
 <div class="panel-body">
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">idx &lt;-<span class="st"> </span><span class="kw">which</span>(hh$city_name %in%<span class="st"> </span>outl.below)
-res &lt;-<span class="st"> </span>hh[idx,]
-res</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hh[<span class="kw">which</span>(hh$city_name %in%<span class="st"> </span>outl.below),]</code></pre></div>
 <pre class="output"><code>    county_id city_id hh10  hh20  hh30  hh40        city_name county_name
 4           1     113 9488 12157 13841 15639     Lake Stevens   Snohomish
 21          1     117  330   346   348   355     Gold Bar UGA   Snohomish

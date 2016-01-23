@@ -141,7 +141,7 @@ a function that returns cities with sqft per job ratio above certain threshold:
 job.space.above <- function(dat, threshold=700) {
   idx <- which(dat$jobs > 0)
   ratio <- dat$non_res_sqft[idx]/dat$jobs[idx]
-  return(dat$city_name[ratio > threshold])
+  return(dat[idx,]$city_name[ratio > threshold])
 }
 job.space.above(lu)
 ~~~
@@ -151,23 +151,23 @@ job.space.above(lu)
 ~~~{.output}
  [1] "Auburn"            "Kent"              "Tukwila"          
  [4] "Kent PAA"          "Enumclaw"          "Pierce-Rural"     
- [7] "Algona"            "Newcastle PAA"     "Snoqualmie"       
-[10] "Black Diamond PAA" "Beaux Arts"        "Skykomish"        
-[13] "UU"                "Milton"            "Carnation"        
-[16] "Milton PAA"        "Bellevue PAA"      "Poulsbo PUTA"     
-[19] "Steilacoom"        "DuPont"            "University Place" 
-[22] "Fircrest"          "Ruston"            "Eatonville"       
-[25] "Puyallup"          "Orting"            "Edgewood"         
-[28] "Sumner"            "Bonney Lake"       "Carbonado"        
-[31] "Buckley"           "Brier"             "Edmonds"          
-[34] "Meadowdale Gap"    "Mill Creek"        "Mountlake Terrace"
-[37] "Mill Creek MUGA"   "Larch Way Overlap" "Bothell MUGA"     
-[40] "Lake Stickney Gap" "Mukilteo MUGA"     "Everett MUGA"     
-[43] "Monroe"            "Snohomish"         "Sultan"           
-[46] "Woodway"           "Darrington"        "Marysville UGA"   
-[49] "Arlington UGA"     "Snohomish UGA"     "Silver Firs Gap"  
-[52] "Granite Falls"     "Stanwood UGA"      "Index"            
-[55] "Granite Falls UGA" "Bothell"          
+ [7] "Algona"            "Snoqualmie"        "Bear Creek UPD"   
+[10] "UUU"               "Skykomish"         "UU"               
+[13] "Milton"            "Carnation"         "Milton PAA"       
+[16] "Bellevue PAA"      "Tacoma"            "Steilacoom"       
+[19] "DuPont"            "Roy"               "Ruston"           
+[22] "Fife"              "Eatonville"        "Orting"           
+[25] "Edgewood"          "Sumner"            "Bonney Lake"      
+[28] "South Prairie"     "Carbonado"         "Wilkeson"         
+[31] "Lynnwood"          "Edmonds"           "Mill Creek"       
+[34] "Mountlake Terrace" "Lynnwood MUGA"     "Mill Creek MUGA"  
+[37] "Bothell MUGA"      "Marysville"        "Lake Stickney Gap"
+[40] "Everett MUGA"      "Monroe"            "Arlington"        
+[43] "Snohomish"         "Sultan"            "Darrington"       
+[46] "Gold Bar UGA"      "Edmonds MUGA"      "Stanwood"         
+[49] "Snohomish UGA"     "Gold Bar"          "Granite Falls"    
+[52] "Index"             "Maltby UGA"        "PAINE FIELD AREA" 
+[55] "Darrington UGA"   
 
 ~~~
 
@@ -180,7 +180,7 @@ job.space.above(lu, 2000)
 
 
 ~~~{.output}
-[1] "Black Diamond PAA" "UU"                "Granite Falls UGA"
+[1] "UUU"            "Milton"         "Darrington UGA"
 
 ~~~
 
@@ -459,9 +459,7 @@ print(res)
 >
 > 
 > ~~~{.r}
-> idx <- which(hh$city_name %in% outl.below)
-> res <- hh[idx,]
-> res
+> hh[which(hh$city_name %in% outl.below),]
 > ~~~
 > 
 > 
