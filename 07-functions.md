@@ -278,9 +278,9 @@ job.space.outliers <- function(dat, threshold=700, above=TRUE) {
   idx <- which(dat$jobs > 0)
   ratio <- dat$non_res_sqft[idx]/dat$jobs[idx]
   if(above) {
-  	res <- dat$city_name[ratio > threshold]
+  	res <- dat[idx,]$city_name[ratio > threshold]
   } else {
-  	res <- dat$city_name[ratio <= threshold]
+  	res <- dat[idx,]$city_name[ratio <= threshold]
   }
   return(res)
 }
@@ -291,7 +291,7 @@ outl.above
 
 
 ~~~{.output}
-[1] "Black Diamond PAA" "UU"                "Granite Falls UGA"
+[1] "UUU"            "Milton"         "Darrington UGA"
 
 ~~~
 
@@ -305,10 +305,12 @@ outl.below
 
 
 ~~~{.output}
- [1] "Pacific"          "Issaquah PAA"     "UUU"             
- [4] "Yarrow Point"     "Medina"           "Auburn PAA"      
- [7] "Kingston UGA"     "Lake Stevens"     "Gold Bar UGA"    
-[10] "Lake Stevens UGA" "Maltby UGA"      
+ [1] "Tukwila PAA"            "Black Diamond PAA"     
+ [3] "Yarrow Point"           "Hunts Point"           
+ [5] "Beaux Arts"             "Pacific PAA"           
+ [7] "JBLM"                   "Woodway"               
+ [9] "Mountlake Terrace MUGA" "Arlington UGA"         
+[11] "Sultan UGA"            
 
 ~~~
 
@@ -324,12 +326,13 @@ for(city in outl.above) {
 
 
 ~~~{.output}
-   county_id city_id hh10 hh20 hh30 hh40         city_name county_name
-91         2      45   64   36   38   40 Black Diamond PAA        King
-    county_id city_id  hh10  hh20  hh30  hh40 city_name county_name
-119         4      53 67417 85491 93594 93893        UU      Pierce
-   county_id city_id hh10 hh20 hh30 hh40         city_name county_name
-37         1     133   92  116  244  390 Granite Falls UGA   Snohomish
+   county_id city_id hh10 hh20 hh30 hh40 city_name county_name
+92         2      46  889 1459 1530 1528       UUU        King
+    county_id city_id hh10 hh20 hh30 hh40 city_name county_name
+100         2      54  363  382  389  395    Milton        King
+141         4     141 2541 3011 3057 3106    Milton      Pierce
+   county_id city_id hh10 hh20 hh30 hh40      city_name county_name
+41         1     137   37   65  141  227 Darrington UGA   Snohomish
 
 ~~~
 This does not look very pretty. We can improve by binding the rows together:
@@ -346,14 +349,11 @@ print(res)
 
 
 ~~~{.output}
-    county_id city_id  hh10  hh20  hh30  hh40         city_name
-91          2      45    64    36    38    40 Black Diamond PAA
-119         4      53 67417 85491 93594 93893                UU
-37          1     133    92   116   244   390 Granite Falls UGA
-    county_name
-91         King
-119      Pierce
-37    Snohomish
+    county_id city_id hh10 hh20 hh30 hh40      city_name county_name
+92          2      46  889 1459 1530 1528            UUU        King
+100         2      54  363  382  389  395         Milton        King
+141         4     141 2541 3011 3057 3106         Milton      Pierce
+41          1     137   37   65  141  227 Darrington UGA   Snohomish
 
 ~~~
 
@@ -371,19 +371,30 @@ print(res)
 
 
 ~~~{.output}
-    county_id city_id hh10  hh20  hh30  hh40        city_name county_name
-85          2      39 2291  2490  2473  2469          Pacific        King
-133         4     142   51    35    43    45          Pacific      Pierce
-90          2      44 3887  4363  4553  4565     Issaquah PAA        King
-92          2      46  889  1459  1530  1528              UUU        King
-93          2      47  416   432   444   447     Yarrow Point        King
-96          2      50 1126  1160  1193  1203           Medina        King
-105         2      60  187   138   136   135       Auburn PAA        King
-113         3      73  867  1573  2359  2638     Kingston UGA      Kitsap
-4           1     113 9488 12157 13841 15639     Lake Stevens   Snohomish
-21          1     117  330   346   348   355     Gold Bar UGA   Snohomish
-26          1     122 1647  2093  2335  2586 Lake Stevens UGA   Snohomish
-36          1     132   56    67    66    66       Maltby UGA   Snohomish
+    county_id city_id hh10 hh20 hh30 hh40              city_name
+86          2      40    7   21   36   37            Tukwila PAA
+91          2      45   64   36   38   40      Black Diamond PAA
+93          2      47  416  432  444  447           Yarrow Point
+94          2      48  197  164  173  173            Hunts Point
+97          2      51  116  122  125  127             Beaux Arts
+102         2      61  295  345  396  398            Pacific PAA
+132         4      75 1389 4123 3764 3543                   JBLM
+32          1     115  450  496  494  502                Woodway
+23          1     119   34   11   13   15 Mountlake Terrace MUGA
+28          1     124  213  230  311  402          Arlington UGA
+39          1     135  167  174  321  489             Sultan UGA
+    county_name
+86         King
+91         King
+93         King
+94         King
+97         King
+102        King
+132      Pierce
+32    Snohomish
+23    Snohomish
+28    Snohomish
+39    Snohomish
 
 ~~~
 
@@ -406,13 +417,12 @@ print(res)
 
 
 ~~~{.output}
-    county_id city_id hh10 hh20 hh30 hh40    city_name county_name
-85          2      39 2291 2490 2473 2469      Pacific        King
-133         4     142   51   35   43   45      Pacific      Pierce
-90          2      44 3887 4363 4553 4565 Issaquah PAA        King
-92          2      46  889 1459 1530 1528          UUU        King
-93          2      47  416  432  444  447 Yarrow Point        King
-96          2      50 1126 1160 1193 1203       Medina        King
+   county_id city_id hh10 hh20 hh30 hh40         city_name county_name
+86         2      40    7   21   36   37       Tukwila PAA        King
+91         2      45   64   36   38   40 Black Diamond PAA        King
+93         2      47  416  432  444  447      Yarrow Point        King
+94         2      48  197  164  173  173       Hunts Point        King
+97         2      51  116  122  125  127        Beaux Arts        King
 
 ~~~
 
@@ -465,18 +475,29 @@ print(res)
 > 
 > 
 > ~~~{.output}
->     county_id city_id hh10  hh20  hh30  hh40        city_name county_name
-> 4           1     113 9488 12157 13841 15639     Lake Stevens   Snohomish
-> 21          1     117  330   346   348   355     Gold Bar UGA   Snohomish
-> 26          1     122 1647  2093  2335  2586 Lake Stevens UGA   Snohomish
-> 36          1     132   56    67    66    66       Maltby UGA   Snohomish
-> 85          2      39 2291  2490  2473  2469          Pacific        King
-> 90          2      44 3887  4363  4553  4565     Issaquah PAA        King
-> 92          2      46  889  1459  1530  1528              UUU        King
-> 93          2      47  416   432   444   447     Yarrow Point        King
-> 96          2      50 1126  1160  1193  1203           Medina        King
-> 105         2      60  187   138   136   135       Auburn PAA        King
-> 113         3      73  867  1573  2359  2638     Kingston UGA      Kitsap
-> 133         4     142   51    35    43    45          Pacific      Pierce
+>     county_id city_id hh10 hh20 hh30 hh40              city_name
+> 23          1     119   34   11   13   15 Mountlake Terrace MUGA
+> 28          1     124  213  230  311  402          Arlington UGA
+> 32          1     115  450  496  494  502                Woodway
+> 39          1     135  167  174  321  489             Sultan UGA
+> 86          2      40    7   21   36   37            Tukwila PAA
+> 91          2      45   64   36   38   40      Black Diamond PAA
+> 93          2      47  416  432  444  447           Yarrow Point
+> 94          2      48  197  164  173  173            Hunts Point
+> 97          2      51  116  122  125  127             Beaux Arts
+> 102         2      61  295  345  396  398            Pacific PAA
+> 132         4      75 1389 4123 3764 3543                   JBLM
+>     county_name
+> 23    Snohomish
+> 28    Snohomish
+> 32    Snohomish
+> 39    Snohomish
+> 86         King
+> 91         King
+> 93         King
+> 94         King
+> 97         King
+> 102        King
+> 132      Pierce
 > 
 > ~~~

@@ -193,9 +193,9 @@ job.space.outliers <- function(dat, threshold=700, above=TRUE) {
   idx <- which(dat$jobs > 0)
   ratio <- dat$non_res_sqft[idx]/dat$jobs[idx]
   if(above) {
-  	res <- dat$city_name[ratio > threshold]
+  	res <- dat[idx,]$city_name[ratio > threshold]
   } else {
-  	res <- dat$city_name[ratio <= threshold]
+  	res <- dat[idx,]$city_name[ratio <= threshold]
   }
   return(res)
 }
