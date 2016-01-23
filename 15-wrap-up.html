@@ -72,6 +72,18 @@ hhc &lt;-<span class="st"> </span><span class="kw">cbind</span>(hh, <span class=
 map &lt;-<span class="st"> </span><span class="kw">gvisMap</span>(hhc, <span class="st">&quot;latlon&quot;</span>, <span class="dt">tipvar=</span><span class="st">&quot;tip&quot;</span>, <span class="dt">options=</span><span class="kw">list</span>(<span class="dt">height=</span><span class="st">&quot;30cm&quot;</span>))
 <span class="kw">plot</span>(map)</code></pre></div>
 <p>Package <strong>maptools</strong> can be used with shapefiles.</p>
+<h3 id="magrittr">magrittr</h3>
+<p>Allows writing R commands as a pipe.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(magrittr)
+hh %&gt;%<span class="st"> </span><span class="kw">subset</span>(county_id ==<span class="st"> </span><span class="dv">2</span>) %&gt;%<span class="st"> </span>head %&gt;%<span class="st"> </span>print</code></pre></div>
+<pre class="output"><code>   county_id city_id  hh10  hh20  hh30  hh40     city_name county_name
+49         2       1  2617  2891  3000  3042 Normandy Park        King
+50         2       2 23596 27690 31164 34383        Auburn        King
+51         2       4  9904 12232 14401 16365       Sea Tac        King
+52         2       5 21511 24731 26511 28714     Shoreline        King
+53         2       6 16555 18963 19916 19962    Renton PAA        King
+54         2       8  7480  9100 10833 12410       Tukwila        King
+</code></pre>
         </div>
       </div>
       </article>

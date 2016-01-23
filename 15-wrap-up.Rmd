@@ -58,3 +58,9 @@ plot(map)
 
 Package **maptools** can be used with shapefiles.
 
+### magrittr
+Allows writing R commands as a pipe.
+```{r}
+library(magrittr)
+hh %>% subset(county_id == 2) %>% head %>% print
+```

@@ -77,3 +77,23 @@ plot(map)
 
 Package **maptools** can be used with shapefiles.
 
+### magrittr
+Allows writing R commands as a pipe.
+
+~~~{.r}
+library(magrittr)
+hh %>% subset(county_id == 2) %>% head %>% print
+~~~
+
+
+
+~~~{.output}
+   county_id city_id  hh10  hh20  hh30  hh40     city_name county_name
+49         2       1  2617  2891  3000  3042 Normandy Park        King
+50         2       2 23596 27690 31164 34383        Auburn        King
+51         2       4  9904 12232 14401 16365       Sea Tac        King
+52         2       5 21511 24731 26511 28714     Shoreline        King
+53         2       6 16555 18963 19916 19962    Renton PAA        King
+54         2       8  7480  9100 10833 12410       Tukwila        King
+
+~~~
