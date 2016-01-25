@@ -30,8 +30,6 @@ Last year R Consortium was founded by several big tech companies (Microsoft, Goo
 
 ## Introduction to RStudio
 
-Welcome to the R portion of the Software Carpentry workshop.
-
 Throughout this lesson, we're going to teach you some of the fundamentals of
 the R language. However it will not teach statistical analysis.
 
@@ -620,7 +618,7 @@ If you're not sure how it's specifically spelled you can do a fuzzy search:
 
 It is possible to add functions to R by writing a package, or by
 obtaining a package written by someone else. As of this writing, there
-are 7,814 packages available on CRAN (the comprehensive R archive
+are 7,827 packages available on CRAN (the comprehensive R archive
 network). Their number increases every day:
 
 <img src="img/NewRpackages.png  " alt="Rpackages" />
