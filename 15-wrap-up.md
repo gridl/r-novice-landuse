@@ -14,6 +14,9 @@ minutes: 15
 
 ## Useful packages
 
+### acs, USCensus2010
+For downloading and working with ACS and Census data.
+
 ### ggplot2
 For fancy graphs.
 
