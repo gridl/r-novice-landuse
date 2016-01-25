@@ -716,6 +716,35 @@ a numeric vector with 10 entries, and a small data frame from
 one of R's many preloaded datasets (see `?data`). We've also given
 each list element a name, which is why you see `$a` instead of `[[1]]`.
 
+Add an element to list:
+
+~~~{.r}
+xlist$c <- rep(c(TRUE, FALSE), 3)
+xlist
+~~~
+
+
+
+~~~{.output}
+$a
+[1] "Research Bazaar"
+
+$b
+ [1]  1  2  3  4  5  6  7  8  9 10
+
+$data
+  Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+1          5.1         3.5          1.4         0.2  setosa
+2          4.9         3.0          1.4         0.2  setosa
+3          4.7         3.2          1.3         0.2  setosa
+4          4.6         3.1          1.5         0.2  setosa
+5          5.0         3.6          1.4         0.2  setosa
+6          5.4         3.9          1.7         0.4  setosa
+
+$c
+[1]  TRUE FALSE  TRUE FALSE  TRUE FALSE
+
+~~~
 
 Lists are extremely useful inside functions. You can "staple" together lots of
 different kinds of results into a single object that a function can return. In

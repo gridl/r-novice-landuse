@@ -323,6 +323,27 @@ $data
 6          5.4         3.9          1.7         0.4  setosa
 </code></pre>
 <p>In this case our list contains a character vector of length one, a numeric vector with 10 entries, and a small data frame from one of R’s many preloaded datasets (see <code>?data</code>). We’ve also given each list element a name, which is why you see <code>$a</code> instead of <code>[[1]]</code>.</p>
+<p>Add an element to list:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">xlist$c &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="kw">c</span>(<span class="ot">TRUE</span>, <span class="ot">FALSE</span>), <span class="dv">3</span>)
+xlist</code></pre></div>
+<pre class="output"><code>$a
+[1] &quot;Research Bazaar&quot;
+
+$b
+ [1]  1  2  3  4  5  6  7  8  9 10
+
+$data
+  Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+1          5.1         3.5          1.4         0.2  setosa
+2          4.9         3.0          1.4         0.2  setosa
+3          4.7         3.2          1.3         0.2  setosa
+4          4.6         3.1          1.5         0.2  setosa
+5          5.0         3.6          1.4         0.2  setosa
+6          5.4         3.9          1.7         0.4  setosa
+
+$c
+[1]  TRUE FALSE  TRUE FALSE  TRUE FALSE
+</code></pre>
 <p>Lists are extremely useful inside functions. You can “staple” together lots of different kinds of results into a single object that a function can return. In fact many R functions which return complex output store their results in a list.</p>
 <h2 id="challenge-solutions">Challenge solutions</h2>
 <section class="challenge panel panel-success">
