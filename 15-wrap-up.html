@@ -74,6 +74,33 @@ hhc &lt;-<span class="st"> </span><span class="kw">cbind</span>(hh, <span class=
 map &lt;-<span class="st"> </span><span class="kw">gvisMap</span>(hhc, <span class="st">&quot;latlon&quot;</span>, <span class="dt">tipvar=</span><span class="st">&quot;tip&quot;</span>, <span class="dt">options=</span><span class="kw">list</span>(<span class="dt">height=</span><span class="st">&quot;30cm&quot;</span>))
 <span class="kw">plot</span>(map)</code></pre></div>
 <p>Package <strong>maptools</strong> can be used with shapefiles.</p>
+<h3 id="dbi-rmysql-rsqlite">DBI, RMySQL, RSQLite</h3>
+<p>For direct connection to MySQL or SQLite tables. Example:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mydb &lt;-<span class="st"> </span><span class="kw">dbConnect</span>(<span class="kw">MySQL</span>(), <span class="dt">user=</span><span class="st">&quot;psrcurbansim&quot;</span>, <span class="dt">password=</span><span class="st">&quot;password&quot;</span>, <span class="dt">dbname=</span><span class="st">&quot;psrc_2014_parcel_baseyear&quot;</span>)
+query &lt;-<span class="st"> </span><span class="kw">dbSendQuery</span>(mydb, <span class="st">&quot;SELECT * from schools&quot;</span>)
+schools &lt;-<span class="st"> </span><span class="kw">fetch</span>(query)
+<span class="kw">head</span>(schools)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">  school_id category scnty                   sname codist math_index total_score sxcoord parcel_id
+<span class="dv">1</span>         <span class="dv">1</span>        E     <span class="dv">3</span> <span class="dv">5-12</span> LEARNING COMMUNITY  <span class="dv">27400</span>    <span class="fl">2.52250</span>     <span class="fl">7.66000</span> <span class="dv">1231019</span>    <span class="dv">721309</span>
+<span class="dv">2</span>         <span class="dv">2</span>        H     <span class="dv">4</span>                    ACES  <span class="dv">31006</span>    <span class="fl">0.00000</span>     <span class="fl">0.00000</span> <span class="dv">1296422</span>   <span class="dv">1145459</span>
+<span class="dv">3</span>         <span class="dv">3</span>        E     <span class="dv">1</span>        ADAMS ELEMENTARY  <span class="dv">17001</span>    <span class="fl">2.62667</span>     <span class="fl">7.96000</span> <span class="dv">1256548</span>    <span class="dv">411436</span>
+<span class="dv">4</span>         <span class="dv">4</span>        H     <span class="dv">1</span>          AE <span class="dv">2</span> @<span class="st"> </span>DECATUR  <span class="dv">17210</span>    <span class="fl">2.47000</span>     <span class="fl">8.00000</span> <span class="dv">1283393</span>     <span class="dv">78426</span>
+<span class="dv">5</span>         <span class="dv">5</span>        E     <span class="dv">1</span>              AE SQUARED  <span class="dv">17001</span>    <span class="fl">3.05000</span>     <span class="fl">8.66333</span> <span class="dv">1273128</span>    <span class="dv">403969</span>
+<span class="dv">6</span>         <span class="dv">6</span>        M     <span class="dv">4</span> ALDERWOOD MIDDLE SCHOOL  <span class="dv">31015</span>    <span class="fl">2.54500</span>     <span class="fl">7.64500</span> <span class="dv">1286736</span>    <span class="dv">956604</span>
+  public reading_index student_count sycoord schoolcode  szip school_district_id staff  pcl_y
+<span class="dv">1</span>      <span class="dv">1</span>       <span class="fl">2.82750</span>           <span class="dv">149</span>   <span class="dv">69662</span>       <span class="dv">5027</span> <span class="dv">98499</span>                 <span class="dv">63</span>     <span class="dv">0</span>  <span class="dv">70087</span>
+<span class="dv">2</span>      <span class="dv">1</span>       <span class="fl">0.00000</span>           <span class="dv">209</span>  <span class="dv">336737</span>       <span class="dv">4247</span> <span class="dv">98204</span>                 <span class="dv">20</span>     <span class="dv">0</span> <span class="dv">335320</span>
+<span class="dv">3</span>      <span class="dv">1</span>       <span class="fl">3.02333</span>           <span class="dv">354</span>  <span class="dv">249531</span>       <span class="dv">2138</span> <span class="dv">98107</span>                 <span class="dv">30</span>     <span class="dv">0</span> <span class="dv">249413</span>
+<span class="dv">4</span>      <span class="dv">1</span>       <span class="fl">3.51000</span>          <span class="dv">1699</span>  <span class="dv">253434</span>       <span class="dv">3766</span> <span class="dv">98115</span>                 <span class="dv">50</span>     <span class="dv">0</span> <span class="dv">118839</span>
+<span class="dv">5</span>      <span class="dv">1</span>       <span class="fl">3.25333</span>           <span class="dv">307</span>  <span class="dv">259108</span>       <span class="dv">3974</span> <span class="dv">98115</span>                 <span class="dv">30</span>     <span class="dv">0</span> <span class="dv">253224</span>
+<span class="dv">6</span>      <span class="dv">1</span>       <span class="fl">2.95000</span>           <span class="dv">709</span>  <span class="dv">301211</span>       <span class="dv">3560</span> <span class="dv">98036</span>                 <span class="dv">22</span>     <span class="dv">0</span> <span class="dv">301214</span>
+    pcl_x    scity
+<span class="dv">1</span> <span class="dv">1231276</span> LAKEWOOD
+<span class="dv">2</span> <span class="dv">1294903</span>  EVERETT
+<span class="dv">3</span> <span class="dv">1256254</span>  SEATTLE
+<span class="dv">4</span> <span class="dv">1259537</span>  SEATTLE
+<span class="dv">5</span> <span class="dv">1283529</span>  SEATTLE
+<span class="dv">6</span> <span class="dv">1286736</span> LYNNWOOD</code></pre></div>
 <h3 id="magrittr">magrittr</h3>
 <p>Allows writing R commands as a pipe.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(magrittr)
