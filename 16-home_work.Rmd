@@ -1,0 +1,32 @@
+---
+layout: page
+title: R for Data Analysis
+subtitle: Homework
+---
+
+```{r, include=FALSE}
+source("tools/chunk-options.R")
+# Silently load in the data so the rest of the lesson works
+lu <- read.table(file="data/city__dataset_table__lu_indicators__2010.tab", header=TRUE, sep="\t")
+cities <- read.table(file="data/cities.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+lu <- merge(lu, cities, by="city_id", all=TRUE)
+counties <- data.frame(county_id=1:4, county_name=c("Snohomish", "King", "Kitsap", "Pierce"))
+lu <- merge(lu, counties, by="county_id", all=TRUE)
+lu <- na.omit(lu)
+```
+
+This homework combines everything we learned: reading data from a file, transforming and adding columns, subsetting, plotting, reading help files.
+
+Write a script that reads the land use dataset `city__dataset_table__lu_indicators__2010.tab`, joins it with cities and counties and for each county it creates a histogram of the non-residential sqft per job ratio. The histogram should have 20 bins. It should also include a thick red vertical line at the mean value of the ratio per county. Your result should look like this:
+
+```{r, echo=FALSE, eval=TRUE}
+lu <- cbind(lu, sqft_per_job=lu$non_res_sqft/lu$jobs)
+par(mfrow=c(2,2))
+for(county in 1:4){
+	county.data <- subset(lu, county_id==county)
+	hist(county.data$sqft_per_job, breaks=20, main=subset(counties, county_id==county)$county_name, xlab="sqft per job")
+	abline(v=mean(county.data$sqft_per_job, na.rm=TRUE), col="red", lwd=2)
+}
+```
+
+Hint: See `?hist` to find out how to control the number of bins in a histogram. Also for the title, you can extract the county name by subsetting the dataset `counties`.

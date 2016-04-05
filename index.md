@@ -32,6 +32,7 @@ Note that this lesson is a modified version of the "R for Reproducible Scientifi
 7.  [Creating functions and Control flow](07-functions.html)
 11. [Writing data](11-writing-data.html)
 15. [Extras](15-wrap-up.html)
+16. [Homework](16-home_work.html)
 
 
 ## Other Resources
