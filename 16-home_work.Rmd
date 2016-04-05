@@ -6,6 +6,7 @@ subtitle: Homework
 
 ```{r, include=FALSE}
 source("tools/chunk-options.R")
+opts_chunk$set(fig.path = "fig/16-homework-")
 # Silently load in the data so the rest of the lesson works
 lu <- read.table(file="data/city__dataset_table__lu_indicators__2010.tab", header=TRUE, sep="\t")
 cities <- read.table(file="data/cities.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
