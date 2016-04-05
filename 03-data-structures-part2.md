@@ -241,7 +241,7 @@ rbind(df, df)
 Data frames can be merged on one or more columns. Create a second dataset and merge it with our `df` object:
 
 ~~~{.r}
-df2 <- data.frame(id = c('a', 'b', 'c', 'd', 'e'), X = 101:105)
+df2 <- data.frame(id = letters[1:5], X = 101:105)
 df2
 ~~~
 

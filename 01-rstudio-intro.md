@@ -618,8 +618,8 @@ If you're not sure how it's specifically spelled you can do a fuzzy search:
 
 It is possible to add functions to R by writing a package, or by
 obtaining a package written by someone else. As of this writing, there
-are 7,827 packages available on CRAN (the comprehensive R archive
-network). Their number increases every day:
+are 8,210 packages available on [CRAN (the comprehensive R archive
+network)](https://www.r-project.org). Their number increases every day:
 
 <img src="img/NewRpackages.png  " alt="Rpackages" />
 
@@ -633,6 +633,10 @@ R and RStudio have functionality for managing packages:
 * You can remove a package with `remove.packages("packagename")`
 * You can make a package available for use with `library(packagename)`
 
+Install and load the `googleVis` package:
 
 
-
+~~~{.r}
+install.packages("googleVis")
+library(googleVis)
+~~~
