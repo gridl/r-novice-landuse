@@ -153,15 +153,15 @@ x
 > Given the following code:
 >
 > ```{.r}
-> x <- c(5.4, 6.2, 7.1, 4.8, 7.5)
-> names(x) <- c('a', 'b', 'c', 'd', 'e')
-> print(x)
+> y <- c(5.4, 6.2, 7.1, 4.8, 7.5)
+> names(y) <- c('a', 'b', 'c', 'd', 'e')
+> print(y)
 > ```
 >
 > Come up with at least 3 different commands that will produce the following output:
 >
 > ```{.r, echo=FALSE}
-> x[2:4]
+> y[2:4]
 > ```
 >
 
@@ -583,22 +583,22 @@ head(pierce)
 > Given the following code:
 >
 > ```{r}
-> x <- c(5.4, 6.2, 7.1, 4.8, 7.5)
-> names(x) <- c('a', 'b', 'c', 'd', 'e')
-> print(x)
+> y <- c(5.4, 6.2, 7.1, 4.8, 7.5)
+> names(y) <- c('a', 'b', 'c', 'd', 'e')
+> print(y)
 > ```
 >
 > 1. Come up with at least 3 different commands that will produce the following output:
 >
 > ```{r, echo=FALSE}
-> x[2:4]
+> y[2:4]
 > ```
 >
 > ```{r, eval=FALSE}
-> x[2:4] 
-> x[-c(1,5)]
-> x[c("b", "c", "d")]
-> x[c(2,3,4)]
+> y[2:4] 
+> y[-c(1,5)]
+> y[c("b", "c", "d")]
+> y[c(2,3,4)]
 > ```
 >
 >

@@ -141,9 +141,9 @@ x</code></pre></div>
 </div>
 <div class="panel-body">
 <p>Given the following code:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">5.4</span>, <span class="fl">6.2</span>, <span class="fl">7.1</span>, <span class="fl">4.8</span>, <span class="fl">7.5</span>)
-<span class="kw">names</span>(x) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;a&#39;</span>, <span class="st">&#39;b&#39;</span>, <span class="st">&#39;c&#39;</span>, <span class="st">&#39;d&#39;</span>, <span class="st">&#39;e&#39;</span>)
-<span class="kw">print</span>(x)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">y &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">5.4</span>, <span class="fl">6.2</span>, <span class="fl">7.1</span>, <span class="fl">4.8</span>, <span class="fl">7.5</span>)
+<span class="kw">names</span>(y) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;a&#39;</span>, <span class="st">&#39;b&#39;</span>, <span class="st">&#39;c&#39;</span>, <span class="st">&#39;d&#39;</span>, <span class="st">&#39;e&#39;</span>)
+<span class="kw">print</span>(y)</code></pre></div>
 <pre class="output"><code>  a   b   c   d   e 
 5.4 6.2 7.1 4.8 7.5 
 </code></pre>
@@ -156,8 +156,8 @@ x</code></pre></div>
 <h2 id="subsetting-through-logical-operations">Subsetting through logical operations</h2>
 <p>We can subset through logical operations:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x[<span class="kw">c</span>(<span class="ot">TRUE</span>, <span class="ot">TRUE</span>, <span class="ot">FALSE</span>, <span class="ot">FALSE</span>)]</code></pre></div>
-<pre class="output"><code>  a   b   e 
-5.4 6.2 7.5 
+<pre class="output"><code>  a   b 
+5.4 6.2 
 </code></pre>
 <p>Since comparison operators evaluate to logical vectors, we can also use them to succinctly subset vectors:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x[x &gt;<span class="st"> </span><span class="dv">7</span>]</code></pre></div>
@@ -180,8 +180,8 @@ x</code></pre></div>
 </aside>
 <p>Any function that returns a logical vector can be used for subsetting:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">is.na</span>(<span class="kw">c</span>(x, <span class="ot">NA</span>))</code></pre></div>
-<pre class="output"><code>    a     b     c     d     e       
-FALSE FALSE FALSE FALSE FALSE  TRUE 
+<pre class="output"><code>    a     b     c     e       
+FALSE FALSE FALSE FALSE  TRUE 
 </code></pre>
 <p>Similarly other functions for identifying special values, e.g.<code>is.nan</code> (<code>Nan</code> values), <code>is.infinite</code> (<code>Inf</code> values), <code>is.finite</code> (values that are not <code>NA</code>, <code>NaN</code>, <code>Inf</code>).</p>
 <section class="challenge panel panel-success">
@@ -520,9 +520,9 @@ $b
 </div>
 <div class="panel-body">
 <p>Given the following code:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">5.4</span>, <span class="fl">6.2</span>, <span class="fl">7.1</span>, <span class="fl">4.8</span>, <span class="fl">7.5</span>)
-<span class="kw">names</span>(x) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;a&#39;</span>, <span class="st">&#39;b&#39;</span>, <span class="st">&#39;c&#39;</span>, <span class="st">&#39;d&#39;</span>, <span class="st">&#39;e&#39;</span>)
-<span class="kw">print</span>(x)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">y &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">5.4</span>, <span class="fl">6.2</span>, <span class="fl">7.1</span>, <span class="fl">4.8</span>, <span class="fl">7.5</span>)
+<span class="kw">names</span>(y) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;a&#39;</span>, <span class="st">&#39;b&#39;</span>, <span class="st">&#39;c&#39;</span>, <span class="st">&#39;d&#39;</span>, <span class="st">&#39;e&#39;</span>)
+<span class="kw">print</span>(y)</code></pre></div>
 <pre class="output"><code>  a   b   c   d   e 
 5.4 6.2 7.1 4.8 7.5 
 </code></pre>
@@ -532,10 +532,10 @@ $b
 <pre class="output"><code>  b   c   d 
 6.2 7.1 4.8 
 </code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x[<span class="dv">2</span>:<span class="dv">4</span>] 
-x[-<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">5</span>)]
-x[<span class="kw">c</span>(<span class="st">&quot;b&quot;</span>, <span class="st">&quot;c&quot;</span>, <span class="st">&quot;d&quot;</span>)]
-x[<span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>)]</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">y[<span class="dv">2</span>:<span class="dv">4</span>] 
+y[-<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">5</span>)]
+y[<span class="kw">c</span>(<span class="st">&quot;b&quot;</span>, <span class="st">&quot;c&quot;</span>, <span class="st">&quot;d&quot;</span>)]
+y[<span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>)]</code></pre></div>
 </div>
 </section>
 <section class="challenge panel panel-success">

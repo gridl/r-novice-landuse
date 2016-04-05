@@ -259,9 +259,9 @@ x
 >
 > 
 > ~~~{.r}
-> x <- c(5.4, 6.2, 7.1, 4.8, 7.5)
-> names(x) <- c('a', 'b', 'c', 'd', 'e')
-> print(x)
+> y <- c(5.4, 6.2, 7.1, 4.8, 7.5)
+> names(y) <- c('a', 'b', 'c', 'd', 'e')
+> print(y)
 > ~~~
 > 
 > 
@@ -294,8 +294,8 @@ x[c(TRUE, TRUE, FALSE, FALSE)]
 
 
 ~~~{.output}
-  a   b   e 
-5.4 6.2 7.5 
+  a   b 
+5.4 6.2 
 
 ~~~
 
@@ -336,8 +336,8 @@ is.na(c(x, NA))
 
 
 ~~~{.output}
-    a     b     c     d     e       
-FALSE FALSE FALSE FALSE FALSE  TRUE 
+    a     b     c     e       
+FALSE FALSE FALSE FALSE  TRUE 
 
 ~~~
 Similarly other functions for identifying special values, e.g.`is.nan` (`Nan` values), `is.infinite` (`Inf` values), `is.finite` (values that are not `NA`, `NaN`, `Inf`).
@@ -1118,9 +1118,9 @@ head(pierce)
 >
 > 
 > ~~~{.r}
-> x <- c(5.4, 6.2, 7.1, 4.8, 7.5)
-> names(x) <- c('a', 'b', 'c', 'd', 'e')
-> print(x)
+> y <- c(5.4, 6.2, 7.1, 4.8, 7.5)
+> names(y) <- c('a', 'b', 'c', 'd', 'e')
+> print(y)
 > ~~~
 > 
 > 
@@ -1142,10 +1142,10 @@ head(pierce)
 >
 > 
 > ~~~{.r}
-> x[2:4] 
-> x[-c(1,5)]
-> x[c("b", "c", "d")]
-> x[c(2,3,4)]
+> y[2:4] 
+> y[-c(1,5)]
+> y[c("b", "c", "d")]
+> y[c(2,3,4)]
 > ~~~
 >
 >
