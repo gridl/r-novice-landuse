@@ -73,7 +73,7 @@ For plotting on google maps. Example:
 library(googleVis)
 coord <- read.table('data/cities_coordinates.csv', header=TRUE, sep=",")
 hhc <- merge(hh, coord, by="city_id")
-hhc <- cbind(hhc, tip = paste(hh$city_name, "HH2040: ", hh$hh40, sep=','))
+hhc <- cbind(hhc, tip = paste(hhc$city_name, "HH2040: ", hhc$hh40, sep=','))
 map <- gvisMap(hhc, "latlon", tipvar="tip", options=list(height="30cm"))
 plot(map)
 ~~~

@@ -70,7 +70,7 @@ dt[, <span class="kw">sum</span>(hh40), by=county_id]</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(googleVis)
 coord &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="st">&#39;data/cities_coordinates.csv&#39;</span>, <span class="dt">header=</span><span class="ot">TRUE</span>, <span class="dt">sep=</span><span class="st">&quot;,&quot;</span>)
 hhc &lt;-<span class="st"> </span><span class="kw">merge</span>(hh, coord, <span class="dt">by=</span><span class="st">&quot;city_id&quot;</span>)
-hhc &lt;-<span class="st"> </span><span class="kw">cbind</span>(hhc, <span class="dt">tip =</span> <span class="kw">paste</span>(hh$city_name, <span class="st">&quot;HH2040: &quot;</span>, hh$hh40, <span class="dt">sep=</span><span class="st">&#39;,&#39;</span>))
+hhc &lt;-<span class="st"> </span><span class="kw">cbind</span>(hhc, <span class="dt">tip =</span> <span class="kw">paste</span>(hhc$city_name, <span class="st">&quot;HH2040: &quot;</span>, hhc$hh40, <span class="dt">sep=</span><span class="st">&#39;,&#39;</span>))
 map &lt;-<span class="st"> </span><span class="kw">gvisMap</span>(hhc, <span class="st">&quot;latlon&quot;</span>, <span class="dt">tipvar=</span><span class="st">&quot;tip&quot;</span>, <span class="dt">options=</span><span class="kw">list</span>(<span class="dt">height=</span><span class="st">&quot;30cm&quot;</span>))
 <span class="kw">plot</span>(map)</code></pre></div>
 <p>Package <strong>maptools</strong> can be used with shapefiles.</p>
