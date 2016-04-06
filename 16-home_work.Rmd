@@ -30,4 +30,4 @@ for(county in 1:4){
 }
 ```
 
-Hint: See `?hist` to find out how to control the number of bins in a histogram. Also for the title, you can extract the county name by subsetting the dataset `counties`.
+Hint: See `?hist` to find out how to control the number of bins in a histogram. Also for the title, you can extract the county name by subsetting the dataset `counties`. Make the code more general by using the `for` loop described in [this](07-functions.html#control-flow) section.

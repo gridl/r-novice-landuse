@@ -12,4 +12,4 @@ Write a script that reads the land use dataset `city__dataset_table__lu_indicato
 
 <img src="fig/16-homework-unnamed-chunk-2-1.png" title="plot of chunk unnamed-chunk-2" alt="plot of chunk unnamed-chunk-2" style="display: block; margin: auto;" />
 
-Hint: See `?hist` to find out how to control the number of bins in a histogram. Also for the title, you can extract the county name by subsetting the dataset `counties`.
+Hint: See `?hist` to find out how to control the number of bins in a histogram. Also for the title, you can extract the county name by subsetting the dataset `counties`. Make the code more general by using the `for` loop described in [this](07-functions.html#control-flow) section.
