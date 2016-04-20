@@ -37,5 +37,6 @@ Note that this lesson is a modified version of the "R for Reproducible Scientifi
 
 ## Other Resources
 
+*   [R vs. Python](R-vs-Python-216-mod.pdf)
 *   [Reference](reference.html)
 *   [Instructor's Guide](instructors.html)
